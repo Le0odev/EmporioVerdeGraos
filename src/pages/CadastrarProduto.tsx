@@ -8,7 +8,8 @@ import {
   Label,
   Input,
   Select,
-  Button
+  Button,
+  H1
 
 } from '../components/StyledProdutos';
 
@@ -29,8 +30,11 @@ const CadastrarProduto: React.FC = () => {
   };
 
   return (
+    <>  
+    <H1>Gerenciamento de produtos:</H1>
     <ProductContainer>
       <Section className="product-section">
+        
         <SectionTitle>Cadastrar Produto</SectionTitle>
         <Form onSubmit={handleSubmit}>
           <Label htmlFor="nome">Nome do Produto</Label>
@@ -67,7 +71,7 @@ const CadastrarProduto: React.FC = () => {
         {/* Conteúdo da seção de pesquisa */}
       </Section>
     </ProductContainer>
-    
+    </>
   );
 };
 
