@@ -1,3 +1,4 @@
+// Sidebar.tsx
 import React from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
@@ -56,11 +57,13 @@ const Sidebar: React.FC = () => {
         <LogoImage src="/src/assets/logo2.jpg" alt="Company Logo" />
         <LogoText>Dashboard</LogoText>
       </LogoContainer>
+      <NavLink to="/login">Login</NavLink> {/* Adicionando o link para a página de login */}
+      <NavLink to="/login" >-------------------------------</NavLink>
       <NavLink to="/cadastrar-produto">Cadastrar Produto</NavLink>
       <NavLink to="/cadastrar-categoria">Cadastrar Categoria</NavLink>
       <NavLink to="/criar-venda">Criar Venda</NavLink>
       <NavLink to="/relatorio">Relatório</NavLink>
-      <NavLink to="/sobre">Sobre</NavLink>
+      
     </SidebarContainer>
   );
 };

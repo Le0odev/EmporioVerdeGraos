@@ -3,9 +3,9 @@ import { Route, Routes } from 'react-router-dom';
 
 
 import styled from 'styled-components';
-import CadastrarProduto from '../pages/CadastrarProduto';
+import CadastrarProduto from '../pages/ProductCad/CadastrarProduto';
 import Sidebar from '../components/Header/Sidebar';
-
+import Login from '../pages/Login/Login';
 
 
 const AppContainer = styled.div`
@@ -27,6 +27,7 @@ export const AppRoutes = () => {
         <Sidebar />
         <MainContent>
           <Routes>
+            <Route path='/login' element={<Login />}></Route>
             <Route path="/cadastrar-produto" element={<CadastrarProduto />} />
             <Route path="/cadastrar-categoria" element={<CadastrarProduto />} />
             <Route path="/criar-venda" element={<CadastrarProduto />} />

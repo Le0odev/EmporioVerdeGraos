@@ -11,7 +11,7 @@ import {
   Button,
   H1
 
-} from '../components/StyledProdutos';
+} from './StyledProdutos';
 
 
 
