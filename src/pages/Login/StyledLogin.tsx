@@ -68,5 +68,6 @@ export const H2 = styled.h1`
   color: #f7f7f7;
   padding: 20px;
   border-radius: 6px;
-  margin: 0;
+  margin-bottom: 15px;
+  margin-left: -20px;
 `;
