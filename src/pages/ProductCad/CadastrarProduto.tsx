@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { FaSearch, FaSearchPlus, FaEdit, FaTrashAlt } from 'react-icons/fa';
+import { FaSearch, FaEdit, FaTrashAlt } from 'react-icons/fa';
 import {
   ProductContainer,
   Section,
@@ -17,7 +17,6 @@ import {
   CardButton,
   CardInput,
   SearchButtonIcon,
-  SearchIcon,
   ProductPrice,
   ProductName,
   EditIcon,
@@ -48,6 +47,7 @@ const CadastrarProduto: React.FC = () => {
   const [categoriaSelecionada, setCategoriaSelecionada] = useState('');
   const [searchTerm, setSearchTerm] = useState('');
   const [produtos, setProdutos] = useState<Produto[]>([]);
+  const [editId, setEditId] = useState<string | null>(null);
   const { token } = useAuth();
 
   useEffect(() => {
@@ -72,30 +72,40 @@ const CadastrarProduto: React.FC = () => {
 
     const data = {
       productName: nome,
-      productPrice: preco,
+      productPrice: parseFloat(preco),
       productDescription: descricao,
       codeBar: codigoBarras,
       categoryId: categoriaSelecionada
     };
 
-    console.log('Token usado na requisição:', token);
-
     try {
-      const response = await axios.post('http://localhost:8080/products/cadastrar', data, {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      });
-      console.log('Produto cadastrado com sucesso:', response.data);
+      if (editId) {
+        // Atualizar produto existente
+        await axios.put(`http://localhost:8080/products/${editId}`, data, {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        });
+        // Atualizar lista de produtos
+        setProdutos(produtos.map(produto => produto.id === editId ? { ...produto, ...data } : produto));
+        setEditId(null);
+      } else {
+        // Criar novo produto
+        await axios.post('http://localhost:8080/products/cadastrar', data, {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        });
+      }
 
-      // Limpar os campos após o cadastro
+      // Limpar os campos após o cadastro ou atualização
       setNome('');
       setPreco('');
       setDescricao('');
       setCodigoBarras('');
       setCategoriaSelecionada('');
     } catch (error) {
-      console.error('Erro ao cadastrar produto:', error);
+      console.error('Erro ao cadastrar ou atualizar produto:', error);
     }
   };
 
@@ -103,9 +113,9 @@ const CadastrarProduto: React.FC = () => {
     setSearchTerm(e.target.value);
   };
 
-  const searchProdutos = async () => {
+  const searchProdutos = async (term: string) => {
     try {
-      const response = await axios.get(`http://localhost:8080/products/search?productName=${searchTerm}`, {
+      const response = await axios.get(`http://localhost:8080/products/search?productName=${term}`, {
         headers: {
           Authorization: `Bearer ${token}`
         }
@@ -116,12 +126,48 @@ const CadastrarProduto: React.FC = () => {
     }
   };
 
+  useEffect(() => {
+    const debounceSearch = setTimeout(() => {
+      if (searchTerm) {
+        searchProdutos(searchTerm);
+      } else {
+        setProdutos([]); // Limpar lista se não houver termo de pesquisa
+      }
+    }, 300); // Atraso de 300ms para evitar chamadas excessivas
+
+    return () => clearTimeout(debounceSearch); // Limpar timeout se o componente desmontar ou searchTerm mudar
+  }, [searchTerm]);
+
+  const handleEdit = (produto: Produto) => {
+    // Lógica para edição
+    setNome(produto.productName);
+    setPreco(produto.productPrice.toString());
+    setDescricao(produto.productDescription);
+    setCodigoBarras(produto.codeBar);
+    setCategoriaSelecionada(produto.categoryId);
+    // Armazenar o ID do produto sendo editado
+    setEditId(produto.id);
+  };
+
+  const handleDelete = async (id: string) => {
+    try {
+      await axios.delete(`http://localhost:8080/products/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+      setProdutos(produtos.filter(produto => produto.id !== id));
+    } catch (error) {
+      console.error('Erro ao excluir produto:', error);
+    }
+  };
+
   return (
     <>
       <H1>Gerenciamento de produtos:</H1>
       <ProductContainer>
         <Section className="product-section">
-          <SectionTitle>Cadastrar Produto</SectionTitle>
+          <SectionTitle>{editId ? 'Atualizar Produto' : 'Cadastrar Produto'}</SectionTitle>
           <Form onSubmit={handleSubmit}>
             <Label htmlFor="nome">Nome do Produto</Label>
             <Input
@@ -166,12 +212,12 @@ const CadastrarProduto: React.FC = () => {
                 <option key={categoria.id} value={categoria.id}>{categoria.categoryName}</option>
               ))}
             </Select>
-            <Button type="submit">Cadastrar</Button>
+            <Button type="submit">{editId ? 'Atualizar' : 'Cadastrar'}</Button>
           </Form>
         </Section>
         <Section className="search-section">
           <SectionTitle>Verificar existência do produto</SectionTitle>
-          <Form onSubmit={(e) => { e.preventDefault(); searchProdutos(); }}>
+          <Form onSubmit={(e) => { e.preventDefault(); searchProdutos(searchTerm); }}>
             <Label htmlFor="search">Pesquisar produto:</Label>
             <CardInput
               type="text"
@@ -179,8 +225,9 @@ const CadastrarProduto: React.FC = () => {
               value={searchTerm}
               onChange={handleSearchChange}
             />
-            <CardButton type="submit"><SearchButtonIcon> <FaSearch /> </SearchButtonIcon>
-            Pesquisar
+            <CardButton type="submit">
+              <SearchButtonIcon><FaSearch /></SearchButtonIcon>
+              Pesquisar
             </CardButton>
           </Form>
           <Card>
@@ -188,8 +235,8 @@ const CadastrarProduto: React.FC = () => {
               {produtos.map((produto) => (
                 <CardItem key={produto.id}>
                   <ProductName>{produto.productName}</ProductName> - <ProductPrice>{produto.productPrice.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</ProductPrice>
-                  <EditIcon  />
-                  <DeleteIcon  />
+                  <EditIcon onClick={() => handleEdit(produto)}><FaEdit /></EditIcon>
+                  <DeleteIcon onClick={() => handleDelete(produto.id)}><FaTrashAlt /></DeleteIcon>
                 </CardItem>
               ))}
             </CardList>

@@ -124,7 +124,7 @@ export const Card = styled.div`
   margin: 20px 0;
   padding: 20px;
   border-radius: 10px;
-  background-color: #f2f2f2;
+  background-color: #5492a6;
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
 `;
 
@@ -143,6 +143,13 @@ export const CardItem = styled.li`
   border-radius: 6px;
   background-color: #f9f9f9;
   box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.1);
+
+  &:hover {
+    background-color: #ccc;
+    
+  }
+
+
 `;
 
 export const ProductName = styled.span`
@@ -161,12 +168,28 @@ export const ProductPrice = styled.span`
 export const EditIcon = styled(FaEdit)`
   color: #6c757d;
   cursor: pointer;
+  font-size: 20px;
   margin-left: auto; /* Move para o canto direito */
+
+  &:hover {
+    font-size: 25px;
+    color: #0056b3;
+    
+  }
+
 `;
 
 export const DeleteIcon = styled(FaTrashAlt)`
   color: #6c757d;
   margin-right: 10px;
   cursor: pointer;
+
+  &:hover {
+    font-size: 20px;
+    color: red;
+    
+  }
+
+
 `;
 
