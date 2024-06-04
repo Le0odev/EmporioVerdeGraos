@@ -1,3 +1,4 @@
+import { FaEdit, FaTrashAlt } from 'react-icons/fa';
 import styled from 'styled-components';
 
 export const ProductContainer = styled.div`
@@ -78,3 +79,94 @@ export const H1 = styled.h1`
   border-radius: 6px;
   margin: 0;
 `;
+
+export const CardInput = styled.input`
+  width: 400px;
+  height: 40px;
+  padding: 12px;
+  margin-bottom: 16px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  font-size: 16px;
+  outline: none; /* Remove a borda ao focar */
+  margin-right: 1rem;
+`;
+
+export const CardButton = styled.button`
+  background-color: #007bff;
+  color: #fff;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 15px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s ease;
+  
+
+  &:hover {
+    background-color: #0056b3;
+  }
+`;
+
+
+// Ícone de pesquisa
+export const SearchIcon = styled.span`
+  margin-right: 10px;
+`;
+
+// Ícone de lupa
+export const SearchButtonIcon = styled.span`
+  margin-right: 8px;
+`;
+
+export const Card = styled.div`
+  width: 100%;
+  margin: 20px 0;
+  padding: 20px;
+  border-radius: 10px;
+  background-color: #f2f2f2;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+`;
+
+export const CardList = styled.ul`
+  margin: -4px;
+  padding: 0;
+`;
+
+export const CardItem = styled.li`
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  font-size: 18px;
+  margin: 12px;
+  padding: 12px;
+  border-radius: 6px;
+  background-color: #f9f9f9;
+  box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.1);
+`;
+
+export const ProductName = styled.span`
+  font-weight: bold;
+ 
+`;
+
+export const ProductPrice = styled.span`
+  color: #007bff;
+  
+  
+`;
+
+
+
+export const EditIcon = styled(FaEdit)`
+  color: #6c757d;
+  cursor: pointer;
+  margin-left: auto; /* Move para o canto direito */
+`;
+
+export const DeleteIcon = styled(FaTrashAlt)`
+  color: #6c757d;
+  margin-right: 10px;
+  cursor: pointer;
+`;
+

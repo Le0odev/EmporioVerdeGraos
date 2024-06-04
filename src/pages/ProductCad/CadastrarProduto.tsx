@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { FaSearch, FaSearchPlus, FaEdit, FaTrashAlt } from 'react-icons/fa';
 import {
   ProductContainer,
   Section,
@@ -9,7 +10,18 @@ import {
   Input,
   Select,
   Button,
-  H1
+  H1,
+  Card,
+  CardList,
+  CardItem,
+  CardButton,
+  CardInput,
+  SearchButtonIcon,
+  SearchIcon,
+  ProductPrice,
+  ProductName,
+  EditIcon,
+  DeleteIcon
 } from './StyledProdutos';
 import { useAuth } from '../Login/authContext';
 
@@ -18,7 +30,14 @@ interface Categoria {
   categoryName: string;
 }
 
-
+interface Produto {
+  id: string;
+  productName: string;
+  productPrice: number;
+  productDescription: string;
+  codeBar: string;
+  categoryId: string;
+}
 
 const CadastrarProduto: React.FC = () => {
   const [nome, setNome] = useState('');
@@ -27,6 +46,8 @@ const CadastrarProduto: React.FC = () => {
   const [codigoBarras, setCodigoBarras] = useState('');
   const [categorias, setCategorias] = useState<Categoria[]>([]);
   const [categoriaSelecionada, setCategoriaSelecionada] = useState('');
+  const [searchTerm, setSearchTerm] = useState('');
+  const [produtos, setProdutos] = useState<Produto[]>([]);
   const { token } = useAuth();
 
   useEffect(() => {
@@ -75,6 +96,23 @@ const CadastrarProduto: React.FC = () => {
       setCategoriaSelecionada('');
     } catch (error) {
       console.error('Erro ao cadastrar produto:', error);
+    }
+  };
+
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchTerm(e.target.value);
+  };
+
+  const searchProdutos = async () => {
+    try {
+      const response = await axios.get(`http://localhost:8080/products/search?productName=${searchTerm}`, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+      setProdutos(response.data);
+    } catch (error) {
+      console.error('Erro ao buscar produtos:', error);
     }
   };
 
@@ -133,7 +171,29 @@ const CadastrarProduto: React.FC = () => {
         </Section>
         <Section className="search-section">
           <SectionTitle>Verificar existência do produto</SectionTitle>
-          {/* Conteúdo da seção de pesquisa */}
+          <Form onSubmit={(e) => { e.preventDefault(); searchProdutos(); }}>
+            <Label htmlFor="search">Pesquisar produto:</Label>
+            <CardInput
+              type="text"
+              id="search"
+              value={searchTerm}
+              onChange={handleSearchChange}
+            />
+            <CardButton type="submit"><SearchButtonIcon> <FaSearch /> </SearchButtonIcon>
+            Pesquisar
+            </CardButton>
+          </Form>
+          <Card>
+            <CardList>
+              {produtos.map((produto) => (
+                <CardItem key={produto.id}>
+                  <ProductName>{produto.productName}</ProductName> - <ProductPrice>{produto.productPrice.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</ProductPrice>
+                  <EditIcon  />
+                  <DeleteIcon  />
+                </CardItem>
+              ))}
+            </CardList>
+          </Card>
         </Section>
       </ProductContainer>
     </>
