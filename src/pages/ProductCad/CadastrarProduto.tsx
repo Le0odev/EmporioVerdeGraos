@@ -120,22 +120,29 @@ const CadastrarProduto: React.FC = () => {
           Authorization: `Bearer ${token}`
         }
       });
-      setProdutos(response.data);
+
+      if (response.data && Array.isArray(response.data)) {
+        setProdutos(response.data);
+      } else {
+        console.error('A resposta da API não é um array:', response.data);
+        setProdutos([]);
+      }
     } catch (error) {
       console.error('Erro ao buscar produtos:', error);
+      setProdutos([]); // Limpa a lista em caso de erro
     }
   };
 
   useEffect(() => {
-    const debounceSearch = setTimeout(() => {
-      if (searchTerm) {
+    if (searchTerm) {
+      const debounceSearch = setTimeout(() => {
         searchProdutos(searchTerm);
-      } else {
-        setProdutos([]); // Limpar lista se não houver termo de pesquisa
-      }
-    }, 300); // Atraso de 300ms para evitar chamadas excessivas
+      }, 300); // Atraso de 300ms para evitar chamadas excessivas
 
-    return () => clearTimeout(debounceSearch); // Limpar timeout se o componente desmontar ou searchTerm mudar
+      return () => clearTimeout(debounceSearch); // Limpar timeout se o componente desmontar ou searchTerm mudar
+    } else {
+      setProdutos([]); // Limpar lista se não houver termo de pesquisa
+    }
   }, [searchTerm]);
 
   const handleEdit = (produto: Produto) => {
@@ -205,7 +212,7 @@ const CadastrarProduto: React.FC = () => {
               id="categoria"
               value={categoriaSelecionada}
               onChange={(e) => setCategoriaSelecionada(e.target.value)}
-              required
+              
             >
               <option value="">Selecione uma categoria</option>
               {categorias.map((categoria) => (
@@ -232,13 +239,17 @@ const CadastrarProduto: React.FC = () => {
           </Form>
           <Card>
             <CardList>
-              {produtos.map((produto) => (
-                <CardItem key={produto.id}>
-                  <ProductName>{produto.productName}</ProductName> - <ProductPrice>{produto.productPrice.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</ProductPrice>
-                  <EditIcon onClick={() => handleEdit(produto)}><FaEdit /></EditIcon>
-                  <DeleteIcon onClick={() => handleDelete(produto.id)}><FaTrashAlt /></DeleteIcon>
-                </CardItem>
-              ))}
+              {produtos.length > 0 ? (
+                produtos.map((produto) => (
+                  <CardItem key={produto.id}>
+                    <ProductName>{produto.productName}</ProductName> - <ProductPrice>{produto.productPrice.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</ProductPrice>
+                    <EditIcon onClick={() => handleEdit(produto)}><FaEdit /></EditIcon>
+                    <DeleteIcon onClick={() => handleDelete(produto.id)}><FaTrashAlt /></DeleteIcon>
+                  </CardItem>
+                ))
+              ) : (
+                <p>Nenhum produto encontrado</p>
+              )}
             </CardList>
           </Card>
         </Section>
