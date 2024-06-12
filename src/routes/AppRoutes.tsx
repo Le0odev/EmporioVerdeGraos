@@ -6,6 +6,8 @@ import styled from 'styled-components';
 import CadastrarProduto from '../pages/ProductCad/CadastrarProduto';
 import Sidebar from '../components/Header/Sidebar';
 import Login from '../pages/Login/Login';
+import CadastrarCategoria from '../pages/CategoryCad/CadastrarCategoria';
+
 
 
 const AppContainer = styled.div`
@@ -29,7 +31,7 @@ export const AppRoutes = () => {
           <Routes>
             <Route path='/login' element={<Login />}></Route>
             <Route path="/cadastrar-produto" element={<CadastrarProduto />} />
-            <Route path="/cadastrar-categoria" element={<CadastrarProduto />} />
+            <Route path="/cadastrar-categoria" element={<CadastrarCategoria />} />
             <Route path="/criar-venda" element={<CadastrarProduto />} />
             <Route path="/relatorio" element={<CadastrarProduto />} />
             

@@ -53,7 +53,7 @@ const CadastrarProduto: React.FC = () => {
   useEffect(() => {
     const fetchCategorias = async () => {
       try {
-        const response = await axios.get('http://localhost:8080/categorias', {
+        const response = await axios.get('http://localhost:8080/category', {
           headers: {
             Authorization: `Bearer ${token}`
           }

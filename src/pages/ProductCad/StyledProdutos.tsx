@@ -154,6 +154,7 @@ export const CardItem = styled.li`
 
 export const ProductName = styled.span`
   font-weight: bold;
+  font-size: 1.2rem;
  
 `;
 
@@ -170,6 +171,7 @@ export const EditIcon = styled(FaEdit)`
   cursor: pointer;
   font-size: 20px;
   margin-left: auto; /* Move para o canto direito */
+  color: #007bff; 
 
   &:hover {
     font-size: 25px;
@@ -183,6 +185,7 @@ export const DeleteIcon = styled(FaTrashAlt)`
   color: #6c757d;
   margin-right: 10px;
   cursor: pointer;
+  color: red;
 
   &:hover {
     font-size: 20px;
