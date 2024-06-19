@@ -19,7 +19,7 @@ import {
   CategoryName,
   EditIcon,
   DeleteIcon,
-  CardButtonContainer
+ 
 } from './StyledCategoria';
 import { useAuth } from '../Login/authContext';
 
@@ -187,14 +187,14 @@ const CadastrarCategoria: React.FC = () => {
               {categorias.length > 0 ? (
                 categorias.map((categoria) => (
                   <CardItem key={categoria.id}>
-  <div>
-    <CategoryName>{categoria.categoryName}</CategoryName> - {categoria.categoryDescription}
-  </div>
-  <CardButtonContainer>
-    <EditIcon onClick={() => handleEdit(categoria)} />
-    <DeleteIcon onClick={() => handleDelete(categoria.id)} />
-  </CardButtonContainer>
-    </CardItem>
+              <div>
+                <CategoryName>{categoria.categoryName}</CategoryName> - {categoria.categoryDescription}
+              </div>
+            
+              <EditIcon onClick={() => handleEdit(categoria)} />
+              <DeleteIcon onClick={() => handleDelete(categoria.id)} />
+            
+              </CardItem>
                 ))
               ) : (
                 <p>Nenhuma categoria encontrada</p>

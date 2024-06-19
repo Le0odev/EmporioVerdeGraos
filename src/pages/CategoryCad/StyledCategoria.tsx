@@ -43,9 +43,8 @@ export const Label = styled.label`
 `;
 
 export const Input = styled.input`
-  padding: 5px;
-  width: calc(100% - 24px);
   padding: 12px;
+  width: calc(100% - 24px);
   margin-bottom: 16px;
   border: 1px solid #ccc;
   border-radius: 4px;
@@ -85,11 +84,26 @@ export const Card = styled.div`
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
 `;
 
+export const CardButton = styled.button`
+  background-color: #007bff;
+  color: #fff;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 15px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s ease;
+  
+
+  &:hover {
+    background-color: #0056b3;
+  }
+`;
+
 export const CardList = styled.ul`
   list-style-type: none;
   padding: 0;
-  margin: -4px;
-  padding: 0;
+  margin: 0;
 `;
 
 export const CardItem = styled.li`
@@ -108,20 +122,7 @@ export const CardItem = styled.li`
   }
 `;
 
-export const CardButton = styled(Button)`
-  background-color: #007bff;
-  color: #fff;
-  padding: 8px 12px;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  font-size: 14px;
-  transition: background-color 0.3s ease;
 
-  &:hover {
-    background-color: #0056b3;
-  }
-`;
 
 export const CardInput = styled(Input)`
   width: 400px;
@@ -131,14 +132,8 @@ export const CardInput = styled(Input)`
   border: 1px solid #ccc;
   border-radius: 10px;
   font-size: 16px;
- width: calc(100% - 24px);
+  outline: none;
   margin-right: 1rem;
-  
-
-
-   &:hover {
-    
-  }
 `;
 
 export const SearchButtonIcon = styled.span`
@@ -152,27 +147,24 @@ export const CategoryName = styled.span`
 
 export const EditIcon = styled(FaEdit)`
   cursor: pointer;
-  font-size: 16px;
-  margin-left: 10px;
+  font-size: 20px;
+  margin-left: auto;
+  margin-right: 10px;
+  color: #007bff;
 
   &:hover {
-    color: #0056b3;
+    font-size: 22px;
+    color: ;
   }
 `;
 
 export const DeleteIcon = styled(FaTrashAlt)`
   cursor: pointer;
-  font-size: 16px;
-  margin-left: 10px;
+  font-size: 20px;
+  color: red;
 
   &:hover {
+    font-size: 22px;
     color: red;
   }
 `;
-
-export const CardButtonContainer = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 10px;
-`;
-
