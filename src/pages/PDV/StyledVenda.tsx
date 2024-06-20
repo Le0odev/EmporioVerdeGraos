@@ -2,23 +2,28 @@ import styled from 'styled-components';
 
 export const VendaContainer = styled.div`
   display: flex;
-  justify-content: space-between;
   background-color: #fff;
   border: 1px solid #ddd;
   border-radius: 4px;
   overflow: hidden;
-  margin-bottom: 1rem; /* Espaço entre os containers */
+  margin-bottom: 1rem;
+  height: 90vh;
 `;
 
 export const SearchSection = styled.div`
-  flex: 1;
+  flex: 2;
   padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  border-right: 1px solid #ddd;
 `;
 
 export const VendaSection = styled.div`
   flex: 1;
   padding: 1rem;
   background-color: #f8f8f8;
+  display: flex;
+  flex-direction: column;
 `;
 
 export const Label = styled.label`
@@ -40,23 +45,34 @@ export const Form = styled.form`
   flex-direction: column;
 `;
 
-export const ProductList = styled.ul`
-  list-style-type: none;
-  padding: 0;
+export const ProductGrid = styled.div`
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  padding: 1rem 0;
+  overflow-y: auto;
 `;
 
-export const ProductItem = styled.li`
+export const ProductCard = styled.div`
   display: flex;
-  justify-content: space-between;
+  flex-direction: column;
   align-items: center;
   padding: 1rem;
-  border-bottom: 1px solid #ccc;
+  border: 1px solid #ddd;
+  border-radius: 4px;
   cursor: pointer;
-  margin-top: 1rem; /* Espaço entre os itens da lista */
+  background-color: #fff;
 
   &:hover {
     background-color: #f0f0f0;
   }
+`;
+
+export const ProductImage = styled.img`
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  margin-bottom: 1rem;
 `;
 
 export const Button = styled.button`
@@ -74,15 +90,19 @@ export const Button = styled.button`
 
 export const ProductName = styled.span`
   font-weight: bold;
+  margin-bottom: 8px;
 `;
 
 export const ProductPrice = styled.span`
   color: #007bff;
+  margin-bottom: 1rem;
 `;
 
 export const CartList = styled.ul`
   list-style-type: none;
   padding: 0;
+  flex: 1;
+  overflow-y: auto;
 `;
 
 export const CartItem = styled.li`
@@ -130,7 +150,7 @@ export const SubtotalContainer = styled.div`
   background-color: #fff;
   border: 1px solid #ddd;
   border-radius: 4px;
-  margin-top: 1rem; /* Espaço acima do subtotal */
+  margin-top: 1rem;
 `;
 
 export const SubtotalLabel = styled.h3`
@@ -155,5 +175,5 @@ export const CheckoutSection = styled.div`
   background-color: #f8f8f8;
   border: 1px solid #ddd;
   border-radius: 4px;
-  margin-top: 1.5rem; /* Espaço acima da seção de checkout */
+  margin-top: 1.5rem;
 `;

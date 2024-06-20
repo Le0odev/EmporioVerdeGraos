@@ -10,8 +10,9 @@ import {
   Label,
   Input,
   Button,
-  ProductList,
-  ProductItem,
+  ProductGrid,
+  ProductCard,
+  ProductImage,
   ProductName,
   ProductPrice,
   QuantityControl,
@@ -32,9 +33,10 @@ interface Produto {
   id: number;
   productName: string;
   productPrice: number;
-  quantidade: number | null; // Permitir null para itens vendidos a granel
-  peso?: number | null; // Permitir null para itens vendidos por quantidade
+  quantidade: number | null;
+  peso?: number | null;
   bulk: boolean;
+  imageUrl: string;
 }
 
 const CriarVenda: React.FC = () => {
@@ -61,13 +63,11 @@ const CriarVenda: React.FC = () => {
   const addToCart = (produto: Produto) => {
     const itemExistente = carrinho.find(item => item.id === produto.id);
     if (itemExistente) {
-      // Se o item já existe no carrinho, incrementa a quantidade
       const novoCarrinho = carrinho.map(item =>
         item.id === produto.id ? { ...item, quantidade: (item.quantidade || 0) + 1 } : item
       );
       setCarrinho(novoCarrinho);
     } else {
-      // Caso contrário, adiciona o produto com quantidade 1
       setCarrinho([...carrinho, { ...produto, quantidade: 1 }]);
     }
   };
@@ -99,6 +99,7 @@ const CriarVenda: React.FC = () => {
         quantity: item.bulk ? null : item.quantidade,
         weight: item.bulk ? item.peso : null,
         isBulk: item.bulk
+        
       }));
 
       const response = await axios.post('http://localhost:8080/sales/create', vendaItems, {
@@ -111,7 +112,7 @@ const CriarVenda: React.FC = () => {
       console.log('Resposta da API após checkout:', response.data);
 
       setCarrinho([]);
-      alert('Venda finalizada com sucesso!'); // Exemplo de feedback ao usuário após sucesso
+      alert('Venda finalizada com sucesso!');
 
     } catch (error) {
       console.error('Erro ao realizar checkout:', error);
@@ -137,7 +138,7 @@ const CriarVenda: React.FC = () => {
       if (!item.bulk) {
         subtotal += item.productPrice * (item.quantidade || 0);
       } else {
-        subtotal += item.productPrice * (item.peso || 0) / 1000; // Convertendo gramas para quilogramas
+        subtotal += item.productPrice * (item.peso || 0) / 1000;
       }
     });
     return subtotal;
@@ -171,17 +172,19 @@ const CriarVenda: React.FC = () => {
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
+          
           <Button type="submit">Pesquisar</Button>
         </Form>
-        <ProductList>
+        <ProductGrid>
           {produtos.map((produto) => (
-            <ProductItem key={produto.id} onClick={() => addToCart(produto)}>
+            <ProductCard key={produto.id} onClick={() => addToCart(produto)}>
+              <ProductImage src={produto.imageUrl} alt={produto.productName} />
               <ProductName>{produto.productName}</ProductName>
               <ProductPrice>{produto.productPrice.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</ProductPrice>
               <Button type="button">Adicionar</Button>
-            </ProductItem>
+            </ProductCard>
           ))}
-        </ProductList>
+        </ProductGrid>
       </SearchSection>
       <VendaSection>
         <h2>Carrinho</h2>

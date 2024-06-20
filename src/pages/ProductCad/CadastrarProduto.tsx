@@ -40,6 +40,7 @@ interface Produto {
   codeBar: string;
   categoryId: string;
   bulk: boolean; // Alterado para corresponder ao nome do campo na API
+  imageUrl: string;
 }
 
 const CadastrarProduto: React.FC = () => {
@@ -53,7 +54,11 @@ const CadastrarProduto: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [produtos, setProdutos] = useState<Produto[]>([]);
   const [editId, setEditId] = useState<string | null>(null);
+  const [imageUrl, setImageUrl] = useState('');
+
   const { token } = useAuth();
+  
+
 
   useEffect(() => {
     const fetchCategorias = async () => {
@@ -81,7 +86,8 @@ const CadastrarProduto: React.FC = () => {
       productDescription: descricao,
       codeBar: codigoBarras,
       categoryId: categoriaSelecionada,
-      bulk: isBulk // Usando o estado isBulk diretamente no objeto de dados
+      bulk: isBulk, 
+      imageUrl: imageUrl
     };
 
     try {
@@ -111,6 +117,7 @@ const CadastrarProduto: React.FC = () => {
       setCodigoBarras('');
       setCategoriaSelecionada('');
       setIsBulk(false); // Reinicia o estado do checkbox para false após o cadastro ou atualização
+      setImageUrl('')
     } catch (error) {
       console.error('Erro ao cadastrar ou atualizar produto:', error);
     }
@@ -162,6 +169,7 @@ const CadastrarProduto: React.FC = () => {
     setIsBulk(produto.bulk); // Define o estado do checkbox com o valor do produto editado
     // Armazenar o ID do produto sendo editado
     setEditId(produto.id);
+    setImageUrl(produto.imageUrl);
   };
 
   const handleDelete = async (id: string) => {
@@ -208,12 +216,12 @@ const CadastrarProduto: React.FC = () => {
               onChange={(e) => setPreco(e.target.value)}
               required
             />
-            <Label htmlFor="descricao">Descrição</Label>
+            <Label htmlFor="descricao">Imagem URL</Label>
             <Input
               type="text"
-              id="descricao"
-              value={descricao}
-              onChange={(e) => setDescricao(e.target.value)}
+              id="imageUrl"
+              value={imageUrl}
+              onChange={(e) => setImageUrl(e.target.value)}
             />
             <Label htmlFor="categoria">Categoria</Label>
             <Select
