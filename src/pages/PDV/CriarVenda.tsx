@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 import { FaPlus, FaMinus, FaTrashAlt } from 'react-icons/fa';
 import { useAuth } from '../Login/authContext';
 import {
@@ -32,9 +32,9 @@ interface Produto {
   id: number;
   productName: string;
   productPrice: number;
-  quantidade: number;
-  peso?: number;
-  isBulk: boolean;
+  quantidade: number | null; // Permitir null para itens vendidos a granel
+  peso?: number | null; // Permitir null para itens vendidos por quantidade
+  bulk: boolean;
 }
 
 const CriarVenda: React.FC = () => {
@@ -72,18 +72,18 @@ const CriarVenda: React.FC = () => {
     }
   };
 
-  const updateQuantity = (id: number, quantidade: number) => {
+  const updateQuantity = (id: number, quantidade: number | null) => {
     setCarrinho((prevCarrinho) =>
       prevCarrinho.map(item =>
-        item.id === id ? { ...item, quantidade: quantidade || 0 } : item
-      ).filter(item => item.quantidade !== undefined && item.quantidade > 0)
+        item.id === id ? { ...item, quantidade: quantidade } : item
+      ).filter(item => item.quantidade !== undefined && item.quantidade !== null && item.quantidade > 0)
     );
   };
 
-  const updateWeight = (id: number, peso: number) => {
+  const updateWeight = (id: number, peso: number | null) => {
     setCarrinho((prevCarrinho) =>
       prevCarrinho.map(item =>
-        item.id === id ? { ...item, peso } : item
+        item.id === id ? { ...item, peso: peso } : item
       )
     );
   };
@@ -96,28 +96,46 @@ const CriarVenda: React.FC = () => {
     try {
       const vendaItems = carrinho.map((item) => ({
         productId: item.id,
-        quantity: item.isBulk ? undefined : item.quantidade,
-        weight: item.isBulk ? item.peso : undefined,
-        isBulk: item.isBulk
+        quantity: item.bulk ? null : item.quantidade,
+        weight: item.bulk ? item.peso : null,
+        isBulk: item.bulk
       }));
 
-      await axios.post('http://localhost:8080/vendas', { itens: vendaItems }, {
+      const response = await axios.post('http://localhost:8080/sales/create', vendaItems, {
         headers: {
-          Authorization: `Bearer ${token}`
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json'
         }
       });
 
+      console.log('Resposta da API após checkout:', response.data);
+
       setCarrinho([]);
+      alert('Venda finalizada com sucesso!'); // Exemplo de feedback ao usuário após sucesso
+
     } catch (error) {
       console.error('Erro ao realizar checkout:', error);
+      if (axios.isAxiosError(error)) {
+        const axiosError = error as AxiosError;
+        console.log('Status do erro:', axiosError.response?.status); 
+        console.log('Dados do erro:', axiosError.response?.data); 
+
+        
+        let errorMessage = 'Erro ao finalizar a venda. Por favor, tente novamente mais tarde.';
+        
+         
+        alert(errorMessage);
+      } else {
+        alert('Erro desconhecido ao finalizar a venda. Por favor, tente novamente mais tarde.');
+      }
     }
   };
 
   const calcularSubtotal = () => {
     let subtotal = 0;
     carrinho.forEach((item) => {
-      if (!item.isBulk) {
-        subtotal += item.productPrice * item.quantidade;
+      if (!item.bulk) {
+        subtotal += item.productPrice * (item.quantidade || 0);
       } else {
         subtotal += item.productPrice * (item.peso || 0) / 1000; // Convertendo gramas para quilogramas
       }
@@ -176,7 +194,7 @@ const CriarVenda: React.FC = () => {
                 <CartItemDetails>
                   <ProductName>{item.productName}</ProductName>
                   <ProductPrice>{item.productPrice.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</ProductPrice>
-                  {item.isBulk && (
+                  {item.bulk && (
                     <div>
                       <Label htmlFor={`weight_${item.id}`}>Peso (g):</Label>
                       <GranelInput
@@ -190,9 +208,9 @@ const CriarVenda: React.FC = () => {
                 </CartItemDetails>
                 <CartActions>
                   <QuantityControl>
-                    <FaMinus onClick={() => updateQuantity(item.id, item.quantidade - 1)} />
+                    <FaMinus onClick={() => updateQuantity(item.id, (item.quantidade || 0) - 1)} />
                     <span>{item.quantidade}</span>
-                    <FaPlus onClick={() => updateQuantity(item.id, item.quantidade + 1)} />
+                    <FaPlus onClick={() => updateQuantity(item.id, (item.quantidade || 0) + 1)} />
                   </QuantityControl>
                   <FaTrashAlt onClick={() => removeFromCart(item.id)} />
                 </CartActions>

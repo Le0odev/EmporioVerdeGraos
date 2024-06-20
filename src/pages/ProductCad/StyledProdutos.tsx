@@ -101,13 +101,11 @@ export const CardButton = styled.button`
   cursor: pointer;
   font-size: 16px;
   transition: background-color 0.3s ease;
-  
 
   &:hover {
     background-color: #0056b3;
   }
 `;
-
 
 // Ícone de pesquisa
 export const SearchIcon = styled.span`
@@ -146,25 +144,17 @@ export const CardItem = styled.li`
 
   &:hover {
     background-color: #ccc;
-    
   }
-
-
 `;
 
 export const ProductName = styled.span`
   font-weight: bold;
   font-size: 1.2rem;
- 
 `;
 
 export const ProductPrice = styled.span`
   color: #007bff;
-  
-  
 `;
-
-
 
 export const EditIcon = styled(FaEdit)`
   color: #6c757d;
@@ -176,9 +166,7 @@ export const EditIcon = styled(FaEdit)`
   &:hover {
     font-size: 25px;
     color: #0056b3;
-    
   }
-
 `;
 
 export const DeleteIcon = styled(FaTrashAlt)`
@@ -190,9 +178,23 @@ export const DeleteIcon = styled(FaTrashAlt)`
   &:hover {
     font-size: 20px;
     color: red;
-    
   }
-
-
 `;
 
+export const CheckboxContainer = styled.div`
+  display: flex;
+  align-items: center;
+  margin-bottom: 16px;
+`;
+
+export const CheckboxLabel = styled.label`
+  font-size: 20px;
+  color: #555;
+`;
+
+export const CheckboxInput = styled.input`
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+  margin-left: 8px;
+`;

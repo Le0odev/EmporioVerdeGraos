@@ -20,7 +20,10 @@ import {
   ProductPrice,
   ProductName,
   EditIcon,
-  DeleteIcon
+  DeleteIcon,
+  CheckboxContainer,
+  CheckboxLabel,
+  CheckboxInput
 } from './StyledProdutos';
 import { useAuth } from '../Login/authContext';
 
@@ -36,6 +39,7 @@ interface Produto {
   productDescription: string;
   codeBar: string;
   categoryId: string;
+  bulk: boolean; // Alterado para corresponder ao nome do campo na API
 }
 
 const CadastrarProduto: React.FC = () => {
@@ -43,6 +47,7 @@ const CadastrarProduto: React.FC = () => {
   const [preco, setPreco] = useState('');
   const [descricao, setDescricao] = useState('');
   const [codigoBarras, setCodigoBarras] = useState('');
+  const [isBulk, setIsBulk] = useState(false); // Estado para checkbox "Produto a granel"
   const [categorias, setCategorias] = useState<Categoria[]>([]);
   const [categoriaSelecionada, setCategoriaSelecionada] = useState('');
   const [searchTerm, setSearchTerm] = useState('');
@@ -75,7 +80,8 @@ const CadastrarProduto: React.FC = () => {
       productPrice: parseFloat(preco),
       productDescription: descricao,
       codeBar: codigoBarras,
-      categoryId: categoriaSelecionada
+      categoryId: categoriaSelecionada,
+      bulk: isBulk // Usando o estado isBulk diretamente no objeto de dados
     };
 
     try {
@@ -104,6 +110,7 @@ const CadastrarProduto: React.FC = () => {
       setDescricao('');
       setCodigoBarras('');
       setCategoriaSelecionada('');
+      setIsBulk(false); // Reinicia o estado do checkbox para false após o cadastro ou atualização
     } catch (error) {
       console.error('Erro ao cadastrar ou atualizar produto:', error);
     }
@@ -152,6 +159,7 @@ const CadastrarProduto: React.FC = () => {
     setDescricao(produto.productDescription);
     setCodigoBarras(produto.codeBar);
     setCategoriaSelecionada(produto.categoryId);
+    setIsBulk(produto.bulk); // Define o estado do checkbox com o valor do produto editado
     // Armazenar o ID do produto sendo editado
     setEditId(produto.id);
   };
@@ -212,13 +220,21 @@ const CadastrarProduto: React.FC = () => {
               id="categoria"
               value={categoriaSelecionada}
               onChange={(e) => setCategoriaSelecionada(e.target.value)}
-              
             >
               <option value="">Selecione uma categoria</option>
               {categorias.map((categoria) => (
                 <option key={categoria.id} value={categoria.id}>{categoria.categoryName}</option>
               ))}
             </Select>
+            <CheckboxContainer>
+              <CheckboxLabel htmlFor="isBulk">Produto a granel?</CheckboxLabel>
+              <CheckboxInput
+                type="checkbox"
+                id="isBulk"
+                checked={isBulk}
+                onChange={(e) => setIsBulk(e.target.checked)} // Atualiza o estado do checkbox
+              />
+            </CheckboxContainer>
             <Button type="submit">{editId ? 'Atualizar' : 'Cadastrar'}</Button>
           </Form>
         </Section>
@@ -243,8 +259,8 @@ const CadastrarProduto: React.FC = () => {
                 produtos.map((produto) => (
                   <CardItem key={produto.id}>
                     <ProductName>{produto.productName}</ProductName> - <ProductPrice>{produto.productPrice.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</ProductPrice>
-                    <EditIcon onClick={() => handleEdit(produto)}><FaEdit /></EditIcon>
-                    <DeleteIcon onClick={() => handleDelete(produto.id)}><FaTrashAlt /></DeleteIcon>
+                    <EditIcon onClick={() => handleEdit(produto)} />
+                    <DeleteIcon onClick={() => handleDelete(produto.id)} />
                   </CardItem>
                 ))
               ) : (
