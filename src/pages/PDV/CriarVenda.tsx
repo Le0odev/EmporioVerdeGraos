@@ -26,7 +26,9 @@ import {
   SubtotalLabel,
   SubtotalAmount,
   EmptyCartMessage,
-  CheckoutSection
+  CheckoutSection,
+  LabelPeso,
+  TrashIcon
 } from './StyledVenda';
 
 interface Produto {
@@ -41,11 +43,40 @@ interface Produto {
 
 const CriarVenda: React.FC = () => {
   const { token } = useAuth();
-  const [searchTerm, setSearchTerm] = useState<string>('');
+  const [searchTermByName, setSearchTermByName] = useState<string>('');
+  const [searchTermByCodeBar, setSearchTermByCodeBar] = useState<string>('');
   const [produtos, setProdutos] = useState<Produto[]>([]);
   const [carrinho, setCarrinho] = useState<Produto[]>([]);
+  const [autoAddFeedback, setAutoAddFeedback] = useState<string>('');
+  const [codigoBarras, setCodigoBarras] = useState<string>('');
 
-  const searchProdutos = async (term: string) => {
+  const searchProdutosByCodeBar = async (codeBar: string) => {
+    try {
+      const response = await axios.get(`http://localhost:8080/products/search/codebar?codeBar=${codeBar}`, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+
+      const produtoEncontrado = response.data[0];
+
+      if (produtoEncontrado) {
+        addToCart(produtoEncontrado);
+
+        setAutoAddFeedback(`Produto "${produtoEncontrado.productName}" adicionado automaticamente.`);
+        setSearchTermByCodeBar('');
+
+      } else {
+        setAutoAddFeedback('Produto não encontrado.');
+      }
+
+    } catch (error) {
+      console.error('Erro ao buscar produtos por código de barras:', error);
+      setAutoAddFeedback('Erro ao buscar produto. Tente novamente.');
+    }
+  };
+
+  const searchProdutosByName = async (term: string) => {
     try {
       const response = await axios.get(`http://localhost:8080/products/search?productName=${term}`, {
         headers: {
@@ -67,9 +98,12 @@ const CriarVenda: React.FC = () => {
         item.id === produto.id ? { ...item, quantidade: (item.quantidade || 0) + 1 } : item
       );
       setCarrinho(novoCarrinho);
+
     } else {
       setCarrinho([...carrinho, { ...produto, quantidade: 1 }]);
     }
+    setCodigoBarras('');
+
   };
 
   const updateQuantity = (id: number, quantidade: number | null) => {
@@ -99,7 +133,6 @@ const CriarVenda: React.FC = () => {
         quantity: item.bulk ? null : item.quantidade,
         weight: item.bulk ? item.peso : null,
         isBulk: item.bulk
-        
       }));
 
       const response = await axios.post('http://localhost:8080/sales/create', vendaItems, {
@@ -118,13 +151,11 @@ const CriarVenda: React.FC = () => {
       console.error('Erro ao realizar checkout:', error);
       if (axios.isAxiosError(error)) {
         const axiosError = error as AxiosError;
-        console.log('Status do erro:', axiosError.response?.status); 
-        console.log('Dados do erro:', axiosError.response?.data); 
+        console.log('Status do erro:', axiosError.response?.status);
+        console.log('Dados do erro:', axiosError.response?.data);
 
-        
         let errorMessage = 'Erro ao finalizar a venda. Por favor, tente novamente mais tarde.';
-        
-         
+
         alert(errorMessage);
       } else {
         alert('Erro desconhecido ao finalizar a venda. Por favor, tente novamente mais tarde.');
@@ -144,37 +175,55 @@ const CriarVenda: React.FC = () => {
     return subtotal;
   };
 
-  const handleSearchSubmit = (e: React.FormEvent) => {
+  const handleSearchByNameSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    searchProdutos(searchTerm);
+    searchProdutosByName(searchTermByName);
+  };
+
+  const handleSearchByCodeBarSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    searchProdutosByCodeBar(searchTermByCodeBar);
   };
 
   useEffect(() => {
-    if (searchTerm) {
+    if (searchTermByName) {
       const debounceSearch = setTimeout(() => {
-        searchProdutos(searchTerm);
+        searchProdutosByName(searchTermByName);
       }, 300);
 
       return () => clearTimeout(debounceSearch);
     } else {
       setProdutos([]);
     }
-  }, [searchTerm]);
+  }, [searchTermByName]);
 
   return (
     <VendaContainer>
       <SearchSection>
-        <Form onSubmit={handleSearchSubmit}>
-          <Label htmlFor="search">Pesquisar produto:</Label>
+        <Form onSubmit={handleSearchByCodeBarSubmit}>
+          <Label htmlFor='searchCodeBar'>Procure um produto:</Label>
           <Input
-            type="text"
-            id="search"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
+            type='text'
+            placeholder='Insira o código de barras'
+            id='searchCodeBar'
+            value={searchTermByCodeBar}
+            onChange={(e) => setSearchTermByCodeBar(e.target.value)}
           />
-          
-          <Button type="submit">Pesquisar</Button>
+
         </Form>
+        <Form onSubmit={handleSearchByNameSubmit}>
+          
+          <Input
+            type='text'
+            placeholder='Procure um produto...'
+            id='searchName'
+            value={searchTermByName}
+            onChange={(e) => setSearchTermByName(e.target.value)}
+          />
+          <Button type="submit">Pesquisar</Button>
+
+        </Form>
+        {autoAddFeedback && <p>{autoAddFeedback}</p>} {/* Exibição do feedback */}
         <ProductGrid>
           {produtos.map((produto) => (
             <ProductCard key={produto.id} onClick={() => addToCart(produto)}>
@@ -195,28 +244,38 @@ const CriarVenda: React.FC = () => {
             carrinho.map((item) => (
               <CartItem key={item.id}>
                 <CartItemDetails>
-                  <ProductName>{item.productName}</ProductName>
-                  <ProductPrice>{item.productPrice.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</ProductPrice>
-                  {item.bulk && (
+                  <div style={{ display: 'flex', alignItems: 'center' }}>
+                    <ProductImage src={item.imageUrl} alt={item.productName} style={{ width: '50px', height: '50px', marginRight: '10px' }} />
                     <div>
-                      <Label htmlFor={`weight_${item.id}`}>Peso (g):</Label>
-                      <GranelInput
-                        type="number"
-                        id={`weight_${item.id}`}
-                        value={item.peso || ''}
-                        onChange={(e) => updateWeight(item.id, parseFloat(e.target.value))}
-                      />
+                      <ProductName>{item.productName}</ProductName>
+                      <div>
+                        <span>Quantidade: {item.quantidade}</span>
+                        <QuantityControl>
+                          <FaMinus onClick={() => updateQuantity(item.id, (item.quantidade || 0) - 1)} />
+                          <span>{item.quantidade}</span>
+                          <FaPlus onClick={() => updateQuantity(item.id, (item.quantidade || 0) + 1)} />
+                        </QuantityControl>
+                      </div>
+                      <ProductPrice>
+                        Subtotal: {(item.productPrice * (item.quantidade || 0)).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}
+                      </ProductPrice>
+                      {item.bulk && (
+                        <div>
+                          <LabelPeso htmlFor={`weight_${item.id}`}>Peso em gramas:</LabelPeso>
+                          <GranelInput
+                            type="number"
+                            id={`weight_${item.id}`}
+                            value={item.peso || ''}
+                            onChange={(e) => updateWeight(item.id, parseFloat(e.target.value))}
+                          />
+                        </div>
+                      )}
                     </div>
-                  )}
+                  </div>
+                  <CartActions>
+                    <TrashIcon onClick={() => removeFromCart(item.id)} />
+                  </CartActions>
                 </CartItemDetails>
-                <CartActions>
-                  <QuantityControl>
-                    <FaMinus onClick={() => updateQuantity(item.id, (item.quantidade || 0) - 1)} />
-                    <span>{item.quantidade}</span>
-                    <FaPlus onClick={() => updateQuantity(item.id, (item.quantidade || 0) + 1)} />
-                  </QuantityControl>
-                  <FaTrashAlt onClick={() => removeFromCart(item.id)} />
-                </CartActions>
               </CartItem>
             ))
           )}
