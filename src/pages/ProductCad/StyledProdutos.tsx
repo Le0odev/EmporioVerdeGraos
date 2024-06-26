@@ -10,6 +10,9 @@ export const ProductContainer = styled.div`
   border-radius: 8px;
   padding: 16px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+
+  
+
 `;
 
 export const Section = styled.div`
@@ -20,6 +23,9 @@ export const Section = styled.div`
   background-color: #f9f9f9;
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+
+  
+
 `;
 
 export const SectionTitle = styled.h1`
@@ -124,6 +130,10 @@ export const Card = styled.div`
   border-radius: 10px;
   background-color: #5492a6;
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+
+
+
+
 `;
 
 export const CardList = styled.ul`

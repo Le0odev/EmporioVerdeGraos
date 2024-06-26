@@ -6,17 +6,17 @@ export const VendaContainer = styled.div`
   display: flex;
   background-color: #fff;
   border: 1px solid #ddd;
-  border-radius: 10px;
+  border-radius: 8px;
   overflow: hidden;
-  margin-bottom: 1.5rem;
+  margin-bottom: 1rem;
   height: 90vh;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 `;
 
 // Seção de pesquisa de produtos
 export const SearchSection = styled.div`
   flex: 2;
-  padding: 2rem;
+  padding: 1.5rem;
   display: flex;
   flex-direction: column;
   border-right: 1px solid #ddd;
@@ -26,7 +26,7 @@ export const SearchSection = styled.div`
 // Seção do carrinho de compras
 export const VendaSection = styled.div`
   flex: 1;
-  padding: 2rem;
+  padding: 1.5rem;
   background-color: #fafafa;
   display: flex;
   flex-direction: column;
@@ -34,10 +34,10 @@ export const VendaSection = styled.div`
 
 // Estilos para rótulos
 export const Label = styled.label`
-  margin-bottom: 10px;
-  color: #333;
+  margin-bottom: 8px;
+  color: #555;
   font-weight: bold;
-  font-size: 1.1rem;
+  font-size: 1rem;
 `;
 
 // Rótulo específico para peso
@@ -49,9 +49,9 @@ export const LabelPeso = styled(Label)`
 export const Input = styled.input`
   width: 100%;
   padding: 12px;
-  margin-bottom: 1.5rem;
+  margin-bottom: 16px;
   border: 1px solid #ccc;
-  border-radius: 6px;
+  border-radius: 4px;
   font-size: 16px;
   transition: border-color 0.3s ease;
 
@@ -86,14 +86,14 @@ export const ProductCard = styled.div`
   align-items: center;
   padding: 1.5rem;
   border: 1px solid #ddd;
-  border-radius: 10px;
+  border-radius: 8px;
   cursor: pointer;
   background-color: #fff;
   transition: background-color 0.3s ease, box-shadow 0.3s ease;
 
   &:hover {
     background-color: #f9f9f9;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   }
 `;
 
@@ -109,8 +109,6 @@ export const ProductImage = styled.img`
   ${ProductCard}:hover & {
     transform: scale(1.1);
   }
-
-  
 `;
 
 // Botão genérico
@@ -133,7 +131,7 @@ export const Button = styled.button`
 // Nome do produto
 export const ProductName = styled.span`
   font-weight: bold;
-  margin-bottom: 10px;
+  margin-bottom: 8px;
   text-align: center;
   font-size: 1rem;
   color: #333;
@@ -146,6 +144,15 @@ export const ProductPrice = styled.span`
   margin-top: 0.8rem;
   margin-bottom: 1rem;
   font-weight: bold;
+`;
+
+// Título da seção do carrinho
+export const CartTitle = styled.h3`
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+  text-align: center;
+  margin-top: -1rem; // Ajusta a margem superior
+  color: #333;
 `;
 
 // Lista de itens do carrinho
@@ -165,14 +172,13 @@ export const CartItem = styled.li`
   padding: 1rem;
   border-bottom: 1px solid #ccc;
   background-color: #fff;
-  border-radius: 8px;
-  margin-bottom: 1rem;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-  transition: background-color 0.3s ease, transform 0.3s ease;
+  border-radius: 4px;
+  margin-bottom: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  transition: background-color 0.3s ease;
 
   &:hover {
     background-color: #f9f9f9;
-    transform: scale(1.00);
   }
 `;
 
@@ -222,10 +228,10 @@ export const QuantityControl = styled.div`
     cursor: pointer;
     color: #007bff;
     transition: color 0.3s ease;
+  }
 
-    &:hover {
-      color: #0056b3;
-    }
+  svg:hover {
+    color: #0056b3;
   }
 `;
 
@@ -234,6 +240,7 @@ export const TrashIcon = styled(FaTrashAlt)`
   cursor: pointer;
   color: red;
   transition: color 0.3s ease;
+  margin-left: 0.5rem; // Adiciona espaço para a margem esquerda
 
   &:hover {
     color: #c82333;
@@ -248,12 +255,11 @@ export const CheckoutButton = styled(Button)`
   color: #fff;
   border: none;
   padding: 0.75rem;
-  border-radius: 6px;
-  transition: background-color 0.3s ease, transform 0.3s ease;
+  border-radius: 4px;
+  transition: background-color 0.3s ease;
 
   &:hover {
     background-color: #218838;
-    transform: scale(1.05);
   }
 `;
 
@@ -265,11 +271,10 @@ export const GranelInput = styled(Input)`
 // Container para subtotal
 export const SubtotalContainer = styled.div`
   padding: 1rem;
-  background-color: #fff;
+  background-color: #f0f0f0;
   border: 1px solid #ddd;
-  border-radius: 6px;
+  border-radius: 4px;
   margin-top: 1rem;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -278,7 +283,7 @@ export const SubtotalContainer = styled.div`
 // Rótulo para subtotal
 export const SubtotalLabel = styled.h3`
   margin-bottom: 0.5rem;
-  color: #333;
+  color: #555;
   font-size: 1.2rem;
 `;
 
@@ -300,65 +305,37 @@ export const EmptyCartMessage = styled.p`
 
 // Seção de checkout
 export const CheckoutSection = styled.div`
-  padding: 2rem;
+  padding: 1.5rem;
   margin-top: 1.5rem;
   border-top: 1px solid #ddd;
   background-color: #f9f9f9;
-  border-radius: 6px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 4px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 `;
 
-// Título da seção de checkout
-export const CheckoutTitle = styled.h2`
-  margin-bottom: 1rem;
-  font-size: 1.5rem;
-  color: #333;
-`;
-
-// Mensagem de checkout
-export const CheckoutMessage = styled.p`
-  margin-bottom: 1rem;
+// Estilos para botões de controle de quantidade
+export const QuantityButton = styled(Button)`
+  padding: 0.2rem 0.5rem;
+  margin: 0 0.2rem;
   font-size: 1rem;
-  color: #555;
-`;
-
-// Detalhes do checkout (por exemplo, subtotal)
-export const CheckoutDetails = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-top: 1rem;
-`;
-
-// Rótulo de checkout (por exemplo, "Subtotal:")
-export const CheckoutLabel = styled.span`
-  font-weight: bold;
-  color: #555;
-`;
-
-// Valor de checkout (por exemplo, valor do subtotal)
-export const CheckoutValue = styled.span`
+  background-color: #f8f9fa;
   color: #007bff;
-  font-weight: bold;
+
+  &:hover {
+    background-color: #e2e6ea;
+  }
 `;
 
-// Total de checkout (por exemplo, total a pagar)
-export const CheckoutTotal = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+// Alerta para mensagens
+export const AlertMessage = styled.p`
+  color: green;
+  font-weight: bold;
+  margin-top: 10px;
+  font-size: 1rem;
+  text-align: center; // Centraliza o texto
+`;
+
+// Botão de pesquisa
+export const SearchButton = styled(Button)`
   margin-top: 1rem;
-`;
-
-// Rótulo para total de checkout
-export const CheckoutTotalLabel = styled.h3`
-  font-size: 1.5rem;
-  color: #555;
-`;
-
-// Valor total de checkout
-export const CheckoutTotalAmount = styled.span`
-  font-size: 1.5rem;
-  font-weight: bold;
-  color: #28a745;
 `;

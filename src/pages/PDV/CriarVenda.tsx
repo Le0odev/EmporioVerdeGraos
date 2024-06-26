@@ -28,7 +28,9 @@ import {
   EmptyCartMessage,
   CheckoutSection,
   LabelPeso,
-  TrashIcon
+  TrashIcon,
+  CartTitle,
+  AlertMessage
 } from './StyledVenda';
 
 interface Produto {
@@ -209,10 +211,8 @@ const CriarVenda: React.FC = () => {
             value={searchTermByCodeBar}
             onChange={(e) => setSearchTermByCodeBar(e.target.value)}
           />
-
         </Form>
         <Form onSubmit={handleSearchByNameSubmit}>
-          
           <Input
             type='text'
             placeholder='Procure um produto...'
@@ -221,9 +221,8 @@ const CriarVenda: React.FC = () => {
             onChange={(e) => setSearchTermByName(e.target.value)}
           />
           <Button type="submit">Pesquisar</Button>
-
         </Form>
-        {autoAddFeedback && <p>{autoAddFeedback}</p>} {/* Exibição do feedback */}
+        {autoAddFeedback && <AlertMessage>{autoAddFeedback}</AlertMessage>} {/* Exibição do feedback */}
         <ProductGrid>
           {produtos.map((produto) => (
             <ProductCard key={produto.id} onClick={() => addToCart(produto)}>
@@ -236,7 +235,7 @@ const CriarVenda: React.FC = () => {
         </ProductGrid>
       </SearchSection>
       <VendaSection>
-        <h2>Carrinho</h2>
+        <CartTitle>Checkout</CartTitle>
         <CartList>
           {carrinho.length === 0 ? (
             <EmptyCartMessage>Seu carrinho está vazio.</EmptyCartMessage>
@@ -248,26 +247,30 @@ const CriarVenda: React.FC = () => {
                     <ProductImage src={item.imageUrl} alt={item.productName} style={{ width: '50px', height: '50px', marginRight: '10px' }} />
                     <div>
                       <ProductName>{item.productName}</ProductName>
-                      <div>
-                        <span>Quantidade: {item.quantidade}</span>
-                        <QuantityControl>
-                          <FaMinus onClick={() => updateQuantity(item.id, (item.quantidade || 0) - 1)} />
-                          <span>{item.quantidade}</span>
-                          <FaPlus onClick={() => updateQuantity(item.id, (item.quantidade || 0) + 1)} />
-                        </QuantityControl>
-                      </div>
-                      <ProductPrice>
-                        Subtotal: {(item.productPrice * (item.quantidade || 0)).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}
-                      </ProductPrice>
-                      {item.bulk && (
+                      {item.bulk ? (
                         <div>
                           <LabelPeso htmlFor={`weight_${item.id}`}>Peso em gramas:</LabelPeso>
                           <GranelInput
+                            placeholder='Gramas:'
                             type="number"
                             id={`weight_${item.id}`}
                             value={item.peso || ''}
                             onChange={(e) => updateWeight(item.id, parseFloat(e.target.value))}
                           />
+                          <ProductPrice>
+                            Subtotal: {(item.productPrice * (item.peso || 0) / 1000).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}
+                          </ProductPrice>
+                        </div>
+                      ) : (
+                        <div>
+                          <QuantityControl>
+                            <FaMinus onClick={() => updateQuantity(item.id, (item.quantidade || 0) - 1)} />
+                            <span>{item.quantidade}</span>
+                            <FaPlus onClick={() => updateQuantity(item.id, (item.quantidade || 0) + 1)} />
+                          </QuantityControl>
+                          <ProductPrice>
+                            Subtotal: {(item.productPrice * (item.quantidade || 0)).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}
+                          </ProductPrice>
                         </div>
                       )}
                     </div>
