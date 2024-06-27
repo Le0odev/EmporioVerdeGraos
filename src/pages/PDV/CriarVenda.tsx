@@ -21,7 +21,6 @@ import {
   CartItem,
   CartItemDetails,
   CartActions,
-  GranelInput,
   SubtotalContainer,
   SubtotalLabel,
   SubtotalAmount,
@@ -30,7 +29,8 @@ import {
   LabelPeso,
   TrashIcon,
   CartTitle,
-  AlertMessage
+  AlertMessage,
+  GranelInput
 } from './StyledVenda';
 
 interface Produto {
@@ -105,7 +105,6 @@ const CriarVenda: React.FC = () => {
       setCarrinho([...carrinho, { ...produto, quantidade: 1 }]);
     }
     setCodigoBarras('');
-
   };
 
   const updateQuantity = (id: number, quantidade: number | null) => {
@@ -250,13 +249,16 @@ const CriarVenda: React.FC = () => {
                       {item.bulk ? (
                         <div>
                           <LabelPeso htmlFor={`weight_${item.id}`}>Peso em gramas:</LabelPeso>
-                          <GranelInput
-                            placeholder='Gramas:'
-                            type="number"
-                            id={`weight_${item.id}`}
-                            value={item.peso || ''}
-                            onChange={(e) => updateWeight(item.id, parseFloat(e.target.value))}
-                          />
+                          <div style={{ position: 'relative' }}>
+                            <GranelInput
+                              placeholder='Gramas:'
+                              type="number"
+                              id={`weight_${item.id}`}
+                              value={item.peso || ''}
+                              onChange={(e) => updateWeight(item.id, parseFloat(e.target.value))}
+                              style={{ paddingRight: '20px' }}
+                            />
+                          </div>
                           <ProductPrice>
                             Subtotal: {(item.productPrice * (item.peso || 0) / 1000).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}
                           </ProductPrice>

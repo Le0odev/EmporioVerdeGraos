@@ -265,6 +265,7 @@ export const CheckoutButton = styled(Button)`
 
 // Input específico para granel (reutiliza estilos de Input)
 export const GranelInput = styled(Input)`
+  width: 80%;
   margin-top: 10px;
 `;
 
