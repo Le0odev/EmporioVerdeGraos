@@ -32,6 +32,7 @@ import {
   AlertMessage,
   GranelInput
 } from './StyledVenda';
+import jsPDF from 'jspdf';
 
 interface Produto {
   id: number;
@@ -51,6 +52,9 @@ const CriarVenda: React.FC = () => {
   const [carrinho, setCarrinho] = useState<Produto[]>([]);
   const [autoAddFeedback, setAutoAddFeedback] = useState<string>('');
   const [codigoBarras, setCodigoBarras] = useState<string>('');
+
+  // Estado para controle da forma de pagamento
+  const [formaDePagamento, setFormaDePagamento] = useState<string>('');
 
   const searchProdutosByCodeBar = async (codeBar: string) => {
     try {
@@ -136,6 +140,10 @@ const CriarVenda: React.FC = () => {
         isBulk: item.bulk
       }));
 
+      // Aqui você deve implementar a lógica para definir a forma de pagamento selecionada
+      // Atualmente, está sendo simulado como 'Cartão de Crédito'
+      setFormaDePagamento('Cartão de Crédito');
+
       const response = await axios.post('http://localhost:8080/sales/create', vendaItems, {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -147,6 +155,7 @@ const CriarVenda: React.FC = () => {
 
       setCarrinho([]);
       alert('Venda finalizada com sucesso!');
+      handlePrintReceipt();
 
     } catch (error) {
       console.error('Erro ao realizar checkout:', error);
@@ -186,6 +195,101 @@ const CriarVenda: React.FC = () => {
     searchProdutosByCodeBar(searchTermByCodeBar);
   };
 
+  const handlePrintReceipt = () => {
+    // Criar uma nova instância do jsPDF
+    const doc = new jsPDF({
+        orientation: 'portrait', // Orientação do documento (retrato)
+        unit: 'mm', // Unidade de medida (milímetros)
+        format: [80, 297] // Formato do papel (80mm de largura, 297mm de altura para rolo)
+    });
+
+    // Configurar o cabeçalho do cupom
+    const dataHora = new Date().toLocaleString('pt-BR');
+    const nomeEmpresa = 'Empório Verde Grãos';
+    const cnpjEmpresa = '81.991.676/1777';
+    const enderecoEmpresa = 'Centro, Abreu e Lima';
+    const telefoneEmpresa = '(81) 9 9167-6177';
+
+    // Título e informações da empresa centralizados
+    doc.setFontSize(12);
+    doc.setFont('helvetica', 'bold');
+    doc.text('Cupom de Compra', 40, 10, { align: 'center' });
+
+    doc.setFont('helvetica', 'normal');
+    doc.text(`${nomeEmpresa}`, 10, 20);
+    doc.text(`CNPJ: ${cnpjEmpresa}`, 10, 25);
+    doc.text(`Endereço: ${enderecoEmpresa}`, 10, 30);
+    doc.text(`Telefone: ${telefoneEmpresa}`, 10, 35);
+    doc.text(`Data e Hora: ${dataHora}`, 10, 40);
+
+    // Linha separadora
+    doc.setLineWidth(0.5);
+    doc.line(10, 45, 70, 45);
+
+    // Adicionar itens do carrinho
+    const startY = 50;
+    const lineHeight = 4; // Reduzi o espaçamento entre linhas para 8mm
+    let currentY = startY;
+
+    carrinho.forEach((item, index) => {
+        const line1 = `Produto: ${item.productName}`;
+        const line2 = item.bulk ? `Peso: ${item.peso}g` : `Quantidade: ${item.quantidade}`;
+        const line3 = `Subtotal: R$ ${item.bulk ? (item.productPrice * (item.peso || 0) / 1000).toFixed(2) : (item.productPrice * (item.quantidade || 0)).toFixed(2)}`;
+
+        doc.setFontSize(10);
+        doc.text(line1, 10, currentY);
+        doc.text(line2, 10, currentY + lineHeight);
+        doc.text(line3, 10, currentY + lineHeight * 2);
+
+        // Adicionar linha divisória após cada item
+        doc.line(10, currentY + lineHeight * 3, 70, currentY + lineHeight * 3);
+
+        currentY += lineHeight * 4; // Ajustar para o próximo item
+    });
+
+    // Adicionar subtotal
+    const subtotal = calcularSubtotal().toFixed(2);
+    doc.setFontSize(12);
+    doc.text(`Subtotal: R$ ${subtotal}`, 10, currentY + lineHeight);
+
+    // Adicionar forma de pagamento
+    doc.text(`Pagamento: ${formaDePagamento}`, 10, currentY + lineHeight * 2);
+
+    // Linha separadora final
+    doc.line(10, currentY + lineHeight * 3, 70, currentY + lineHeight * 3);
+
+    // Salvar o PDF e abrir a impressão
+    const pdfBlob = doc.output('blob') as Blob;
+    printPDF(pdfBlob);
+};
+
+const printPDF = (pdfBlob: Blob) => {
+  const pdfUrl = URL.createObjectURL(pdfBlob);
+
+  // Abrir uma nova janela para a impressão
+  const printWindow = window.open(pdfUrl);
+  
+  if (!printWindow) {
+      alert('Não foi possível abrir a janela de impressão. Verifique se as configurações do navegador permitem abrir novas janelas.');
+      return;
+  }
+
+  printWindow.onload = () => {
+      // Espera um pouco para garantir que o PDF seja carregado na janela de impressão
+      setTimeout(() => {
+          printWindow.print();
+          printWindow.onfocus = () => {
+              printWindow.close(); // Fechar a janela de impressão após a impressão ser concluída
+          };
+      }, 1000); // Ajuste o tempo de espera conforme necessário
+  };
+
+  // Revogar a URL do Blob após a impressão
+  URL.revokeObjectURL(pdfUrl);
+};
+
+
+
   useEffect(() => {
     if (searchTermByName) {
       const debounceSearch = setTimeout(() => {
@@ -221,7 +325,7 @@ const CriarVenda: React.FC = () => {
           />
           <Button type="submit">Pesquisar</Button>
         </Form>
-        {autoAddFeedback && <AlertMessage>{autoAddFeedback}</AlertMessage>} {/* Exibição do feedback */}
+        {autoAddFeedback && <AlertMessage>{autoAddFeedback}</AlertMessage>}
         <ProductGrid>
           {produtos.map((produto) => (
             <ProductCard key={produto.id} onClick={() => addToCart(produto)}>
@@ -292,7 +396,12 @@ const CriarVenda: React.FC = () => {
               <SubtotalAmount>{calcularSubtotal().toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</SubtotalAmount>
             </SubtotalContainer>
             <CheckoutSection>
+              {/* Botões para escolha de forma de pagamento */}
+              <Button onClick={() => setFormaDePagamento('Dinheiro')}>Dinheiro</Button>
+              <Button onClick={() => setFormaDePagamento('Cartão de Crédito')}>Cartão de Crédito</Button>
+              <Button onClick={() => setFormaDePagamento('PIX')}>PIX</Button>
               <CheckoutButton onClick={handleCheckout}>Finalizar Venda</CheckoutButton>
+              <CheckoutButton onClick={handlePrintReceipt}>Imprimir Cupom</CheckoutButton>
             </CheckoutSection>
           </>
         )}
