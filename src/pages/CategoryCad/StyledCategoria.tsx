@@ -152,7 +152,7 @@ export const EditIcon = styled(FaEdit)`
   margin-right: 10px;
   color: #007bff;
 
-  &:hover {
+  &:hover {a
     font-size: 22px;
     color: ;
   }
@@ -166,5 +166,25 @@ export const DeleteIcon = styled(FaTrashAlt)`
   &:hover {
     font-size: 22px;
     color: red;
+  }
+`;
+
+export const PaginationContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+`;
+
+export const PageButton = styled.span<{ active?: boolean }>`
+  padding: 8px;
+  margin: 0 4px;
+  cursor: pointer;
+  border-radius: 4px;
+  background-color: ${props => (props.active ? '#007bff' : '#ddd')};
+  color: ${props => (props.active ? '#fff' : '#333')};
+  transition: background-color 0.3s ease, color 0.3s ease;
+
+  &:hover {
+    background-color: ${props => (props.active ? '#0056b3' : '#ccc')};
   }
 `;

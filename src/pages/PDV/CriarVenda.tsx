@@ -30,7 +30,9 @@ import {
   TrashIcon,
   CartTitle,
   AlertMessage,
-  GranelInput
+  GranelInput,
+  PaymentButtonsContainer,
+  PaymentButton
 } from './StyledVenda';
 import jsPDF from 'jspdf';
 
@@ -71,7 +73,8 @@ const CriarVenda: React.FC = () => {
 
         setAutoAddFeedback(`Produto "${produtoEncontrado.productName}" adicionado automaticamente.`);
         setSearchTermByCodeBar('');
-
+        
+        
       } else {
         setAutoAddFeedback('Produto não encontrado.');
       }
@@ -155,6 +158,7 @@ const CriarVenda: React.FC = () => {
 
       setCarrinho([]);
       alert('Venda finalizada com sucesso!');
+      setAutoAddFeedback('');
       handlePrintReceipt();
 
     } catch (error) {
@@ -396,12 +400,27 @@ const printPDF = (pdfBlob: Blob) => {
               <SubtotalAmount>{calcularSubtotal().toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</SubtotalAmount>
             </SubtotalContainer>
             <CheckoutSection>
-              {/* Botões para escolha de forma de pagamento */}
-              <Button onClick={() => setFormaDePagamento('Dinheiro')}>Dinheiro</Button>
-              <Button onClick={() => setFormaDePagamento('Cartão de Crédito')}>Cartão de Crédito</Button>
-              <Button onClick={() => setFormaDePagamento('PIX')}>PIX</Button>
+              <PaymentButtonsContainer>
+                <PaymentButton 
+                  onClick={() => setFormaDePagamento('Dinheiro')} 
+                  selected={formaDePagamento === 'Dinheiro'}
+                >
+                  Dinheiro
+                </PaymentButton>
+                <PaymentButton 
+                  onClick={() => setFormaDePagamento('Cartão de Crédito')} 
+                  selected={formaDePagamento === 'Cartão de Crédito'}
+                >
+                  Cartão de Crédito
+                </PaymentButton>
+                <PaymentButton 
+                  onClick={() => setFormaDePagamento('PIX')} 
+                  selected={formaDePagamento === 'PIX'}
+                >
+                  PIX
+                </PaymentButton>
+              </PaymentButtonsContainer>
               <CheckoutButton onClick={handleCheckout}>Finalizar Venda</CheckoutButton>
-              <CheckoutButton onClick={handlePrintReceipt}>Imprimir Cupom</CheckoutButton>
             </CheckoutSection>
           </>
         )}

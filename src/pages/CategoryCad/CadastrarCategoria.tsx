@@ -19,7 +19,8 @@ import {
   CategoryName,
   EditIcon,
   DeleteIcon,
- 
+  PaginationContainer,
+  PageButton,
 } from './StyledCategoria';
 import { useAuth } from '../Login/authContext';
 
@@ -35,24 +36,32 @@ const CadastrarCategoria: React.FC = () => {
   const [categorias, setCategorias] = useState<Categoria[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [editId, setEditId] = useState<string | null>(null);
+  const [currentPage, setCurrentPage] = useState<number>(0);
+  const [pageSize, setPageSize] = useState<number>(5); // Tamanho padrão da página
+  const [totalPages, setTotalPages] = useState<number>(0);
   const { token } = useAuth();
 
-  useEffect(() => {
-    const fetchCategorias = async () => {
-      try {
-        const response = await axios.get('http://localhost:8080/category', {
-          headers: {
-            Authorization: `Bearer ${token}`
-          }
-        });
-        setCategorias(response.data);
-      } catch (error) {
-        console.error('Erro ao obter categorias', error);
-      }
-    };
+  const fetchCategorias = async () => {
+    try {
+      const response = await axios.get('http://localhost:8080/category/pages', {
+        params: {
+          page: currentPage,
+          size: pageSize
+        },
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+      setCategorias(response.data.content);
+      setTotalPages(response.data.totalPages);
+    } catch (error) {
+      console.error('Erro ao obter categorias', error);
+    }
+  };
 
+  useEffect(() => {
     fetchCategorias();
-  }, [token]);
+  }, [currentPage, pageSize, token]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -117,9 +126,9 @@ const CadastrarCategoria: React.FC = () => {
 
       return () => clearTimeout(debounceSearch); // Limpar timeout se o componente desmontar ou searchTerm mudar
     } else {
-      setCategorias([]); // Limpar lista se não houver termo de pesquisa
+      fetchCategorias(); // Atualiza a lista de categorias ao limpar o termo de pesquisa
     }
-  }, [searchTerm]);
+  }, [searchTerm, token]); // Inclua 'token' como dependência
 
   const handleEdit = (categoria: Categoria) => {
     // Lógica para edição
@@ -142,6 +151,47 @@ const CadastrarCategoria: React.FC = () => {
     }
   };
 
+  const handleNextPage = () => {
+    setCurrentPage(currentPage + 1);
+  };
+
+  const handlePrevPage = () => {
+    setCurrentPage(currentPage - 1);
+  };
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+  };
+
+  const handlePageSizeChange = (size: number) => {
+    setPageSize(size);
+    setCurrentPage(0); // Reinicia para a primeira página ao mudar o tamanho da página
+  };
+
+  const renderPagination = () => {
+    const pages = Array.from(Array(totalPages).keys());
+
+    return (
+      <PaginationContainer>
+      <PageButton onClick={handlePrevPage} className={currentPage === 0 ? 'disabled' : ''}>
+        Anterior
+      </PageButton>
+      {pages.map(page => (
+        <PageButton
+          key={page}
+          onClick={() => handlePageChange(page)}
+          active={currentPage === page}
+        >
+          {page + 1}
+        </PageButton>
+      ))}
+      <PageButton onClick={handleNextPage} className={currentPage === totalPages - 1 ? 'disabled' : ''}>
+        Próxima
+      </PageButton>
+    </PaginationContainer>
+    );
+  };
+
   return (
     <>
       <H1>Gerenciamento de categorias:</H1>
@@ -151,6 +201,7 @@ const CadastrarCategoria: React.FC = () => {
           <Form onSubmit={handleSubmit}>
             <Label htmlFor="nome">Nome da Categoria</Label>
             <Input
+              placeholder='Insira um nome...'
               type="text"
               id="nome"
               value={nome}
@@ -159,6 +210,7 @@ const CadastrarCategoria: React.FC = () => {
             />
             <Label htmlFor="descricao">Descrição</Label>
             <Input
+              placeholder='Insira uma descrição...'
               type="text"
               id="descricao"
               value={descricao}
@@ -187,20 +239,19 @@ const CadastrarCategoria: React.FC = () => {
               {categorias.length > 0 ? (
                 categorias.map((categoria) => (
                   <CardItem key={categoria.id}>
-              <div>
-                <CategoryName>{categoria.categoryName}</CategoryName> - {categoria.categoryDescription}
-              </div>
-            
-              <EditIcon onClick={() => handleEdit(categoria)} />
-              <DeleteIcon onClick={() => handleDelete(categoria.id)} />
-            
-              </CardItem>
+                    <div>
+                      <CategoryName>{categoria.categoryName}</CategoryName> - {categoria.categoryDescription}
+                    </div>
+                    <EditIcon onClick={() => handleEdit(categoria)} />
+                    <DeleteIcon onClick={() => handleDelete(categoria.id)} />
+                  </CardItem>
                 ))
               ) : (
                 <p>Nenhuma categoria encontrada</p>
               )}
             </CardList>
           </Card>
+          {renderPagination()}
         </Section>
       </CategoriaContainer>
     </>

@@ -247,21 +247,7 @@ export const TrashIcon = styled(FaTrashAlt)`
   }
 `;
 
-// Botão de checkout
-export const CheckoutButton = styled(Button)`
-  font-size: 1.2rem;
-  width: 100%;
-  background-color: #28a745;
-  color: #fff;
-  border: none;
-  padding: 0.75rem;
-  border-radius: 4px;
-  transition: background-color 0.3s ease;
 
-  &:hover {
-    background-color: #218838;
-  }
-`;
 
 // Input específico para granel (reutiliza estilos de Input)
 export const GranelInput = styled(Input)`
@@ -304,15 +290,7 @@ export const EmptyCartMessage = styled.p`
   font-size: 1.2rem;
 `;
 
-// Seção de checkout
-export const CheckoutSection = styled.div`
-  padding: 1.5rem;
-  margin-top: 1.5rem;
-  border-top: 1px solid #ddd;
-  background-color: #f9f9f9;
-  border-radius: 4px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-`;
+
 
 // Estilos para botões de controle de quantidade
 export const QuantityButton = styled(Button)`
@@ -336,7 +314,73 @@ export const AlertMessage = styled.p`
   text-align: center; // Centraliza o texto
 `;
 
-// Botão de pesquisa
-export const SearchButton = styled(Button)`
+// Contêiner de botões de pagamento
+export const PaymentButtonsContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin: 1rem 0;
+  width: 100%;
+`;
+
+// Botão de pagamento
+export const PaymentButton = styled.button<{ selected?: boolean }>`
+  background-color: ${({ selected }) => (selected ? '#007bff' : '#f8f9fa')};
+  color: ${({ selected }) => (selected ? '#fff' : '#007bff')};
+  border: 2px solid #007bff;
+  padding: 0.5rem 1.5rem;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background-color 0.3s, color 0.3s;
+  width: 150px;
+  text-align: center;
+
+  &:hover {
+    background-color: #0056b3;
+    color: #fff;
+  }
+`;
+
+// Botão de finalização de venda
+export const CheckoutButton = styled.button`
+  background-color: #28a745;
+  color: #fff;
+  border: none;
+  padding: 0.75rem 2rem;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1.2rem;
+  transition: background-color 0.3s;
+  width: 100%;
+  max-width: 500px;
+
+  &:hover {
+    background-color: #218838;
+  }
+`;
+
+// Seção de finalização de compra
+export const CheckoutSection = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid #ddd;
+  width: 100%;
+
+  @media (min-width: 768px) {
+    flex-direction: column;
+    align-items: center;
+  }
+`;
+
+// Contêiner de subtotal e finalização
+export const SubtotalCheckoutContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
   margin-top: 1rem;
 `;
