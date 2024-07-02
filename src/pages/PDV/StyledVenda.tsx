@@ -257,11 +257,16 @@ export const GranelInput = styled(Input)`
 
 // Container para subtotal
 export const SubtotalContainer = styled.div`
-  padding: 1rem;
+  width: 100%;
+  padding: 0.5rem;
   background-color: #f0f0f0;
   border: 1px solid #ddd;
   border-radius: 4px;
-  margin-top: 1rem;
+  margin-top:1rem;
+  margin-bottom: 1rem;
+  
+  
+  
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -269,7 +274,7 @@ export const SubtotalContainer = styled.div`
 
 // Rótulo para subtotal
 export const SubtotalLabel = styled.h3`
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.8rem;
   color: #555;
   font-size: 1.2rem;
 `;
@@ -314,20 +319,43 @@ export const AlertMessage = styled.p`
   text-align: center; // Centraliza o texto
 `;
 
-// Contêiner de botões de pagamento
-export const PaymentButtonsContainer = styled.div`
-  display: flex;
-  justify-content: center;
-  gap: 1rem;
-  margin: 1rem 0;
-  width: 100%;
+export const DiscountInput = styled.input`
+  width: 30%;
+  padding: 8px;
+  margin-bottom: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 16px;
+  transition: border-color 0.3s ease;
+  text-align: left; /* Alinha o texto à esquerda */
+
+  &:focus {
+    border-color: #007bff;
+  }
+
+  @media (max-width: 768px) {
+    font-size: 14px;
+  }
 `;
 
-// Botão de pagamento
+export const PaymentButtonsContainer = styled.div`
+  display: flex;
+  justify-content: center; 
+  gap: 1.4rem; 
+  margin: 0.8rem 0; 
+  width: 100%; /* Largura total do container */
+  
+
+  @media (max-width: 768px) {
+    flex-wrap: wrap; /* Quebra para várias linhas em telas menores */
+    gap: 0.5rem; /* Espaçamento menor entre os botões */
+  }
+`;
+
 export const PaymentButton = styled.button<{ selected?: boolean }>`
   background-color: ${({ selected }) => (selected ? '#007bff' : '#f8f9fa')};
   color: ${({ selected }) => (selected ? '#fff' : '#007bff')};
-  border: 2px solid #007bff;
+  border: 0.5px solid #007bff;
   padding: 0.5rem 1.5rem;
   border-radius: 5px;
   cursor: pointer;
@@ -342,12 +370,11 @@ export const PaymentButton = styled.button<{ selected?: boolean }>`
   }
 `;
 
-// Botão de finalização de venda
 export const CheckoutButton = styled.button`
   background-color: #28a745;
   color: #fff;
   border: none;
-  padding: 0.75rem 2rem;
+  padding: 0.75rem 1rem;
   border-radius: 5px;
   cursor: pointer;
   font-size: 1.2rem;
@@ -362,11 +389,11 @@ export const CheckoutButton = styled.button`
 
 // Seção de finalização de compra
 export const CheckoutSection = styled.div`
-  display: flex;
+  
   flex-direction: column;
   align-items: center;
-  margin-top: 1rem;
-  padding-top: 1rem;
+  margin-top: 0.8rem;
+  padding-top: 2rem;
   border-top: 1px solid #ddd;
   width: 100%;
 
@@ -377,10 +404,9 @@ export const CheckoutSection = styled.div`
 `;
 
 // Contêiner de subtotal e finalização
-export const SubtotalCheckoutContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 100%;
-  margin-top: 1rem;
-`;
+
+
+
+
+
+

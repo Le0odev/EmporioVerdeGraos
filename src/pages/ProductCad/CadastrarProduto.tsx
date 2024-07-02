@@ -174,7 +174,7 @@ const CadastrarProduto: React.FC = () => {
 
   const handleDelete = async (id: string) => {
     try {
-      await axios.delete(`http://localhost:8080/products/${id}`, {
+      await axios.delete(`http://localhost:8080/products/delete/${id}`, {
         headers: {
           Authorization: `Bearer ${token}`
         }

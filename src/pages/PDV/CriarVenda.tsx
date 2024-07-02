@@ -32,7 +32,8 @@ import {
   AlertMessage,
   GranelInput,
   PaymentButtonsContainer,
-  PaymentButton
+  PaymentButton,
+  DiscountInput
 } from './StyledVenda';
 import jsPDF from 'jspdf';
 
@@ -54,8 +55,7 @@ const CriarVenda: React.FC = () => {
   const [carrinho, setCarrinho] = useState<Produto[]>([]);
   const [autoAddFeedback, setAutoAddFeedback] = useState<string>('');
   const [codigoBarras, setCodigoBarras] = useState<string>('');
-
-  // Estado para controle da forma de pagamento
+  const [desconto, setDesconto] = useState<number>(0);
   const [formaDePagamento, setFormaDePagamento] = useState<string>('');
 
   const searchProdutosByCodeBar = async (codeBar: string) => {
@@ -179,6 +179,7 @@ const CriarVenda: React.FC = () => {
 
   const calcularSubtotal = () => {
     let subtotal = 0;
+  
     carrinho.forEach((item) => {
       if (!item.bulk) {
         subtotal += item.productPrice * (item.quantidade || 0);
@@ -186,8 +187,15 @@ const CriarVenda: React.FC = () => {
         subtotal += item.productPrice * (item.peso || 0) / 1000;
       }
     });
+  
+    // Calcular desconto em porcentagem
+    const descontoDecimal = desconto / 100; // Converter o desconto de porcentagem para decimal
+    const descontoValor = subtotal * descontoDecimal;
+    subtotal -= descontoValor;
+  
     return subtotal;
-  };
+  }
+  
 
   const handleSearchByNameSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -202,70 +210,81 @@ const CriarVenda: React.FC = () => {
   const handlePrintReceipt = () => {
     // Criar uma nova instância do jsPDF
     const doc = new jsPDF({
-        orientation: 'portrait', // Orientação do documento (retrato)
-        unit: 'mm', // Unidade de medida (milímetros)
-        format: [80, 297] // Formato do papel (80mm de largura, 297mm de altura para rolo)
+      orientation: 'portrait', // Orientação do documento (retrato)
+      unit: 'mm', // Unidade de medida (milímetros)
+      format: [80, 297] // Formato do papel (80mm de largura, 297mm de altura para rolo)
     });
-
+  
     // Configurar o cabeçalho do cupom
     const dataHora = new Date().toLocaleString('pt-BR');
     const nomeEmpresa = 'Empório Verde Grãos';
     const cnpjEmpresa = '81.991.676/1777';
     const enderecoEmpresa = 'Centro, Abreu e Lima';
     const telefoneEmpresa = '(81) 9 9167-6177';
-
+  
     // Título e informações da empresa centralizados
     doc.setFontSize(12);
     doc.setFont('helvetica', 'bold');
     doc.text('Cupom de Compra', 40, 10, { align: 'center' });
-
+  
     doc.setFont('helvetica', 'normal');
     doc.text(`${nomeEmpresa}`, 10, 20);
     doc.text(`CNPJ: ${cnpjEmpresa}`, 10, 25);
     doc.text(`Endereço: ${enderecoEmpresa}`, 10, 30);
     doc.text(`Telefone: ${telefoneEmpresa}`, 10, 35);
     doc.text(`Data e Hora: ${dataHora}`, 10, 40);
-
+  
     // Linha separadora
     doc.setLineWidth(0.5);
     doc.line(10, 45, 70, 45);
-
+  
     // Adicionar itens do carrinho
     const startY = 50;
-    const lineHeight = 4; // Reduzi o espaçamento entre linhas para 8mm
     let currentY = startY;
-
+    const lineHeight = 4.5; // Aumente o espaçamento entre as linhas aqui
+  
     carrinho.forEach((item, index) => {
-        const line1 = `Produto: ${item.productName}`;
-        const line2 = item.bulk ? `Peso: ${item.peso}g` : `Quantidade: ${item.quantidade}`;
-        const line3 = `Subtotal: R$ ${item.bulk ? (item.productPrice * (item.peso || 0) / 1000).toFixed(2) : (item.productPrice * (item.quantidade || 0)).toFixed(2)}`;
-
-        doc.setFontSize(10);
-        doc.text(line1, 10, currentY);
-        doc.text(line2, 10, currentY + lineHeight);
-        doc.text(line3, 10, currentY + lineHeight * 2);
-
-        // Adicionar linha divisória após cada item
-        doc.line(10, currentY + lineHeight * 3, 70, currentY + lineHeight * 3);
-
-        currentY += lineHeight * 4; // Ajustar para o próximo item
+      const line1 = `Produto: ${item.productName}`;
+      const line2 = item.bulk ? `Peso: ${item.peso}g` : `Quantidade: ${item.quantidade}`;
+      const line3 = `Subtotal: R$ ${item.bulk ? (item.productPrice * (item.peso || 0) / 1000).toFixed(2) : (item.productPrice * (item.quantidade || 0)).toFixed(2)}`;
+  
+      doc.setFontSize(10);
+      doc.text(line1, 10, currentY);
+      doc.text(line2, 10, currentY + lineHeight);
+      doc.text(line3, 10, currentY + lineHeight * 2);
+  
+      // Adicionar linha divisória após cada item
+      doc.line(10, currentY + lineHeight * 3, 70, currentY + lineHeight * 3);
+  
+      currentY += lineHeight * 4; // Ajuste o multiplicador conforme necessário para o espaçamento entre os itens
     });
-
-    // Adicionar subtotal
+  
+    // Espaçamento entre os itens do carrinho e o subtotal
+    currentY += lineHeight;
+  
     const subtotal = calcularSubtotal().toFixed(2);
     doc.setFontSize(12);
     doc.text(`Subtotal: R$ ${subtotal}`, 10, currentY + lineHeight);
-
-    // Adicionar forma de pagamento
-    doc.text(`Pagamento: ${formaDePagamento}`, 10, currentY + lineHeight * 2);
-
+    const subtotalComDesconto = (calcularSubtotal() - desconto).toFixed(2);
+    doc.text(`Desconto: R$ ${desconto.toFixed(2)}`, 10, currentY + lineHeight * 2);
+    doc.text(`Pagamento: ${formaDePagamento}`, 10, currentY  + lineHeight * 3 );
+  
+    // Espaçamento entre o total e a forma de pagamento
+    currentY += lineHeight * 4;
+  
+    // Adicionar total
+    doc.text(`Total: R$ ${subtotalComDesconto}`, 10, currentY + lineHeight * 0.5);
+    doc.line(10, currentY + lineHeight, 70, currentY + lineHeight);
+  
     // Linha separadora final
-    doc.line(10, currentY + lineHeight * 3, 70, currentY + lineHeight * 3);
-
+    doc.line(10, currentY + lineHeight * 2, 70, currentY + lineHeight * 2);
+  
     // Salvar o PDF e abrir a impressão
     const pdfBlob = doc.output('blob') as Blob;
     printPDF(pdfBlob);
-};
+  };
+  
+  
 
 const printPDF = (pdfBlob: Blob) => {
   const pdfUrl = URL.createObjectURL(pdfBlob);
@@ -395,12 +414,22 @@ const printPDF = (pdfBlob: Blob) => {
         </CartList>
         {carrinho.length > 0 && (
           <>
-            <SubtotalContainer>
-              <SubtotalLabel>Subtotal:</SubtotalLabel>
-              <SubtotalAmount>{calcularSubtotal().toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</SubtotalAmount>
-            </SubtotalContainer>
+            
             <CheckoutSection>
+
+              <Form>
+                <Label htmlFor='desconto'>Desconto (%):</Label>
+                <DiscountInput
+                  type='number'
+                  id='desconto'
+                  value={desconto}
+                  onChange={(e) => setDesconto(parseFloat(e.target.value))}
+                />
+              </Form>
+
               <PaymentButtonsContainer>
+              
+
                 <PaymentButton 
                   onClick={() => setFormaDePagamento('Dinheiro')} 
                   selected={formaDePagamento === 'Dinheiro'}
@@ -420,7 +449,14 @@ const printPDF = (pdfBlob: Blob) => {
                   PIX
                 </PaymentButton>
               </PaymentButtonsContainer>
+
+              <SubtotalContainer>
+              <SubtotalLabel>Subtotal:</SubtotalLabel>
+              <SubtotalAmount>{calcularSubtotal().toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</SubtotalAmount>
+            </SubtotalContainer>
+
               <CheckoutButton onClick={handleCheckout}>Finalizar Venda</CheckoutButton>
+              
             </CheckoutSection>
           </>
         )}
