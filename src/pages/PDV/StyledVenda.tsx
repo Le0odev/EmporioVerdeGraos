@@ -1,16 +1,34 @@
 import { FaTrashAlt } from 'react-icons/fa';
 import styled from 'styled-components';
 
-// Container principal da venda
+// Define a color palette
+const colors = {
+  primary: '#007bff',
+  secondary: '#f8f9fa',
+  accent: '#28a745',
+  background: '#fafafa',
+  text: '#333',
+  lightText: '#777',
+  border: '#ddd',
+  shadow: 'rgba(0, 0, 0, 0.1)',
+};
+
+// Define typography
+const fonts = {
+  primary: "'Roboto', sans-serif",
+  secondary: "'Open Sans', sans-serif",
+};
+
+// Principal container da venda
 export const VendaContainer = styled.div`
   display: flex;
-  background-color: #fff;
-  border: 1px solid #ddd;
+  background-color: ${colors.background};
+  border: 1px solid ${colors.border};
   border-radius: 8px;
   overflow: hidden;
   margin-bottom: 1rem;
   height: 90vh;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 8px ${colors.shadow};
 `;
 
 // Seção de pesquisa de produtos
@@ -19,15 +37,15 @@ export const SearchSection = styled.div`
   padding: 1.5rem;
   display: flex;
   flex-direction: column;
-  border-right: 1px solid #ddd;
-  background-color: #fdfdfd;
+  border-right: 1px solid ${colors.border};
+  background-color: ${colors.secondary};
 `;
 
 // Seção do carrinho de compras
 export const VendaSection = styled.div`
   flex: 1;
   padding: 1.5rem;
-  background-color: #fafafa;
+  background-color: ${colors.background};
   display: flex;
   flex-direction: column;
 `;
@@ -35,28 +53,25 @@ export const VendaSection = styled.div`
 // Estilos para rótulos
 export const Label = styled.label`
   margin-bottom: 8px;
-  color: #555;
+  color: ${colors.text};
   font-weight: bold;
   font-size: 1rem;
+  font-family: ${fonts.primary};
 `;
 
-// Rótulo específico para peso
-export const LabelPeso = styled(Label)`
-  // Reutiliza estilos de Label
-`;
-
-// Estilos para inputs
+// Input padrão
 export const Input = styled.input`
   width: 100%;
   padding: 12px;
   margin-bottom: 16px;
-  border: 1px solid #ccc;
+  border: 1px solid ${colors.border};
   border-radius: 4px;
   font-size: 16px;
   transition: border-color 0.3s ease;
+  font-family: ${fonts.secondary};
 
   &:focus {
-    border-color: #007bff;
+    border-color: ${colors.primary};
   }
 
   @media (max-width: 768px) {
@@ -85,15 +100,16 @@ export const ProductCard = styled.div`
   flex-direction: column;
   align-items: center;
   padding: 1.5rem;
-  border: 1px solid #ddd;
+  border: 1px solid ${colors.border};
   border-radius: 8px;
   cursor: pointer;
   background-color: #fff;
-  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
 
   &:hover {
-    background-color: #f9f9f9;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    background-color: ${colors.secondary};
+    box-shadow: 0 4px 8px ${colors.shadow};
+    transform: scale(1.00);
   }
 `;
 
@@ -113,7 +129,7 @@ export const ProductImage = styled.img`
 
 // Botão genérico
 export const Button = styled.button`
-  background-color: #007bff;
+  background-color: ${colors.primary};
   color: #fff;
   border: none;
   padding: 0.75rem 1.5rem;
@@ -123,7 +139,7 @@ export const Button = styled.button`
   transition: background-color 0.3s ease, transform 0.3s ease;
 
   &:hover {
-    background-color: #0056b3;
+    background-color: ${colors.primary}CC;
     transform: scale(1.05);
   }
 `;
@@ -134,28 +150,20 @@ export const ProductName = styled.span`
   margin-bottom: 8px;
   text-align: center;
   font-size: 1rem;
-  color: #333;
+  color: ${colors.text};
+  font-family: ${fonts.secondary};
 `;
 
 // Preço do produto
 export const ProductPrice = styled.span`
   font-size: 1.2rem;
-  color: #007bff;
+  color: ${colors.primary};
   margin-top: 0.8rem;
   margin-bottom: 1rem;
   font-weight: bold;
 `;
 
 // Título da seção do carrinho
-export const CartTitle = styled.h3`
-  font-size: 1.5rem;
-  margin-bottom: 1rem;
-  text-align: center;
-  margin-top: -1rem; // Ajusta a margem superior
-  color: #333;
-`;
-
-// Lista de itens do carrinho
 export const CartList = styled.ul`
   list-style-type: none;
   padding: 0;
@@ -170,15 +178,15 @@ export const CartItem = styled.li`
   justify-content: space-between;
   align-items: center;
   padding: 1rem;
-  border-bottom: 1px solid #ccc;
+  border-bottom: 1px solid ${colors.border};
   background-color: #fff;
   border-radius: 4px;
   margin-bottom: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 2px 4px ${colors.shadow};
   transition: background-color 0.3s ease;
 
   &:hover {
-    background-color: #f9f9f9;
+    background-color: ${colors.secondary};
   }
 `;
 
@@ -194,15 +202,16 @@ export const CartItemDetails = styled.div`
 export const CartItemName = styled.span`
   font-weight: bold;
   margin-bottom: 5px;
-  color: #333;
+  color: ${colors.text};
   font-size: 1rem;
+  font-family: ${fonts.secondary};
 `;
 
 // Preço do produto no carrinho
 export const CartItemPrice = styled.span`
   font-size: 1rem;
   font-weight: bold;
-  color: #007bff;
+  color: ${colors.primary};
   margin-top: 4px;
 `;
 
@@ -221,17 +230,17 @@ export const QuantityControl = styled.div`
   span {
     margin: 0 0.5rem;
     font-size: 1rem;
-    color: #333;
+    color: ${colors.text};
   }
 
   svg {
     cursor: pointer;
-    color: #007bff;
+    color: ${colors.primary};
     transition: color 0.3s ease;
   }
 
   svg:hover {
-    color: #0056b3;
+    color: ${colors.primary}CC;
   }
 `;
 
@@ -240,14 +249,12 @@ export const TrashIcon = styled(FaTrashAlt)`
   cursor: pointer;
   color: red;
   transition: color 0.3s ease;
-  margin-left: 0.5rem; // Adiciona espaço para a margem esquerda
+  margin-left: 0.5rem;
 
   &:hover {
     color: #c82333;
   }
 `;
-
-
 
 // Input específico para granel (reutiliza estilos de Input)
 export const GranelInput = styled(Input)`
@@ -259,14 +266,11 @@ export const GranelInput = styled(Input)`
 export const SubtotalContainer = styled.div`
   width: 100%;
   padding: 0.5rem;
-  background-color: #f0f0f0;
-  border: 1px solid #ddd;
+  background-color: ${colors.secondary};
+  border: 1px solid ${colors.border};
   border-radius: 4px;
-  margin-top:1rem;
+  margin-top: 1rem;
   margin-bottom: 1rem;
-  
-  
-  
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -275,121 +279,42 @@ export const SubtotalContainer = styled.div`
 // Rótulo para subtotal
 export const SubtotalLabel = styled.h3`
   margin-bottom: 0.8rem;
-  color: #555;
+  color: ${colors.text};
   font-size: 1.2rem;
+  font-family: ${fonts.primary};
 `;
 
 // Valor do subtotal
 export const SubtotalAmount = styled.span`
   font-size: 2rem;
   font-weight: bold;
-  color: #007bff;
+  color: ${colors.primary};
 `;
 
 // Mensagem de carrinho vazio
 export const EmptyCartMessage = styled.p`
   margin-top: 2rem;
   text-align: center;
-  color: #777;
+  color: ${colors.lightText};
   font-weight: bold;
   font-size: 1.2rem;
+  font-family: ${fonts.secondary};
 `;
 
-
-
-// Estilos para botões de controle de quantidade
-export const QuantityButton = styled(Button)`
-  padding: 0.2rem 0.5rem;
-  margin: 0 0.2rem;
-  font-size: 1rem;
-  background-color: #f8f9fa;
-  color: #007bff;
-
-  &:hover {
-    background-color: #e2e6ea;
-  }
-`;
-
-// Alerta para mensagens
-export const AlertMessage = styled.p`
-  color: green;
-  font-weight: bold;
-  margin-top: 10px;
-  font-size: 1rem;
-  text-align: center; // Centraliza o texto
-`;
-
-export const DiscountInput = styled.input`
-  width: 30%;
-  padding: 8px;
-  margin-bottom: 8px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  font-size: 16px;
-  transition: border-color 0.3s ease;
-  text-align: left; /* Alinha o texto à esquerda */
-
-  &:focus {
-    border-color: #007bff;
-  }
-
-  @media (max-width: 768px) {
-    font-size: 14px;
-  }
-`;
-
-export const PaymentButtonsContainer = styled.div`
-  display: flex;
-  justify-content: center; 
-  gap: 1.4rem; 
-  margin: 0.8rem 0; 
-  width: 100%; /* Largura total do container */
-  
-
-  @media (max-width: 768px) {
-    flex-wrap: wrap; /* Quebra para várias linhas em telas menores */
-    gap: 0.5rem; /* Espaçamento menor entre os botões */
-  }
-`;
-
-export const PaymentButton = styled.button<{ selected?: boolean }>`
-  background-color: ${({ selected }) => (selected ? '#007bff' : '#f8f9fa')};
-  color: ${({ selected }) => (selected ? '#fff' : '#007bff')};
-  border: 0.5px solid #007bff;
-  padding: 0.5rem 1.5rem;
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 1rem;
-  transition: background-color 0.3s, color 0.3s;
-  width: 150px;
-  text-align: center;
-
-  &:hover {
-    background-color: #0056b3;
-    color: #fff;
-  }
-`;
-
-export const CheckoutButton = styled.button`
-  background-color: #28a745;
-  color: #fff;
-  border: none;
-  padding: 0.75rem 1rem;
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 1.2rem;
-  transition: background-color 0.3s;
+// Botão para finalizar a venda
+export const CheckoutButton = styled(Button)`
   width: 100%;
-  max-width: 500px;
+  padding: 1rem;
+  font-size: 1.1rem;
+  background-color: ${colors.accent};
 
   &:hover {
-    background-color: #218838;
+    background-color: ${colors.accent}CC;
   }
 `;
 
 // Seção de finalização de compra
 export const CheckoutSection = styled.div`
-  
   flex-direction: column;
   align-items: center;
   margin-top: 0.8rem;
@@ -403,10 +328,121 @@ export const CheckoutSection = styled.div`
   }
 `;
 
-// Contêiner de subtotal e finalização
+// Alerta para mensagens
+export const AlertMessage = styled.p`
+  color: green;
+  font-weight: bold;
+  margin-top: 10px;
+  font-size: 1rem;
+  text-align: center;
+`;
 
+// Input para desconto
+export const DiscountInput = styled.input`
+  width: 30%;
+  padding: 8px;
+  margin-bottom: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 16px;
+  transition: border-color 0.3s ease;
+  text-align: left;
 
+  &:focus {
+    border-color: ${colors.primary};
+  }
 
+  @media (max-width: 768px) {
+    font-size: 14px;
+  }
+`;
 
+// Container para os botões de pagamento
+export const PaymentButtonsContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  gap: 1.6rem;
+  margin: 0.8rem 0;
+  width: 100%;
 
+  @media (max-width: 768px) {
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+`;
 
+// Botão de pagamento
+export const PaymentButton = styled.button<{ selected?: boolean }>`
+  background-color: ${({ selected }) => (selected ? colors.primary : colors.secondary)};
+  color: ${({ selected }) => (selected ? '#fff' : colors.primary)};
+  border: 0.5px solid ${colors.primary};
+  padding: 0.5rem 1.5rem;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 1.1rem;
+  transition: background-color 0.3s, color 0.3s;
+  width: 150px;
+  text-align: center;
+
+  &:hover {
+    background-color: ${colors.primary};
+    color: #fff;
+  }
+`;
+
+// Wrapper do modal
+export const ModalWrapper = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+
+  & > div {
+    background-color: white;
+    padding: 30px;
+    border-radius: 8px;
+    max-width: 400px;
+    width: 100%;
+    text-align: center;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+
+  h2 {
+    font-size: 26px;
+    margin-bottom: 10px;
+  }
+
+  button {
+    padding: 10px 20px;
+    margin: 12px;
+    background-color: ${colors.primary};
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+
+    &:hover {
+      background-color: #0056b3;
+    }
+  }
+`;
+
+// Label para peso
+export const LabelPeso = styled(Label)`
+  // Reutiliza estilos de Label
+`;
+
+export const CartTitle = styled.h3`
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+  text-align: center;
+  margin-top: -1rem; // Ajusta a margem superior
+  color: #333;
+`;

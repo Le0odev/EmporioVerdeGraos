@@ -23,7 +23,7 @@ import {
   CartActions,
   SubtotalContainer,
   SubtotalLabel,
-  SubtotalAmount,
+  SubtotalAmount, 
   EmptyCartMessage,
   CheckoutSection,
   LabelPeso,
@@ -32,8 +32,9 @@ import {
   AlertMessage,
   GranelInput,
   PaymentButtonsContainer,
+  DiscountInput,
   PaymentButton,
-  DiscountInput
+  ModalWrapper
 } from './StyledVenda';
 import jsPDF from 'jspdf';
 
@@ -57,6 +58,12 @@ const CriarVenda: React.FC = () => {
   const [codigoBarras, setCodigoBarras] = useState<string>('');
   const [desconto, setDesconto] = useState<number>(0);
   const [formaDePagamento, setFormaDePagamento] = useState<string>('');
+  const [showModal, setShowModal] = useState<boolean>(false); // Estado para controlar o modal
+  const [showPrintModal, setShowPrintModal] = useState<boolean>(false); // Estado para controlar o modal de impressão
+  const togglePrintModal = () => setShowPrintModal(!showPrintModal);
+
+  const toggleModal = () => setShowModal(!showModal); 
+
 
   const searchProdutosByCodeBar = async (codeBar: string) => {
     try {
@@ -91,6 +98,7 @@ const CriarVenda: React.FC = () => {
         headers: {
           Authorization: `Bearer ${token}`
         }
+        
       });
 
       setProdutos(response.data);
@@ -136,46 +144,65 @@ const CriarVenda: React.FC = () => {
 
   const handleCheckout = async () => {
     try {
+      if ( !formaDePagamento) {
+        alert('Por favor, preencha o desconto e a forma de pagamento antes de finalizar a venda.');
+        return;
+      }
+  
       const vendaItems = carrinho.map((item) => ({
         productId: item.id,
         quantity: item.bulk ? null : item.quantidade,
         weight: item.bulk ? item.peso : null,
         isBulk: item.bulk
       }));
-
-      // Aqui você deve implementar a lógica para definir a forma de pagamento selecionada
-      // Atualmente, está sendo simulado como 'Cartão de Crédito'
-      setFormaDePagamento('Cartão de Crédito');
-
-      const response = await axios.post('http://localhost:8080/sales/create', vendaItems, {
+  
+      const saleRequest = {
+        itemsSale: vendaItems,
+        discount: desconto,
+        methodPayment: formaDePagamento
+      };
+  
+      const response = await axios.post('http://localhost:8080/sales/create', saleRequest, {
         headers: {
           Authorization: `Bearer ${token}`,
           'Content-Type': 'application/json'
         }
       });
-
+  
       console.log('Resposta da API após checkout:', response.data);
-
+      
       setCarrinho([]);
-      alert('Venda finalizada com sucesso!');
+      setShowPrintModal(true); // Abrir modal de impressão após o checkout
+      toggleModal();
       setAutoAddFeedback('');
-      handlePrintReceipt();
+      setSearchTermByName('')
+      setDesconto(0);
 
+      
+
+  
     } catch (error) {
       console.error('Erro ao realizar checkout:', error);
       if (axios.isAxiosError(error)) {
         const axiosError = error as AxiosError;
         console.log('Status do erro:', axiosError.response?.status);
         console.log('Dados do erro:', axiosError.response?.data);
-
+  
         let errorMessage = 'Erro ao finalizar a venda. Por favor, tente novamente mais tarde.';
-
+  
         alert(errorMessage);
       } else {
         alert('Erro desconhecido ao finalizar a venda. Por favor, tente novamente mais tarde.');
       }
     }
   };
+
+  useEffect(() => {
+    if (carrinho.length === 0) {
+      setDesconto(0);
+    }
+  }, [carrinho]);
+
 
   const calcularSubtotal = () => {
     let subtotal = 0;
@@ -188,13 +215,11 @@ const CriarVenda: React.FC = () => {
       }
     });
   
-    // Calcular desconto em porcentagem
-    const descontoDecimal = desconto / 100; // Converter o desconto de porcentagem para decimal
-    const descontoValor = subtotal * descontoDecimal;
-    subtotal -= descontoValor;
+    const descontoPercentual = desconto || 0;
+    const subtotalComDesconto = subtotal - (subtotal * (descontoPercentual / 100));
   
-    return subtotal;
-  }
+    return { subtotal, subtotalComDesconto };
+  };
   
 
   const handleSearchByNameSubmit = (e: React.FormEvent) => {
@@ -206,6 +231,7 @@ const CriarVenda: React.FC = () => {
     e.preventDefault();
     searchProdutosByCodeBar(searchTermByCodeBar);
   };
+
 
   const handlePrintReceipt = () => {
     // Criar uma nova instância do jsPDF
@@ -262,18 +288,18 @@ const CriarVenda: React.FC = () => {
     // Espaçamento entre os itens do carrinho e o subtotal
     currentY += lineHeight;
   
-    const subtotal = calcularSubtotal().toFixed(2);
+    const { subtotal, subtotalComDesconto } = calcularSubtotal();
     doc.setFontSize(12);
-    doc.text(`Subtotal: R$ ${subtotal}`, 10, currentY + lineHeight);
-    const subtotalComDesconto = (calcularSubtotal() - desconto).toFixed(2);
-    doc.text(`Desconto: R$ ${desconto.toFixed(2)}`, 10, currentY + lineHeight * 2);
-    doc.text(`Pagamento: ${formaDePagamento}`, 10, currentY  + lineHeight * 3 );
+    doc.text(`Subtotal: R$ ${subtotal.toFixed(2)}`, 10, currentY + lineHeight);
+    doc.text(`Desconto: R$ ${(subtotal - subtotalComDesconto).toFixed(2)}`, 10, currentY + lineHeight * 2);
+    doc.text(`Total: R$ ${subtotalComDesconto.toFixed(2)}`, 10, currentY + lineHeight * 3);
+    doc.text(`Pagamento: ${formaDePagamento}`, 10, currentY + lineHeight * 4);
   
     // Espaçamento entre o total e a forma de pagamento
-    currentY += lineHeight * 4;
+    currentY += lineHeight * 5;
   
     // Adicionar total
-    doc.text(`Total: R$ ${subtotalComDesconto}`, 10, currentY + lineHeight * 0.5);
+    doc.text(`Total: R$ ${subtotalComDesconto.toFixed(2)}`, 10, currentY + lineHeight * 0.5);
     doc.line(10, currentY + lineHeight, 70, currentY + lineHeight);
   
     // Linha separadora final
@@ -283,34 +309,26 @@ const CriarVenda: React.FC = () => {
     const pdfBlob = doc.output('blob') as Blob;
     printPDF(pdfBlob);
   };
-  
-  
 
-const printPDF = (pdfBlob: Blob) => {
-  const pdfUrl = URL.createObjectURL(pdfBlob);
+  const printPDF = (pdfBlob: Blob) => {
+    const pdfUrl = URL.createObjectURL(pdfBlob);
 
-  // Abrir uma nova janela para a impressão
-  const printWindow = window.open(pdfUrl);
-  
-  if (!printWindow) {
-      alert('Não foi possível abrir a janela de impressão. Verifique se as configurações do navegador permitem abrir novas janelas.');
-      return;
-  }
+    const printWindow = window.open(pdfUrl);
+    
+    if (!printWindow) {
+        alert('Não foi possível abrir a janela de impressão. Verifique se as configurações do navegador permitem abrir novas janelas.');
+        return;
+    }
 
-  printWindow.onload = () => {
-      // Espera um pouco para garantir que o PDF seja carregado na janela de impressão
-      setTimeout(() => {
-          printWindow.print();
-          printWindow.onfocus = () => {
-              printWindow.close(); // Fechar a janela de impressão após a impressão ser concluída
-          };
-      }, 1000); // Ajuste o tempo de espera conforme necessário
+    printWindow.onload = () => {
+        setTimeout(() => {
+            printWindow.print();
+            URL.revokeObjectURL(pdfUrl);
+        }, 1000); // Aguarde 1 segundo para garantir que o PDF seja carregado antes da impressão
+    };
   };
 
-  // Revogar a URL do Blob após a impressão
-  URL.revokeObjectURL(pdfUrl);
-};
-
+  
 
 
   useEffect(() => {
@@ -324,6 +342,8 @@ const printPDF = (pdfBlob: Blob) => {
       setProdutos([]);
     }
   }, [searchTermByName]);
+
+  const { subtotal, subtotalComDesconto } = calcularSubtotal();
 
   return (
     <VendaContainer>
@@ -417,50 +437,60 @@ const printPDF = (pdfBlob: Blob) => {
             
             <CheckoutSection>
 
-              <Form>
+            <Form>
                 <Label htmlFor='desconto'>Desconto (%):</Label>
                 <DiscountInput
                   type='number'
                   id='desconto'
-                  value={desconto}
+                  value={desconto || '' }
                   onChange={(e) => setDesconto(parseFloat(e.target.value))}
-                />
+                      />
               </Form>
 
               <PaymentButtonsContainer>
-              
-
-                <PaymentButton 
-                  onClick={() => setFormaDePagamento('Dinheiro')} 
-                  selected={formaDePagamento === 'Dinheiro'}
-                >
-                  Dinheiro
-                </PaymentButton>
-                <PaymentButton 
-                  onClick={() => setFormaDePagamento('Cartão de Crédito')} 
-                  selected={formaDePagamento === 'Cartão de Crédito'}
-                >
-                  Cartão de Crédito
-                </PaymentButton>
-                <PaymentButton 
-                  onClick={() => setFormaDePagamento('PIX')} 
-                  selected={formaDePagamento === 'PIX'}
-                >
-                  PIX
-                </PaymentButton>
+                  <PaymentButton  onClick={() => setFormaDePagamento('Cartão')}
+                                  selected={formaDePagamento === 'Cartão'}>
+                      Cartão
+                    </PaymentButton>
+                    <PaymentButton  onClick={() => setFormaDePagamento('Dinheiro')} 
+                                    selected={formaDePagamento === 'Dinheiro'}>
+                      Dinheiro
+                  </PaymentButton>
+                  <PaymentButton  onClick={() => setFormaDePagamento('PIX')}
+                                  selected={formaDePagamento === 'PIX'}>                                               
+                      PIX
+                  </PaymentButton>
               </PaymentButtonsContainer>
 
               <SubtotalContainer>
               <SubtotalLabel>Subtotal:</SubtotalLabel>
-              <SubtotalAmount>{calcularSubtotal().toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</SubtotalAmount>
+              <SubtotalAmount>R$ {subtotalComDesconto.toFixed(2)}</SubtotalAmount>
             </SubtotalContainer>
 
-              <CheckoutButton onClick={handleCheckout}>Finalizar Venda</CheckoutButton>
-              
+            <CheckoutButton onClick={() => {
+            setShowModal(true);
+          }}>Finalizar Venda</CheckoutButton>          
             </CheckoutSection>
           </>
         )}
       </VendaSection>
+      {showModal && (
+        <ModalWrapper>
+          <div>
+            <h2>Deseja finalizar a venda?</h2>
+            
+            <div>
+              <Button onClick={() => {
+                handleCheckout();
+                handlePrintReceipt();
+              }}>Confirmar</Button>
+              <Button onClick={() => setShowModal(false)}>Cancelar</Button>
+            </div>
+          </div>
+        </ModalWrapper>
+      )}
+
+    
     </VendaContainer>
   );
 };
