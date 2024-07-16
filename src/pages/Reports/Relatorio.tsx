@@ -1,5 +1,3 @@
-// Arquivo Relatorio.tsx
-
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import {
@@ -10,10 +8,12 @@ import {
   FilterContainer,
   FilterLabel,
   FilterInput,
-  Button,
   TotalContainer,
   PaginationContainer,
   PaginationButton,
+  ButtonGroup,
+  InputGroup,
+  Button
 } from './StyledReport';
 import { useAuth } from '../Login/authContext';
 
@@ -31,27 +31,27 @@ const Relatorio = () => {
   const [totalSalesByDay, setTotalSalesByDay] = useState<number>(0);
   const [totalSalesByMonth, setTotalSalesByMonth] = useState<number>(0);
   const [currentPage, setCurrentPage] = useState<number>(1);
-  const [filterOption, setFilterOption] = useState<'day' | 'month'>('day'); // Opções: 'day' para filtro por dia, 'month' para filtro por mês
+  const [filterOption, setFilterOption] = useState<'day' | 'month'>('day');
   const { token } = useAuth();
 
   useEffect(() => {
-    if (filterOption === 'day') {
+    if (filterOption === 'day' && date) {
       fetchSalesByDay();
-    } else if (filterOption === 'month') {
+    } else if (filterOption === 'month' && month && year) {
       fetchTotalSalesByMonth();
     }
-  }, [filterOption]); // Atualiza as vendas sempre que a opção de filtro mudar
+  }, [filterOption, date, month, year]);
 
   const fetchSalesByDay = async () => {
     try {
       const response = await axios.get(`http://localhost:8080/report/day/${date}`, {
         headers: {
-          Authorization: `Bearer ${token}`
-        }
+          Authorization: `Bearer ${token}`,
+        },
       });
       setSales(response.data);
       calculateTotalByDay(response.data);
-      setTotalSalesByMonth(0); // Limpa o total de vendas por mês ao mudar para filtro por dia
+      setTotalSalesByMonth(0);
     } catch (error) {
       console.error('Erro ao buscar vendas por dia:', error);
     }
@@ -61,13 +61,13 @@ const Relatorio = () => {
     try {
       const response = await axios.get(`http://localhost:8080/report/month/${year}/${month}`, {
         headers: {
-          Authorization: `Bearer ${token}`
-        }
+          Authorization: `Bearer ${token}`,
+        },
       });
-      setSales([]); // Limpa os resultados ao mudar para filtro por mês
-      setTotalSalesByMonth(response.data); // Atualiza o total de vendas no mês diretamente com o valor retornado
-      setTotalSalesByDay(0); // Limpa o total de vendas por dia ao mudar para filtro por mês
-      setDate(''); // Limpa a data ao mudar para filtro por mês
+      setSales([]);
+      setTotalSalesByMonth(response.data);
+      setTotalSalesByDay(0);
+      setDate('');
     } catch (error) {
       console.error('Erro ao buscar total de vendas por mês:', error);
     }
@@ -80,16 +80,12 @@ const Relatorio = () => {
 
   const handleFilterOption = (option: 'day' | 'month') => {
     setFilterOption(option);
-    if (option === 'day') {
-      setDate('');
-      setSales([]);
-      setTotalSalesByDay(0);
-    } else if (option === 'month') {
-      setMonth(0);
-      setYear(0);
-      setSales([]);
-      setTotalSalesByMonth(0);
-    }
+    setSales([]);
+    setTotalSalesByDay(0);
+    setTotalSalesByMonth(0);
+    setDate('');
+    setMonth(0);
+    setYear(0);
   };
 
   const handlePageChange = (page: number) => {
@@ -105,83 +101,80 @@ const Relatorio = () => {
     <Container>
       <Title>Relatório de Vendas</Title>
 
-      <div style={{ marginBottom: '20px' }}>
-        <Button
-          style={{ marginRight: '10px', backgroundColor: filterOption === 'day' ? '#4CAF50' : '#DDD' }}
-          onClick={() => handleFilterOption('day')}
-        >
+      <ButtonGroup>
+        <Button active={filterOption === 'day'} onClick={() => handleFilterOption('day')}>
           Filtrar por Dia
         </Button>
-        <Button
-          style={{ backgroundColor: filterOption === 'month' ? '#4CAF50' : '#DDD' }}
-          onClick={() => handleFilterOption('month')}
-        >
+        <Button active={filterOption === 'month'} onClick={() => handleFilterOption('month')}>
           Filtrar por Mês
         </Button>
-      </div>
+      </ButtonGroup>
 
       {filterOption === 'day' && (
         <FilterContainer>
           <FilterLabel htmlFor="date">Filtrar por Data:</FilterLabel>
-          <FilterInput
-            type="date"
-            id="date"
-            value={date}
-            onChange={(e) => setDate(e.target.value)}
-          />
-          <Button onClick={fetchSalesByDay}>Filtrar</Button>
+          <InputGroup>
+            <FilterInput
+              type="date"
+              id="date"
+              value={date}
+              onChange={(e) => setDate(e.target.value)}
+            />
+            <Button active={true} onClick={fetchSalesByDay}>Filtrar</Button>
+          </InputGroup>
         </FilterContainer>
       )}
 
       {filterOption === 'month' && (
         <FilterContainer>
-          <FilterLabel htmlFor="month">Filtrar por Mês e Ano:</FilterLabel>
-          <FilterInput
-            type="number"
-            id="month"
-            placeholder="Mês"
-            value={month}
-            onChange={(e) => setMonth(parseInt(e.target.value))}
-          />
-
-          <FilterInput
-            type="number"
-            id="year"
-            placeholder="Ano"
-            value={year}
-            onChange={(e) => setYear(parseInt(e.target.value))}
-          />
-
-          <Button onClick={fetchTotalSalesByMonth}>Filtrar</Button>
+          <FilterLabel>Filtrar por Mês e Ano:</FilterLabel>
+          <InputGroup>
+            <FilterInput
+              type="number"
+              placeholder="Mês"
+              value={month || ''}
+              onChange={(e) => setMonth(parseInt(e.target.value))}
+            />
+            <FilterInput
+              type="number"
+              placeholder="Ano"
+              value={year || ''}
+              onChange={(e) => setYear(parseInt(e.target.value))}
+            />
+            <Button active={true} onClick={fetchTotalSalesByMonth}>Filtrar</Button>
+          </InputGroup>
         </FilterContainer>
       )}
 
       <SalesList>
         {paginatedSales.map((sale) => (
           <SalesItem key={sale.id}>
-            <p>Data: {sale.saleDate}</p>
-            <p>Total: {sale.saleTotals}</p>
+            <p className="date">Data: {sale.saleDate}</p>
+            <p className="total">Total: R${sale.saleTotals.toFixed(2)}</p>
           </SalesItem>
         ))}
       </SalesList>
 
       <PaginationContainer>
         {Array.from({ length: totalPages }).map((_, index) => (
-          <PaginationButton key={index + 1} onClick={() => handlePageChange(index + 1)}>
+          <PaginationButton
+            key={index + 1}
+            onClick={() => handlePageChange(index + 1)}
+          >
             {index + 1}
           </PaginationButton>
         ))}
       </PaginationContainer>
 
       {filterOption === 'day' && (
-        <TotalContainer>Total do Dia: {totalSalesByDay}</TotalContainer>
+        <TotalContainer>Total do Dia: R${totalSalesByDay.toFixed(2)}</TotalContainer>
       )}
 
       {filterOption === 'month' && (
-        <TotalContainer>Total de Vendas no Mês: {totalSalesByMonth}</TotalContainer>
+        <TotalContainer>Total de Vendas no Mês: R${totalSalesByMonth.toFixed(2)}</TotalContainer>
       )}
     </Container>
   );
 };
-
 export default Relatorio;
+
