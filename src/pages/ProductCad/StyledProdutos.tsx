@@ -116,12 +116,11 @@ export const CardButton = styled.button`
   }
 `;
 
-// Ícone de pesquisa
+
 export const SearchIcon = styled.span`
   margin-right: 10px;
 `;
 
-// Ícone de lupa
 export const SearchButtonIcon = styled.span`
   margin-right: 8px;
 `;
@@ -172,7 +171,7 @@ export const ProductPrice = styled.span`
 export const EditIcon = styled(FaEdit)`
   color: #6c757d;
   cursor: pointer;
-  font-size: 20px;
+  font-size: 21px;
   margin-left: auto; /* Move para o canto direito */
   color: #007bff; 
 

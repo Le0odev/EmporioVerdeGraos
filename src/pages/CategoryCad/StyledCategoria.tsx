@@ -123,7 +123,7 @@ export const CardItem = styled.li`
   }
 `;
 
-// Contêiner para o input de pesquisa e o botão de pesquisa
+
 export const SearchContainer = styled.div`
   display: flex;
   align-items: center;
