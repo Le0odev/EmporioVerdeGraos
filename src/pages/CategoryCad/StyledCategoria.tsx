@@ -13,7 +13,7 @@ export const CategoriaContainer = styled.div`
 `;
 
 export const Section = styled.section`
-  width: 48%;
+  width: 58%;
   flex: 1;
   padding: 20px;
   background-color: #f9f9f9;
@@ -67,12 +67,14 @@ export const Button = styled.button`
 `;
 
 export const H1 = styled.h1`
-  margin-bottom: 20px;
-  background-color: #333;
+  font-size: 32px;
+  margin-bottom: 40px;
+  background-color: #343a40;
   color: #fff;
-  padding: 1rem;
-  border-radius: 6px;
-  margin: 0;
+  padding: 20px;
+  border-radius: 10px;
+  text-align: center;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 `;
 
 export const Card = styled.div`
@@ -80,7 +82,7 @@ export const Card = styled.div`
   margin: 20px 0;
   padding: 20px;
   border-radius: 10px;
-  background-color: #5492a6;
+  background-color: #eef2f9;
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
 `;
 
@@ -93,7 +95,6 @@ export const CardButton = styled.button`
   cursor: pointer;
   font-size: 16px;
   transition: background-color 0.3s ease;
-  
 
   &:hover {
     background-color: #0056b3;
@@ -122,22 +123,43 @@ export const CardItem = styled.li`
   }
 `;
 
+// Contêiner para o input de pesquisa e o botão de pesquisa
+export const SearchContainer = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 8px; /* Espaçamento entre o campo e o botão */
+`;
 
-
-export const CardInput = styled(Input)`
-  width: 400px;
+export const CardInput = styled.input`
+  flex: 1;
   height: 40px;
   padding: 12px;
-  margin-bottom: 16px;
   border: 1px solid #ccc;
   border-radius: 10px;
   font-size: 16px;
   outline: none;
-  margin-right: 1rem;
+`;
+
+export const SearchButton = styled.button`
+  background-color: #007bff;
+  color: #fff;
+  padding: 12px 18px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  transition: background-color 0.3s ease;
+
+  &:hover {
+    background-color: #0056b3;
+  }
 `;
 
 export const SearchButtonIcon = styled.span`
   margin-right: 5px;
+  font-size: 16px;
 `;
 
 export const CategoryName = styled.span`
@@ -152,9 +174,9 @@ export const EditIcon = styled(FaEdit)`
   margin-right: 10px;
   color: #007bff;
 
-  &:hover {a
+  &:hover {
     font-size: 22px;
-    color: ;
+    color: #0056b3;
   }
 `;
 
@@ -165,7 +187,7 @@ export const DeleteIcon = styled(FaTrashAlt)`
 
   &:hover {
     font-size: 22px;
-    color: red;
+    color: darkred;
   }
 `;
 

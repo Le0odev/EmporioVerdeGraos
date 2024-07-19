@@ -21,6 +21,7 @@ import {
   DeleteIcon,
   PaginationContainer,
   PageButton,
+  SearchContainer,
 } from './StyledCategoria';
 import { useAuth } from '../Login/authContext';
 
@@ -223,16 +224,19 @@ const CadastrarCategoria: React.FC = () => {
           <SectionTitle>Verificar existência da categoria</SectionTitle>
           <Form onSubmit={(e) => { e.preventDefault(); searchCategorias(searchTerm); }}>
             <Label htmlFor="search">Pesquisar categoria:</Label>
-            <CardInput
-              type="text"
-              id="search"
-              value={searchTerm}
-              onChange={handleSearchChange}
-            />
-            <CardButton type="submit">
-              <SearchButtonIcon><FaSearch /></SearchButtonIcon>
-              Pesquisar
-            </CardButton>
+            <SearchContainer>
+          <CardInput
+            type="text"
+            id="search"
+            value={searchTerm}
+            onChange={handleSearchChange}
+          />
+          <CardButton type="submit">
+            <SearchButtonIcon><FaSearch /></SearchButtonIcon>
+            Pesquisar
+          </CardButton>
+        </SearchContainer>
+            
           </Form>
           <Card>
             <CardList>

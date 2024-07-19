@@ -20,7 +20,7 @@ export const Section = styled.div`
   max-width: 890px;
   flex: 1;
   padding: 20px;
-  background-color: #f9f9f9;
+  background-color: #fff;
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 
@@ -79,22 +79,25 @@ export const Button = styled.button`
 `;
 
 export const H1 = styled.h1`
-  background-color: #333;
+  font-size: 32px;
+  margin-bottom: 40px;
+  background-color: #343a40;
   color: #fff;
-  padding: 1rem;
-  border-radius: 6px;
-  margin: 0;
+  padding: 20px;
+  border-radius: 10px;
+  text-align: center;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 `;
 
 export const CardInput = styled.input`
-  width: 400px;
+  width: 500px;
   height: 40px;
   padding: 12px;
   margin-bottom: 16px;
   border: 1px solid #ccc;
   border-radius: 10px;
   font-size: 16px;
-  outline: none; /* Remove a borda ao focar */
+  outline: none; 
   margin-right: 1rem;
 `;
 
@@ -128,7 +131,7 @@ export const Card = styled.div`
   margin: 20px 0;
   padding: 20px;
   border-radius: 10px;
-  background-color: #5492a6;
+  background-color: #eef2f9;
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
 
 
@@ -137,7 +140,7 @@ export const Card = styled.div`
 `;
 
 export const CardList = styled.ul`
-  margin: -4px;
+  margin: -5px;
   padding: 0;
 `;
 
