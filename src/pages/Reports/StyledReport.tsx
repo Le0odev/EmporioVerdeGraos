@@ -29,10 +29,7 @@ export const Container = styled.div`
   margin: 20px auto;
   transition: all 0.3s ease;
 
-  &:hover {
-    transform: scale(1.02);
-    box-shadow: 0 8px 16px ${colors.shadow};
-  }
+  
 `;
 
 export const Title = styled.h1`
@@ -69,6 +66,7 @@ export const SalesItem = styled.div`
     transform: translateY(-5px);
     box-shadow: 0 8px 16px ${colors.shadow};
     background-color: ${colors.hoverGray};
+    cursor:pointer;
   }
 
   .date {
@@ -113,7 +111,8 @@ export const FilterInput = styled.input`
 export const Button = styled.button<ButtonProps>`
   background-color: ${(props) => (props.active ? colors.primary : colors.lightGray)};
   color: ${colors.white};
-  padding: 8px 16px;
+  padding: 11px 19px;
+  font-size: 1rem;
   border: none;
   border-radius: 8px;
   cursor: pointer;
@@ -125,11 +124,8 @@ export const Button = styled.button<ButtonProps>`
     transform: translateY(-2px);
   }
 
-  &:focus {
-    outline: none;
-    box-shadow: 0 0 5px ${(props) => (props.active ? colors.primary : colors.hoverGray)};
-  }
-`;
+  
+`
 
 export const ButtonGroup = styled.div`
   display: flex;
@@ -174,7 +170,7 @@ export const TotalContainer = styled.div`
   text-align: center;
   margin-top: 15px;
   font-weight: bold;
-  font-size: 1.3em;
+  font-size: 1.8rem;
   color: ${colors.primaryDark};
   transition: color 0.3s ease;
 
