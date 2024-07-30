@@ -1,180 +1,234 @@
 import styled from 'styled-components';
 
-const colors = {
-  primary: '#4CAF50',
-  primaryDark: '#388E3C',
-  background: '#f9f9f9',
-  text: '#333',
-  white: '#FFFFFF',
-  shadow: 'rgba(0, 0, 0, 0.1)',
-  lightGray: '#f1f1f1',
-  hoverGray: '#e0e0e0',
-};
-
-const fonts = {
-  main: 'Arial, sans-serif',
-};
-
 interface ButtonProps {
-  active: boolean;
+  active?: boolean;
 }
 
+// Container principal
 export const Container = styled.div`
   padding: 20px;
-  background: linear-gradient(135deg, ${colors.white} 0%, ${colors.lightGray} 100%);
-  border-radius: 15px;
-  box-shadow: 0 6px 12px ${colors.shadow};
-  font-family: ${fonts.main};
-  max-width: 800px;
-  margin: 20px auto;
-  transition: all 0.3s ease;
-
-  
+  max-width: 1200px;
+  margin: 0 auto;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
 `;
 
+// Título
 export const Title = styled.h1`
-  text-align: center;
-  color: ${colors.primaryDark};
-  font-size: 2em;
+  font-size: 28px;
+  color: #333;
   margin-bottom: 20px;
-  transition: color 0.3s ease, transform 0.3s ease;
-
-  &:hover {
-    color: ${colors.primary};
-    transform: translateY(-5px);
-  }
+  font-weight: 600;
 `;
 
-export const SalesList = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  max-height: 300px;
-  overflow-y: auto;
-`;
-
-export const SalesItem = styled.div`
-  background-color: ${colors.white};
-  padding: 15px;
-  margin: 5px 0;
-  width: 90%;
-  border-radius: 10px;
-  box-shadow: 0 4px 8px ${colors.shadow};
-  transition: transform 0.3s, box-shadow 0.3s, background-color 0.3s;
-
-  &:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 16px ${colors.shadow};
-    background-color: ${colors.hoverGray};
-    cursor:pointer;
-  }
-
-  .date {
-    font-weight: bold;
-    color: ${colors.primaryDark};
-  }
-
-  .total {
-    color: ${colors.primary};
-    font-size: 1.1em;
-    margin-top: 5px;
-  }
-`;
-
+// Container para os filtros
 export const FilterContainer = styled.div`
+  margin-bottom: 20px;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  margin-bottom: 15px;
 `;
 
+// Rótulo dos filtros
 export const FilterLabel = styled.label`
+  font-size: 18px;
+  color: #666;
   margin-bottom: 8px;
-  color: ${colors.text};
-  font-weight: bold;
 `;
 
+// Entrada para os filtros
 export const FilterInput = styled.input`
-  padding: 8px;
-  margin-right: 8px;
-  border: 1px solid ${colors.lightGray};
-  border-radius: 8px;
-  transition: border-color 0.3s ease, box-shadow 0.3s ease;
-
-  &:focus {
-    border-color: ${colors.primary};
-    box-shadow: 0 0 5px ${colors.primary};
-    outline: none;
-  }
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  margin-right: 10px;
+  width: calc(100% - 150px);
+  font-size: 16px;
+  box-sizing: border-box;
 `;
 
-export const Button = styled.button<ButtonProps>`
-  background-color: ${(props) => (props.active ? colors.primary : colors.lightGray)};
-  color: ${colors.white};
-  padding: 11px 19px;
-  font-size: 1rem;
-  border: none;
+// Container para o total de vendas
+export const TotalContainer = styled.div`
+  font-size: 20px;
+  color: #333;
+  margin: 20px 0;
+  padding: 15px;
+  background-color: #fff;
+  border-radius: 6px;
+  border: 1px solid #ddd;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+`;
+
+// Lista de vendas
+export const SalesList = styled.ul`
+  list-style: none;
+  padding: 0;
+  margin: 0;
+`;
+
+// Item de venda (Card)
+export const SalesItem = styled.li`
+  padding: 20px;
+  margin-bottom: 12px;
+  background-color: #fff;
   border-radius: 8px;
+  border: 1px solid #ddd;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   cursor: pointer;
-  transition: background-color 0.3s ease, transform 0.3s ease;
-  margin: 3px;
+  transition: background-color 0.3s, transform 0.2s;
 
   &:hover {
-    background-color: ${(props) => (props.active ? colors.primaryDark : colors.hoverGray)};
-    transform: translateY(-2px);
+    background-color: #f0f0f0;
+    transform: scale(1.02);
   }
-
-  
-`
-
-export const ButtonGroup = styled.div`
-  display: flex;
-  justify-content: center;
-  margin-bottom: 15px;
 `;
 
-export const InputGroup = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`;
-
+// Container da paginação
 export const PaginationContainer = styled.div`
   display: flex;
   justify-content: center;
-  margin-top: 15px;
+  margin: 20px 0;
 `;
 
-export const PaginationButton = styled.button`
-  background-color: ${colors.primary};
-  color: ${colors.white};
-  padding: 8px 12px;
-  border: none;
-  border-radius: 8px;
+// Botão da paginação
+export const PaginationButton = styled.button<{ active?: boolean }>`
+  background-color: ${props => (props.active ? '#007bff' : '#fff')};
+  border: 1px solid ${props => (props.active ? '#007bff' : '#ddd')};
+  color: ${props => (props.active ? '#fff' : '#007bff')};
+  padding: 12px 20px;
   margin: 0 5px;
+  border-radius: 4px;
   cursor: pointer;
-  transition: background-color 0.3s ease, transform 0.3s ease;
+  font-size: 16px;
+  transition: background-color 0.3s, color 0.3s;
 
   &:hover {
-    background-color: ${colors.primaryDark};
-    transform: translateY(-2px);
-  }
-
-  &:focus {
-    outline: none;
-    box-shadow: 0 0 5px ${colors.primary};
+    background-color: ${props => (props.active ? '#0056b3' : '#f0f0f0')};
+    color: ${props => (props.active ? '#fff' : '#007bff')};
   }
 `;
 
-export const TotalContainer = styled.div`
-  text-align: center;
-  margin-top: 15px;
-  font-weight: bold;
-  font-size: 1.8rem;
-  color: ${colors.primaryDark};
-  transition: color 0.3s ease;
+// Botão geral
+export const Button = styled.button<ButtonProps>`
+  background-color: ${props => (props.active ? '#007bff' : '#fff')};
+  border: 1px solid ${props => (props.active ? '#007bff' : '#ddd')};
+  color: ${props => (props.active ? '#fff' : '#007bff')};
+  padding: 12px 20px;
+  margin: 0 5px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s, color 0.3s;
 
   &:hover {
-    color: ${colors.primary};
+    background-color: ${props => (props.active ? '#0056b3' : '#f0f0f0')};
+    color: ${props => (props.active ? '#fff' : '#007bff')};
   }
+`;
+
+// Grupo de botões
+export const ButtonGroup = styled.div`
+  display: flex;
+  flex-direction: row;
+  gap: 12px;
+`;
+
+// Grupo de entradas
+export const InputGroup = styled.div`
+  display: flex;
+  align-items: center;
+`;
+
+// Container do modal
+export const ModalContainer = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+
+export const ModalContent = styled.div`
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  max-width: 600px;
+  width: 100%;
+  padding: 20px;
+  position: relative;
+`;
+
+export const ModalHeader = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+  border-bottom: 2px solid #eee;
+  padding-bottom: 10px;
+`;
+
+export const ModalBody = styled.div`
+  padding: 10px 0;
+`;
+
+export const ModalFooter = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 15px;
+`;
+
+export const CloseButton = styled.button`
+  background: transparent;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  color: #333;
+  transition: color 0.3s;
+
+  &:hover {
+    color: #e74c3c;
+  }
+`;
+
+export const SaleInfo = styled.div`
+  margin-bottom: 20px;
+  font-size: 16px;
+  color: #333;
+
+  div {
+    margin-bottom: 10px;
+  }
+`;
+
+export const ItemList = styled.ul`
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+`;
+
+export const Item = styled.li`
+  padding: 10px 0;
+  border-bottom: 1px solid #eee;
+  display: flex;
+  flex-direction: column;
+  font-size: 14px;
+  color: #666;
+
+  &:last-child {
+    border-bottom: none;
+  }
+`;
+
+export const ItemTitle = styled.div`
+  font-weight: bold;
+  color: #333;
+`;
+
+export const ItemDetails = styled.div`
+  margin-top: 5px;
 `;
