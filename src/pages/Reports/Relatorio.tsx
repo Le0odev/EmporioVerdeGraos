@@ -27,18 +27,27 @@ import {
   Item
 } from './StyledReport';
 import { useAuth } from '../Login/authContext';
+import { format } from 'date-fns';
+
 
 interface Sale {
   id: number;
   saleDate: string;
   saleTotals: number;
-  items: Array<{ productName: string; quantity: number; productPrice: number; weight: number; subtotal: number; }>;
+  methodPayment: string;
+  discount: number;
+  items: Array<{ productName: string; quantity: number; productPrice: number; weight: number; subtotal: number;  }>;
 }
 
 interface SalesByDay {
   date: string;
   total: number;
 }
+
+const formatDate = (dateString: string | number | Date) => {
+  const date = new Date(dateString);
+  return format(date, 'dd/MM/yyyy HH:mm:ss');
+};
 
 const Relatorio: React.FC = () => {
   const [sales, setSales] = useState<Sale[]>([]);
@@ -52,6 +61,7 @@ const Relatorio: React.FC = () => {
   const [totalSalesByMonth, setTotalSalesByMonth] = useState<number>(0);
   const [totalSalesByPeriod, setTotalSalesByPeriod] = useState<number>(0);
   const [currentPage, setCurrentPage] = useState<number>(1);
+  const [itemsPerPage] = useState<number>(4);
   const [filterOption, setFilterOption] = useState<'day' | 'month' | 'period'>('day');
   const [selectedSale, setSelectedSale] = useState<Sale | null>(null);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
@@ -168,6 +178,7 @@ const Relatorio: React.FC = () => {
       const detailedSale: Sale = response.data;
       setSelectedSale(detailedSale);
       setIsModalOpen(true);
+      console.log(detailedSale)
     } catch (error) {
       console.error('Erro ao buscar detalhes da venda:', error);
     }
@@ -178,10 +189,8 @@ const Relatorio: React.FC = () => {
     setSelectedSale(null);
   };
 
-  const itemsPerPage = 6;
-  const totalItems = groupedSales.length;
-  const totalPages = Math.ceil(totalItems / itemsPerPage);
-  const paginatedSales = groupedSales.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
+  const paginatedSales = sales.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
+  const totalPages = Math.ceil(sales.length / itemsPerPage);
 
   return (
     <Container>
@@ -254,38 +263,51 @@ const Relatorio: React.FC = () => {
         </FilterContainer>
       )}
 
-      {filterOption === 'day' && sales.length > 0 && (
+      {filterOption === 'day' && paginatedSales.length > 0 && (
         <SalesList>
-          {sales.map((sale) => (
+          {paginatedSales.map((sale) => (
             <SalesItem key={sale.id} onClick={() => handleSaleClick(sale)}>
-              <div>Data: {sale.saleDate}</div>
+              <div>Data: {formatDate(sale.saleDate)}</div>
               <div>Total: R${sale.saleTotals.toFixed(2)}</div>
             </SalesItem>
           ))}
 
           <TotalContainer>
-            <p>Total de Vendas: {totalSalesByDay.toFixed(2)}</p>
-          </TotalContainer>   
+            <p>Total de Vendas: R${totalSalesByDay.toFixed(2)}</p>
+          </TotalContainer>
+
+          {/* Paginação */}
+          <PaginationContainer>
+            <PaginationButton 
+              onClick={() => handlePageChange(currentPage - 1)}
+              disabled={currentPage === 1}
+            >
+              Anterior
+            </PaginationButton>
+            <span>Página {currentPage} de {totalPages}</span>
+            <PaginationButton 
+              onClick={() => handlePageChange(currentPage + 1)}
+              disabled={currentPage === totalPages}
+            >
+              Próxima
+            </PaginationButton>
+          </PaginationContainer>
         </SalesList>
       )}
 
+      {/* Outras exibições (mês, período) */}
       {filterOption === 'month' && totalSalesByMonth > 0 && (
         <TotalContainer>
-          <div>Total de Vendas do Mês: R${totalSalesByMonth.toFixed(2)}</div>
+          <p>Total de Vendas no Mês: R${totalSalesByMonth.toFixed(2)}</p>
         </TotalContainer>
       )}
 
       {filterOption === 'period' && totalSalesByPeriod > 0 && (
         <TotalContainer>
-          <div>Total de Vendas no Período: R${totalSalesByPeriod.toFixed(2)}</div>
+          <p>Total de Vendas no Período: R${totalSalesByPeriod.toFixed(2)}</p>
         </TotalContainer>
       )}
 
-      {filterOption === 'period' && groupedSales.length > 0 && (
-        <>
-          
-        </>
-      )}
       {isModalOpen && selectedSale && (
         <ModalContainer>
           <ModalContent>
@@ -295,8 +317,11 @@ const Relatorio: React.FC = () => {
             </ModalHeader>
             <ModalBody>
               <SaleInfo>
-                <div><strong>Data:</strong> {selectedSale.saleDate}</div>
+                <div><strong>Data:</strong> {formatDate(selectedSale.saleDate)}</div>
+                <div><strong>Descontos:</strong> {selectedSale.discount}%</div>
+                <div><strong>Pagamento:</strong> {selectedSale.methodPayment}</div>
                 <div><strong>Total:</strong> R${selectedSale.saleTotals.toFixed(2)}</div>
+                
               </SaleInfo>
               <h3>Itens:</h3>
               <ItemList>
@@ -318,12 +343,11 @@ const Relatorio: React.FC = () => {
               </ItemList>
             </ModalBody>
             <ModalFooter>
-              <button onClick={handleCloseModal}>Fechar</button>
+              {/* Footer modal (se necessário) */}
             </ModalFooter>
           </ModalContent>
         </ModalContainer>
       )}
-      
     </Container>
   );
 };
