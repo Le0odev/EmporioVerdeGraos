@@ -1,5 +1,5 @@
-import { FaEdit, FaTrashAlt } from 'react-icons/fa';
-import styled from 'styled-components';
+import { FaEdit, FaTrashAlt } from "react-icons/fa";
+import styled from "styled-components";
 
 export const ProductContainer = styled.div`
   margin: 24px;
@@ -10,9 +10,6 @@ export const ProductContainer = styled.div`
   border-radius: 8px;
   padding: 16px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-
-  
-
 `;
 
 export const Section = styled.div`
@@ -23,9 +20,6 @@ export const Section = styled.div`
   background-color: #fff;
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-
-  
-
 `;
 
 export const SectionTitle = styled.h1`
@@ -97,7 +91,7 @@ export const CardInput = styled.input`
   border: 1px solid #ccc;
   border-radius: 10px;
   font-size: 16px;
-  outline: none; 
+  outline: none;
   margin-right: 1rem;
 `;
 
@@ -116,7 +110,6 @@ export const CardButton = styled.button`
   }
 `;
 
-
 export const SearchIcon = styled.span`
   margin-right: 10px;
 `;
@@ -130,66 +123,71 @@ export const Card = styled.div`
   margin: 20px 0;
   padding: 20px;
   border-radius: 10px;
-  background-color: #eef2f9;
+  background-color: #f9f9f9;
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-
-
-
-
 `;
 
 export const CardList = styled.ul`
-  margin: -5px;
+  list-style: none;
   padding: 0;
+  margin: 0;
 `;
 
 export const CardItem = styled.li`
   display: flex;
   align-items: center;
-  gap: 14px;
+  justify-content: space-between;
   font-size: 18px;
-  margin: 12px;
-  padding: 12px;
-  border-radius: 6px;
-  background-color: #f9f9f9;
-  box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.1);
+  margin: 12px 0;
+  padding: 12px 20px;
+  border-radius: 8px;
+  background-color: #fff;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
 
   &:hover {
-    background-color: #ccc;
+    background-color: #eef2f9;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.15);
   }
 `;
 
 export const ProductName = styled.span`
   font-weight: bold;
   font-size: 1.2rem;
+  color: #333;
 `;
 
 export const ProductPrice = styled.span`
   color: #007bff;
 `;
 
+export const IconContainer = styled.div`
+  display: flex;
+  align-items: center;
+`;
+
 export const EditIcon = styled(FaEdit)`
-  color: #6c757d;
+  color: #007bff;
   cursor: pointer;
-  font-size: 21px;
-  margin-left: auto; /* Move para o canto direito */
-  color: #007bff; 
+  font-size: 20px;
+  margin-right: 10px;
+  transition: color 0.3s ease, font-size 0.3s ease;
 
   &:hover {
-    font-size: 25px;
     color: #0056b3;
+    font-size: 22px;
   }
 `;
 
 export const DeleteIcon = styled(FaTrashAlt)`
-  color: #6c757d;
-  margin-right: 10px;
-  cursor: pointer;
   color: red;
+  cursor: pointer;
+  font-size: 20px;
+  transition: color 0.3s ease, font-size 0.3s ease;
 
   &:hover {
-    font-size: 20px;
-    color: red;
+    color: #d9534f;
+    font-size: 22px;
   }
 `;
 

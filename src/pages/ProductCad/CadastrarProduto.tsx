@@ -23,7 +23,8 @@ import {
   DeleteIcon,
   CheckboxContainer,
   CheckboxLabel,
-  CheckboxInput
+  CheckboxInput,
+  IconContainer
 } from './StyledProdutos';
 import { useAuth } from '../Login/authContext';
 
@@ -266,9 +267,13 @@ const CadastrarProduto: React.FC = () => {
               {produtos.length > 0 ? (
                 produtos.map((produto) => (
                   <CardItem key={produto.id}>
-                    <ProductName>{produto.productName}</ProductName> - <ProductPrice>{produto.productPrice.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</ProductPrice>
-                    <EditIcon onClick={() => handleEdit(produto)} />
-                    <DeleteIcon onClick={() => handleDelete(produto.id)} />
+                    <div>
+                      <ProductName>{produto.productName}</ProductName> - <ProductPrice>{produto.productPrice.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</ProductPrice>
+                    </div>
+                    <IconContainer>
+                      <EditIcon onClick={() => handleEdit(produto)} />
+                      <DeleteIcon onClick={() => handleDelete(produto.id)} />
+                    </IconContainer>
                   </CardItem>
                 ))
               ) : (
