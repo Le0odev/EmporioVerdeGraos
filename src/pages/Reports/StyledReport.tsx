@@ -215,7 +215,7 @@ export const ModalFooter = styled.div`
 export const CloseButton = styled.button`
   background: transparent;
   border: none;
-  font-size: 24px;
+  font-size: 30px;
   cursor: pointer;
   color: #333;
   transition: color 0.3s;
