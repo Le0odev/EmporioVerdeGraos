@@ -119,7 +119,7 @@ export const ProductImage = styled.img`
   height: 120px;
   object-fit: cover;
   margin-bottom: 1rem;
-  border-radius: 20%;
+  border-radius: 10%;
   transition: transform 0.3s ease;
 
   ${ProductCard}:hover & {
