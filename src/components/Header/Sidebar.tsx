@@ -1,7 +1,10 @@
 import React from 'react';
-import { AiOutlineProduct } from 'react-icons/ai';
+import { AiOutlineAppstore, AiOutlineBook, AiOutlineProduct } from 'react-icons/ai';
+import { BiBook } from 'react-icons/bi';
 import { CiLogin, CiShoppingCart } from 'react-icons/ci';
-import { MdOutlineCategory } from 'react-icons/md';
+import { FaBook, FaBoxes } from 'react-icons/fa';
+import { GiArchiveResearch } from 'react-icons/gi';
+import { MdLibraryBooks, MdOutlineCategory, MdViewList } from 'react-icons/md';
 import { TbReportMoney } from 'react-icons/tb';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
@@ -88,6 +91,9 @@ const Sidebar: React.FC = () => {
       </NavLink>
       <NavLink to="/relatorio">
         <TbReportMoney /> Relatório
+      </NavLink>
+      <NavLink to="/catalogo">
+      <MdViewList /> Catálogo    
       </NavLink>
     </SidebarContainer>
   );

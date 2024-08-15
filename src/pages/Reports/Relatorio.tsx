@@ -228,13 +228,13 @@ const Relatorio: React.FC = () => {
           <FilterLabel>Filtrar por Mês e Ano:</FilterLabel>
           <InputGroup>
             <FilterInput
-              type="number"
+              type="text"
               placeholder="Mês"
               value={month}
               onChange={(e) => setMonth(parseInt(e.target.value))}
             />
             <FilterInput
-              type="number"
+              type="text"
               placeholder="Ano"
               value={year}
               onChange={(e) => setYear(parseInt(e.target.value))}
