@@ -15,7 +15,7 @@ const AppContainer = styled.div`
 
 const MainContent = styled.div<{ showSidebar: boolean }>`
   flex: 1;
-  padding: 2rem;
+  padding: rem;
   background-color: #ccc;
   margin-left: ${(props) => (props.showSidebar ? '250px' : '0')};
   transition: margin-left 0.3s;

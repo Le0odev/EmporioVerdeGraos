@@ -11,11 +11,13 @@ import {
   RemoveButton,
   CartItemQuantity
 } from './StyledCart'
+import { Footer } from '../../components/Footer/Footer';
 
 const Cart: React.FC = () => {
   const { cartItems, removeFromCart } = useCart();
 
   return (
+    <>
     <CartContainer>
       <h1>Carrinho</h1>
       {cartItems.length === 0 ? (
@@ -34,6 +36,8 @@ const Cart: React.FC = () => {
         ))
       )}
     </CartContainer>
+    <Footer />
+    </>
   );
 };
 

@@ -22,6 +22,8 @@ import {
 import { Category, Product } from './Product'; // Corrigi o caminho do import
 import { FiSearch, FiShoppingCart } from 'react-icons/fi';
 import { useNavigate } from 'react-router-dom'; // Para redirecionamento
+import { Footer } from '../../components/Footer/Footer';
+
 
 const Catalog: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState<string>('');
@@ -85,6 +87,7 @@ const Catalog: React.FC = () => {
   };
 
   return (
+    <>
     <CatalogContainer>
       <Header>
         <LogoImage src="/src/assets/logo.png" alt="Company Logo" />
@@ -135,9 +138,13 @@ const Catalog: React.FC = () => {
             </ProductCard>
           ))}
         </ProductList>
+        
       )}
     </CatalogContainer>
+    <Footer />
+    </>
   );
+
 };
 
 export default Catalog;
