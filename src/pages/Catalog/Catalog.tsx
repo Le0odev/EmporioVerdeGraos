@@ -1,6 +1,8 @@
+// Catalog.tsx
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { useCart } from './CartContext'; // Importa o contexto do carrinho
+import { useCart } from './CartContext';
+import WeightModal from './WeightModal'; // Importe o modal
 import {
   CatalogContainer,
   SearchBar,
@@ -19,11 +21,11 @@ import {
   LogoImage,
   AddToCartButton
 } from './StyledCatalog';
-import { Category, Product } from './Product'; // Corrigi o caminho do import
+import { Category, Product } from './Product';
 import { FiSearch, FiShoppingCart } from 'react-icons/fi';
-import { useNavigate } from 'react-router-dom'; // Para redirecionamento
+import { useNavigate } from 'react-router-dom';
 import { Footer } from '../../components/Footer/Footer';
-
+import HeaderCart from '../../components/Header/HeadrCart/HeaderCart';
 
 const Catalog: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState<string>('');
@@ -32,12 +34,14 @@ const Catalog: React.FC = () => {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
+  const [modalOpen, setModalOpen] = useState<boolean>(false);
+  const [currentProduct, setCurrentProduct] = useState<Product | null>(null);
+  const [weight, setWeight] = useState<number | null>(null);
 
-  const { addToCart } = useCart(); // Usa o contexto do carrinho
-  const navigate = useNavigate(); // Hook para redirecionamento
+  const { addToCart } = useCart();
+  const navigate = useNavigate();
   const { getCartItemCount } = useCart();
   const itemCount = getCartItemCount();
-
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -79,72 +83,78 @@ const Catalog: React.FC = () => {
   }, [searchTerm, selectedCategory]);
 
   const handleAddToCart = (product: Product) => {
-    addToCart(product); // Adiciona ao carrinho
+    if (product.bulk) {
+      setCurrentProduct(product);
+      setModalOpen(true);
+    } else {
+      addToCart(product);
+    }
+  };
+
+  const handleModalSubmit = (weight: number) => {
+    if (currentProduct) {
+      addToCart(currentProduct, weight);
+      setCurrentProduct(null);
+    }
   };
 
   const handleGoToCart = () => {
-    navigate('/cart'); // Redireciona para a página do carrinho
+    navigate('/cart');
   };
 
   return (
     <>
-    <CatalogContainer>
-      <Header>
-        <LogoImage src="/src/assets/logo.png" alt="Company Logo" />
-        <Title>Empório Verde Grãos</Title>
-        <IconButton>
-          <FiShoppingCart onClick={handleGoToCart}/>
-          {itemCount > 0 && (
-            <span>{itemCount}</span> // Adiciona o contador aqui
-          )}
-        </IconButton>
-      </Header>
+      <CatalogContainer>
+      <HeaderCart handleGoToCart={handleGoToCart} />
       <SearchContainer>
-        <SearchIcon>
-          <FiSearch />
-        </SearchIcon>
-        <SearchBar
-          type="text"
-          placeholder="Buscar produtos..."
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-        />
-      </SearchContainer>
-      <FiltersContainer>
-        <FilterButton onClick={() => setSelectedCategory(null)}>Todos</FilterButton>
-        {categories.map((category) => (
-          <FilterButton
-            key={category.id}
-            onClick={() => setSelectedCategory(category.id)}
-          >
-            {category.categoryName}
-          </FilterButton>
-        ))}
-      </FiltersContainer>
-      {loading ? (
-        <p>Carregando...</p>
-      ) : error ? (
-        <p>{error}</p>
-      ) : (
-        <ProductList>
-          {products.map((product) => (
-            <ProductCard key={product.id}>
-              <ProductImage src={product.imageUrl} alt={product.productName} />
-              <ProductName>{product.productName}</ProductName>
-              <ProductPrice>R${product.productPrice.toFixed(2)}</ProductPrice>
-              <AddToCartButton onClick={() => handleAddToCart(product)}>
-                Comprar
-              </AddToCartButton>
-            </ProductCard>
+          <SearchIcon>
+            <FiSearch />
+          </SearchIcon>
+          <SearchBar
+            type="text"
+            placeholder="Buscar produtos..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
+        </SearchContainer>
+        <FiltersContainer>
+          <FilterButton onClick={() => setSelectedCategory(null)}>Todos</FilterButton>
+          {categories.map((category) => (
+            <FilterButton
+              key={category.id}
+              onClick={() => setSelectedCategory(category.id)}
+            >
+              {category.categoryName}
+            </FilterButton>
           ))}
-        </ProductList>
-        
-      )}
-    </CatalogContainer>
-    <Footer />
+        </FiltersContainer>
+        {loading ? (
+          <p>Carregando...</p>
+        ) : error ? (
+          <p>{error}</p>
+        ) : (
+          <ProductList>
+            {products.map((product) => (
+              <ProductCard key={product.id}>
+                <ProductImage src={product.imageUrl} alt={product.productName} />
+                <ProductName>{product.productName}</ProductName>
+                <ProductPrice>R${product.productPrice.toFixed(2)}</ProductPrice>
+                <AddToCartButton onClick={() => handleAddToCart(product)}>
+                  Comprar
+                </AddToCartButton>
+              </ProductCard>
+            ))}
+          </ProductList>
+        )}
+      </CatalogContainer>
+      <Footer />
+      <WeightModal
+        isOpen={modalOpen}
+        onClose={() => setModalOpen(false)}
+        onSubmit={handleModalSubmit}
+      />
     </>
   );
-
 };
 
 export default Catalog;

@@ -289,3 +289,4 @@ export const LogoImage = styled.img`
     width: 2.5rem;
   }
 `;
+
