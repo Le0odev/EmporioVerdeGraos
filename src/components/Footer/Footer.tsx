@@ -1,7 +1,7 @@
 
 
 import { FooterContainer, FooterContent, SocialIcons, SocialIcon, Copyright } from './StyledFooter';
-import { FaFacebook, FaInstagram, FaWhatsapp } from 'react-icons/fa';
+import {  FaInstagram, FaWhatsapp } from 'react-icons/fa';
 
 
 export const Footer = () => {
