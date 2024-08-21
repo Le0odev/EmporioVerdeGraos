@@ -1,10 +1,9 @@
-
 import React from 'react';
-import { Header, LogoImage, Title, IconButton, BackButton } from './StyledHeader'; // Certifique-se de ter os estilos adequados
-import { FiArrowLeft, FiShoppingCart } from 'react-icons/fi';
-import { useCart } from '../../../pages/Catalog/CartContext'; // Certifique-se de que o caminho está correto
-
-
+import { Header, LogoImage, Title, IconButton, BackButton } from './StyledHeader';
+import {  FiShoppingCart } from 'react-icons/fi';
+import { useCart } from '../../../pages/Catalog/CartContext'; 
+import { useLocation } from 'react-router-dom'; // Importa o useLocation para pegar a rota atual
+import { FaArrowLeftLong } from "react-icons/fa6";
 
 interface HeaderCartProps {
   handleGoToCart: () => void;
@@ -15,15 +14,21 @@ interface HeaderCartProps {
 const HeaderCart: React.FC<HeaderCartProps> = ({ handleGoToCart, showBackButton = false, handleBack }) => {
   const { getCartItemCount } = useCart();
   const itemCount = getCartItemCount();
+  const location = useLocation(); // Pega a rota atual
+
+  // Condiciona a exibição da logo apenas no catálogo
+  const showLogo = location.pathname === '/catalogo'; // Ajusta conforme sua rota do catálogo
 
   return (
     <Header>
       {showBackButton && handleBack && (
         <BackButton onClick={handleBack}>
-          <FiArrowLeft />
+          <FaArrowLeftLong />
         </BackButton>
       )}
-      <LogoImage src="/src/assets/logo.png" alt="Company Logo" />
+      {showLogo && (
+        <LogoImage src="/src/assets/logo.png" alt="Company Logo" />
+      )}
       <Title>Empório Verde Grãos</Title>
       <IconButton onClick={handleGoToCart}>
         <FiShoppingCart />

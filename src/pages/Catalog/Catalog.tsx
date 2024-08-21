@@ -2,7 +2,8 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useCart } from './CartContext';
-import WeightModal from './WeightModal'; // Importe o modal
+import WeightModal from './WeightModal';
+import QuestionModal from './QuestionModal';
 import {
   CatalogContainer,
   SearchBar,
@@ -13,16 +14,12 @@ import {
   ProductImage,
   ProductName,
   ProductPrice,
-  Header,
-  Title,
-  IconButton,
   SearchContainer,
   SearchIcon,
-  LogoImage,
   AddToCartButton
 } from './StyledCatalog';
 import { Category, Product } from './Product';
-import { FiSearch, FiShoppingCart } from 'react-icons/fi';
+import { FiSearch } from 'react-icons/fi';
 import { useNavigate } from 'react-router-dom';
 import { Footer } from '../../components/Footer/Footer';
 import HeaderCart from '../../components/Header/HeadrCart/HeaderCart';
@@ -36,11 +33,10 @@ const Catalog: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [modalOpen, setModalOpen] = useState<boolean>(false);
   const [currentProduct, setCurrentProduct] = useState<Product | null>(null);
-  const [weight, setWeight] = useState<number | null>(null);
+  const [questionModalOpen, setQuestionModalOpen] = useState<boolean>(false);
 
-  const { addToCart } = useCart();
+  const { addToCart, getCartItemCount } = useCart();
   const navigate = useNavigate();
-  const { getCartItemCount } = useCart();
   const itemCount = getCartItemCount();
 
   useEffect(() => {
@@ -88,6 +84,7 @@ const Catalog: React.FC = () => {
       setModalOpen(true);
     } else {
       addToCart(product);
+      setQuestionModalOpen(true);
     }
   };
 
@@ -95,6 +92,8 @@ const Catalog: React.FC = () => {
     if (currentProduct) {
       addToCart(currentProduct, weight);
       setCurrentProduct(null);
+      setModalOpen(false);
+      setQuestionModalOpen(true);
     }
   };
 
@@ -102,11 +101,15 @@ const Catalog: React.FC = () => {
     navigate('/cart');
   };
 
+  const handleContinueShopping = () => {
+    setQuestionModalOpen(false);
+  };
+
   return (
     <>
       <CatalogContainer>
-      <HeaderCart handleGoToCart={handleGoToCart} />
-      <SearchContainer>
+        <HeaderCart handleGoToCart={handleGoToCart} />
+        <SearchContainer>
           <SearchIcon>
             <FiSearch />
           </SearchIcon>
@@ -152,6 +155,12 @@ const Catalog: React.FC = () => {
         isOpen={modalOpen}
         onClose={() => setModalOpen(false)}
         onSubmit={handleModalSubmit}
+      />
+      <QuestionModal 
+        isOpen={questionModalOpen}
+        onClose={() => setQuestionModalOpen(false)}
+        onContinueShopping={handleContinueShopping}
+        onGoToCart={handleGoToCart}
       />
     </>
   );

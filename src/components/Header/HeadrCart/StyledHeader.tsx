@@ -44,10 +44,9 @@ export const Title = styled.h1`
   text-align: center;
   margin: 0;
   text-shadow: 1px 1px ${colors.shadow}; // efeito de sombra no texto
-  margin-right: 10px;
 
   @media (max-width: 768px) {
-    font-size: 1.45rem; //telas menores
+    font-size: 1.4rem; //telas menores
   }
 `;
 
@@ -95,7 +94,7 @@ export const LogoImage = styled.img`
 
 
   @media (max-width: 768px) {
-    width: 2.3rem;
+    width: 2.2rem;
   }
 `;
 
@@ -104,4 +103,5 @@ export const BackButton = styled.button`
   border: none;
   font-size: 1.5rem;
   cursor: pointer;
+  color: #f7fafc;
 `;
