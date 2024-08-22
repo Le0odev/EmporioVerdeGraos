@@ -81,20 +81,25 @@ const CadastrarProduto: React.FC = () => {
 
   useEffect(() => {
     const fetchProdutos = async () => {
-      try {
-        const response = await axios.get(`http://localhost:8080/products/search?productName=${searchTerm}`, {
-          headers: {
-            Authorization: `Bearer ${token}`
-          }
-        });
-        setProdutos(response.data);
-      } catch (error) {
-        console.error('Erro ao buscar produtos:', error);
+      if (searchTerm.trim() !== '') { 
+        try {
+          const response = await axios.get(`http://localhost:8080/products/search?productName=${searchTerm}`, {
+            headers: {
+              Authorization: `Bearer ${token}`
+            }
+          });
+          setProdutos(response.data);
+        } catch (error) {
+          console.error('Erro ao buscar produtos:', error);
+        }
+      } else {
+        setProdutos([]); 
       }
     };
-
+  
     fetchProdutos();
   }, [searchTerm, token]);
+  
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -153,6 +158,8 @@ const CadastrarProduto: React.FC = () => {
     setIsBulk(produto.bulk);
     setEditId(produto.id);
     setImageUrl(produto.imageUrl);
+
+    setIsCadastroVisible(true);
   };
 
   const handleDelete = async (id: string) => {
@@ -167,6 +174,16 @@ const CadastrarProduto: React.FC = () => {
       console.error('Erro ao excluir produto:', error);
     }
   };
+
+  const formatPrice = (price: number) => {
+    return new Intl.NumberFormat('pt-BR', {
+      style: 'currency',
+      currency: 'BRL',
+    }).format(price);
+  };
+  
+  
+  
 
   return (
     <ProductContainer>
@@ -186,7 +203,7 @@ const CadastrarProduto: React.FC = () => {
           </ToggleButton>
         </ToggleButtonContainer>
 
-        <div style={{ display: 'flex', flex: 1 }}>
+        <div >
           {isCadastroVisible && (
             <Section style={{ flex: 1 }}>
               <SectionTitle>{editId ? 'Atualizar Produto' : 'Cadastrar Produto'}</SectionTitle>
@@ -197,6 +214,7 @@ const CadastrarProduto: React.FC = () => {
                   id="nome"
                   value={nome}
                   onChange={(e) => setNome(e.target.value)}
+                  placeholder="Digite o nome do produto"
                   required
                 />
                 <Label htmlFor="codigoBarras">Código de Barras</Label>
@@ -205,7 +223,8 @@ const CadastrarProduto: React.FC = () => {
                   id="codigoBarras"
                   value={codigoBarras}
                   onChange={(e) => setCodigoBarras(e.target.value)}
-                  required
+                  placeholder="Digite o código de barras"
+                  
                 />
                 <Label htmlFor="preco">Preço</Label>
                 <Input
@@ -213,6 +232,7 @@ const CadastrarProduto: React.FC = () => {
                   id="preco"
                   value={preco}
                   onChange={(e) => setPreco(e.target.value)}
+                  placeholder="Digite o preço"
                   required
                 />
                 <Label htmlFor="imageUrl">Imagem URL</Label>
@@ -221,6 +241,7 @@ const CadastrarProduto: React.FC = () => {
                   id="imageUrl"
                   value={imageUrl}
                   onChange={(e) => setImageUrl(e.target.value)}
+                  placeholder="Cole a URL da imagem"
                 />
                 <Label htmlFor="categoria">Categoria</Label>
                 <Select
@@ -261,7 +282,6 @@ const CadastrarProduto: React.FC = () => {
                   onChange={(e) => setSearchTerm(e.target.value)}
                   placeholder="Digite o nome do produto"
                 />
-                
               </Form>
               <CardList>
                 {produtos.map((produto) => (
@@ -269,7 +289,7 @@ const CadastrarProduto: React.FC = () => {
                     <Card>
                       {produto.imageUrl && <Image src={produto.imageUrl} alt={produto.productName} />}
                       <ProductName>{produto.productName}</ProductName>
-                      <ProductPrice>R${produto.productPrice.toFixed(2)}</ProductPrice>
+                      <ProductPrice>{formatPrice(produto.productPrice)}</ProductPrice>
                       <IconContainer>
                         <CardButton onClick={() => handleEdit(produto)}>
                           <EditIcon />
