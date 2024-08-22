@@ -78,28 +78,6 @@ const CadastrarProduto: React.FC = () => {
     fetchCategorias();
   }, [token]);
 
-  useEffect(() => {
-    const fetchProdutos = async () => {
-      if (searchTerm.trim() !== '') { 
-        try {
-          const response = await axios.get(`http://localhost:8080/products/search?productName=${searchTerm}`, {
-            headers: {
-              Authorization: `Bearer ${token}`
-            }
-          });
-          setProdutos(response.data);
-        } catch (error) {
-          console.error('Erro ao buscar produtos:', error);
-        }
-      } else {
-        setProdutos([]); 
-      }
-    };
-  
-    fetchProdutos();
-  }, [searchTerm, token]);
-  
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -185,119 +163,93 @@ const CadastrarProduto: React.FC = () => {
   
 
   return (
-    <ProductContainer>
-      <ContainerWrapper>
-        <ToggleButtonContainer>
-          <ToggleButton 
-            onClick={() => setIsCadastroVisible(true)} 
-            active={isCadastroVisible}
-          >
-            CADASTRO DE PRODUTOS
-          </ToggleButton>
-          <ToggleButton 
-            onClick={() => setIsCadastroVisible(false)} 
-            active={!isCadastroVisible}
-          >
-            PRODUTOS
-          </ToggleButton>
-        </ToggleButtonContainer>
-
-        <div >
-          {isCadastroVisible && (
-            <Section style={{ flex: 1 }}>
-              <SectionTitle>{editId ? 'Atualizar Produto' : 'Cadastrar Produto'}</SectionTitle>
-              <Form onSubmit={handleSubmit}>
-                <Label htmlFor="nome">Nome do Produto</Label>
-                <Input
-                  type="text"
-                  id="nome"
-                  value={nome}
-                  onChange={(e) => setNome(e.target.value)}
-                  placeholder="Digite o nome do produto"
-                  required
-                />
-                <Label htmlFor="codigoBarras">Código de Barras</Label>
-                <Input
-                  type="text"
-                  id="codigoBarras"
-                  value={codigoBarras}
-                  onChange={(e) => setCodigoBarras(e.target.value)}
-                  placeholder="Digite o código de barras"
-                  
-                />
-                <Label htmlFor="preco">Preço</Label>
-                <Input
-                  type="number"
-                  id="preco"
-                  value={preco}
-                  onChange={(e) => setPreco(e.target.value)}
-                  placeholder="Digite o preço"
-                  required
-                />
-                <Label htmlFor="imageUrl">Imagem URL</Label>
-                <Input
-                  type="text"
-                  id="imageUrl"
-                  value={imageUrl}
-                  onChange={(e) => setImageUrl(e.target.value)}
-                  placeholder="Cole a URL da imagem"
-                />
-                <Label htmlFor="categoria">Categoria</Label>
-                <Select
-                  id="categoria"
-                  value={categoriaSelecionada}
-                  onChange={(e) => setCategoriaSelecionada(e.target.value)}
-                >
-                  <option value="">Selecione uma categoria</option>
-                  {categorias.map((categoria) => (
-                    <option key={categoria.id} value={categoria.id}>
-                      {categoria.categoryName}
-                    </option>
-                  ))}
-                </Select>
-                <CheckboxContainer>
-                  <CheckboxLabel htmlFor="isBulk">Produto a granel?</CheckboxLabel>
-                  <CheckboxInput
-                    type="checkbox"
-                    id="isBulk"
-                    checked={isBulk}
-                    onChange={(e) => setIsBulk(e.target.checked)}
-                  />
-                </CheckboxContainer>
-                <Button type="submit">{editId ? 'Atualizar' : 'Cadastrar'}</Button>
-              </Form>
-            </Section>
-          )}
-
-          {!isCadastroVisible && (
-            <Section style={{ flex: 1 }}>
-              <SectionTitle>Produtos</SectionTitle>
-              <Form onSubmit={(e) => { e.preventDefault(); setSearchTerm(searchTerm); }}>
-                <Label htmlFor="search">Pesquisar produto:</Label>
-                <SearchInput
-                  type="text"
-                  id="search"
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  placeholder="Digite o nome do produto"
-                />
-              </Form>
-              <CardList>
-                {produtos.map((produto) => (
+    <>
+      <H1>Gerenciamento de produtos:</H1>
+      <ProductContainer>
+        <Section className="product-section">
+          <SectionTitle>{editId ? 'Atualizar Produto' : 'Cadastrar Produto'}</SectionTitle>
+          <Form onSubmit={handleSubmit}>
+            <Label htmlFor="nome">Nome do Produto</Label>
+            <Input
+              type="text"
+              id="nome"
+              value={nome}
+              onChange={(e) => setNome(e.target.value)}
+              required
+            />
+            <Label htmlFor="codigoBarras">Código de barras</Label>
+            <Input
+              type="text"
+              id="codigoBarras"
+              value={codigoBarras}
+              onChange={(e) => setCodigoBarras(e.target.value)}
+              required
+            />
+            <Label htmlFor="preco">Preço</Label>
+            <Input
+              type="number"
+              id="preco"
+              value={preco}
+              onChange={(e) => setPreco(e.target.value)}
+              required
+            />
+            <Label htmlFor="descricao">Imagem URL</Label>
+            <Input
+              type="text"
+              id="imageUrl"
+              value={imageUrl}
+              onChange={(e) => setImageUrl(e.target.value)}
+            />
+            <Label htmlFor="categoria">Categoria</Label>
+            <Select
+              id="categoria"
+              value={categoriaSelecionada}
+              onChange={(e) => setCategoriaSelecionada(e.target.value)}
+            >
+              <option value="">Selecione uma categoria</option>
+              {categorias.map((categoria) => (
+                <option key={categoria.id} value={categoria.id}>{categoria.categoryName}</option>
+              ))}
+            </Select>
+            <CheckboxContainer>
+              <CheckboxLabel htmlFor="isBulk">Produto a granel?</CheckboxLabel>
+              <CheckboxInput
+                type="checkbox"
+                id="isBulk"
+                checked={isBulk}
+                onChange={(e) => setIsBulk(e.target.checked)} // Atualiza o estado do checkbox
+              />
+            </CheckboxContainer>
+            <Button type="submit">{editId ? 'Atualizar' : 'Cadastrar'}</Button>
+          </Form>
+        </Section>
+        <Section className="search-section">
+          <SectionTitle>Verificar existência do produto</SectionTitle>
+          <Form onSubmit={(e) => { e.preventDefault(); searchProdutos(searchTerm); }}>
+            <Label htmlFor="search">Pesquisar produto:</Label>
+            <CardInput
+              type="text"
+              id="search"
+              value={searchTerm}
+              onChange={handleSearchChange}
+            />
+            <CardButton type="submit">
+              <SearchButtonIcon><FaSearch /></SearchButtonIcon>
+              Pesquisar
+            </CardButton>
+          </Form>
+          <Card>
+            <CardList>
+              {produtos.length > 0 ? (
+                produtos.map((produto) => (
                   <CardItem key={produto.id}>
-                    <Card>
-                      {produto.imageUrl && <Image src={produto.imageUrl} alt={produto.productName} />}
-                      <ProductName>{produto.productName}</ProductName>
-                      <ProductPrice>{formatPrice(produto.productPrice)}</ProductPrice>
-                      <IconContainer>
-                        <CardButton onClick={() => handleEdit(produto)}>
-                          <EditIcon />
-                        </CardButton>
-                        <CardButton onClick={() => handleDelete(produto.id)}>
-                          <DeleteIcon />
-                        </CardButton>
-                      </IconContainer>
-                    </Card>
+                    <div>
+                      <ProductName>{produto.productName}</ProductName> - <ProductPrice>{produto.productPrice.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</ProductPrice>
+                    </div>
+                    <IconContainer>
+                      <EditIcon onClick={() => handleEdit(produto)} />
+                      <DeleteIcon onClick={() => handleDelete(produto.id)} />
+                    </IconContainer>
                   </CardItem>
                 ))}
               </CardList>
