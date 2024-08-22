@@ -1,7 +1,6 @@
 import styled from 'styled-components';
 import {  FaEdit, FaTrashAlt } from 'react-icons/fa';
 
-
 // Container principal do produto
 export const ProductContainer = styled.div`
   margin-left: 10%;
@@ -127,7 +126,7 @@ export const Card = styled.div`
   padding: 10px; 
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   transition: box-shadow 0.3s ease, transform 0.3s ease;
-  max-width: 100%;
+  max-width: 100%;s
   height: auto;
   box-sizing: border-box;
 
@@ -143,7 +142,7 @@ export const CardList = styled.div`
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); /* Reduzi o minmax */
   gap: 12px; /* Reduzi o gap */
-  padding: 15px; /* Reduzi o padding */
+  padding: 12px; /* Reduzi o padding */
   box-sizing: border-box;
 `;
 
@@ -245,7 +244,9 @@ export const ToggleButton = styled.button<{ active: boolean }>`
 // Item individual da lista de cartões
 export const CardItem = styled.div`
   display: flex;
-  align-items: center;
+  width: 100%;
+ 
+  
 `;
 
 // Rótulo para checkbox

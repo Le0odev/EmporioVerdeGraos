@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { FaSearch, FaEdit, FaTrashAlt } from 'react-icons/fa';
 import {
   ProductContainer,
   ContainerWrapper,
