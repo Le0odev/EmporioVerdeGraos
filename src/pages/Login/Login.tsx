@@ -10,7 +10,7 @@ const LoginContainer = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  margin: 10rem;
+  margin: 5rem;
 `;
 
 interface LoginFormData {
@@ -69,7 +69,7 @@ const LoginForm: React.FC = () => {
   return (
     <LoginContainer>
       <Form onSubmit={handleSubmit}>
-        <H2>Login</H2>
+        <H2>Login Admin</H2>
         <Label htmlFor="username">Username</Label>
         <Input
           type="text"
