@@ -1,210 +1,193 @@
-import { FaEdit, FaTrashAlt } from "react-icons/fa";
-import styled from "styled-components";
+import styled from 'styled-components';
+import { FaSearch, FaEdit, FaTrashAlt } from 'react-icons/fa';
 
 export const ProductContainer = styled.div`
-  margin: 24px;
-  margin-top: 2.5rem;
   display: flex;
-  justify-content: space-between;
-  border: 1.5px solid #ddd;
-  border-radius: 8px;
+  flex-direction: column;
+  width: 100%;
+  height: 100vh;
   padding: 16px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  box-sizing: border-box;
+`;
+
+export const ContainerWrapper = styled.div`
+  display: flex;
+  flex: 1;
+  gap: 14px;
 `;
 
 export const Section = styled.div`
-  margin: 20px;
-  max-width: 890px;
-  flex: 1;
-  padding: 20px;
-  background-color: #fff;
+  background: #fff;
   border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  padding: 16px;
+  flex: 1;
+  overflow-y: auto;
+  max-height: calc(100vh - 32px);
 `;
 
-export const SectionTitle = styled.h1`
-  font-size: 24px;
-  margin-bottom: 20px;
+export const SectionTitle = styled.h2`
+  margin-bottom: 16px;
+  font-size: 20px;
   color: #333;
 `;
 
 export const Form = styled.form`
-  margin: 15px;
-  margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
 `;
 
 export const Label = styled.label`
-  display: block;
-  margin-bottom: 8px;
+  font-weight: bold;
   color: #555;
+  font-size: 14px;
 `;
 
 export const Input = styled.input`
-  width: calc(100% - 24px);
-  padding: 12px;
-  margin-bottom: 16px;
-  border: 1px solid #ccc;
+  padding: 8px;
+  border: 1px solid #ddd;
   border-radius: 4px;
-  font-size: 16px;
+  font-size: 14px;
 `;
 
 export const Select = styled.select`
-  width: calc(100% - 24px);
-  padding: 12px;
-  margin-bottom: 16px;
-  border: 1px solid #ccc;
+  padding: 8px;
+  border: 1px solid #ddd;
   border-radius: 4px;
-  font-size: 16px;
+  font-size: 14px;
 `;
 
 export const Button = styled.button`
+  padding: 8px 12px;
   background-color: #007bff;
   color: #fff;
-  padding: 12px 24px;
   border: none;
   border-radius: 4px;
   cursor: pointer;
-  font-size: 16px;
-  transition: background-color 0.3s ease;
-
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+  
   &:hover {
     background-color: #0056b3;
   }
 `;
 
-export const H1 = styled.h1`
-  font-size: 32px;
-  margin-bottom: 40px;
-  background-color: #343a40;
-  color: #fff;
-  padding: 20px;
-  border-radius: 10px;
+export const CardList = styled.div`
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 16px;
+`;
+
+export const CardItem = styled.div`
+  display: flex;
+  flex-direction: column;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  padding: 10px;
   text-align: center;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-`;
-
-export const CardInput = styled.input`
-  width: 500px;
-  height: 40px;
-  padding: 12px;
-  margin-bottom: 16px;
-  border: 1px solid #ccc;
-  border-radius: 10px;
-  font-size: 16px;
-  outline: none;
-  margin-right: 1rem;
-`;
-
-export const CardButton = styled.button`
-  background-color: #007bff;
-  color: #fff;
-  padding: 12px 20px;
-  border: none;
-  border-radius: 15px;
-  cursor: pointer;
-  font-size: 16px;
-  transition: background-color 0.3s ease;
-
-  &:hover {
-    background-color: #0056b3;
-  }
-`;
-
-export const SearchIcon = styled.span`
-  margin-right: 10px;
-`;
-
-export const SearchButtonIcon = styled.span`
-  margin-right: 8px;
 `;
 
 export const Card = styled.div`
-  width: 100%;
-  margin: 20px 0;
-  padding: 20px;
-  border-radius: 10px;
-  background-color: #f9f9f9;
-  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  max-width: 100%;
 `;
 
-export const CardList = styled.ul`
-  list-style: none;
-  padding: 0;
-  margin: 0;
+export const ProductName = styled.h3`
+  font-size: 16px;
+  margin: 6px 0;
 `;
 
-export const CardItem = styled.li`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  font-size: 18px;
-  margin: 12px 0;
-  padding: 12px 20px;
-  border-radius: 8px;
-  background-color: #fff;
-  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
-  transition: background-color 0.3s ease, box-shadow 0.3s ease;
-
-  &:hover {
-    background-color: #eef2f9;
-    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.15);
-  }
-`;
-
-export const ProductName = styled.span`
-  font-weight: bold;
-  font-size: 1.2rem;
-  color: #333;
-`;
-
-export const ProductPrice = styled.span`
+export const ProductPrice = styled.p`
+  font-size: 14px;
   color: #007bff;
+`;
+
+export const EditIcon = styled(FaEdit)`
+  color: #28a745;
+  margin-right: auto;
+`;
+
+export const DeleteIcon = styled(FaTrashAlt)`
+  color: #dc3545;
 `;
 
 export const IconContainer = styled.div`
   display: flex;
-  align-items: center;
+  justify-content: center;
+  margin-top: 8px;
 `;
 
-export const EditIcon = styled(FaEdit)`
-  color: #007bff;
-  cursor: pointer;
-  font-size: 20px;
-  margin-right: 10px;
-  transition: color 0.3s ease, font-size 0.3s ease;
+export const ToggleButtonContainer = styled.div`
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+`;
 
+export const ToggleButton = styled.button<{ active: boolean }>`
+  height: 25%;
+  width: 25%;
+  padding: 4px 16px;
+  background: ${(props) => (props.active ? '#007bff' : '#f1f1f1')};
+  color: ${(props) => (props.active ? '#fff' : '#333')};
+  border: none;
+  border-radius: 30%;
+  cursor: pointer;
+  flex: 1;
+  font-size: 14px;
+  
   &:hover {
-    color: #0056b3;
-    font-size: 22px;
+    background: ${(props) => (props.active ? '#0056b3' : '#ddd')};
   }
 `;
 
-export const DeleteIcon = styled(FaTrashAlt)`
-  color: red;
-  cursor: pointer;
-  font-size: 20px;
-  transition: color 0.3s ease, font-size 0.3s ease;
-
-  &:hover {
-    color: #d9534f;
-    font-size: 22px;
-  }
+export const Image = styled.img`
+  max-width: 60px;
+  height: auto;
+  border-radius: 4px;
 `;
 
 export const CheckboxContainer = styled.div`
   display: flex;
   align-items: center;
-  margin-bottom: 16px;
 `;
 
-export const CheckboxLabel = styled.label`
-  font-size: 20px;
-  color: #555;
+export const CheckboxLabel = styled(Label)`
+  margin-right: 8px;
+  font-size: 16px;
 `;
 
 export const CheckboxInput = styled.input`
-  width: 20px;
-  height: 20px;
-  cursor: pointer;
-  margin-left: 8px;
+  margin-right: 4px;
 `;
+
+export const CardButton = styled.button`
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  margin: 0 4px;
+  transition: color 0.3s;
+  
+  &:hover {
+    color: #007bff;
+  }
+
+  svg {
+    font-size: 18px;
+  }
+`;
+
+// Ajuste do campo de pesquisa
+export const SearchInput = styled.input`
+  width: 100%;
+  padding: 12px;
+  font-size: 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  margin-bottom: 12px;
+  box-sizing: border-box;
+`;
+
+
