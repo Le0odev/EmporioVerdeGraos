@@ -3,6 +3,7 @@ import axios from 'axios';
 import { FaSearch, FaEdit, FaTrashAlt } from 'react-icons/fa';
 import {
   ProductContainer,
+  ContainerWrapper,
   Section,
   SectionTitle,
   Form,
@@ -10,21 +11,22 @@ import {
   Input,
   Select,
   Button,
-  H1,
   Card,
   CardList,
   CardItem,
-  CardButton,
-  CardInput,
-  SearchButtonIcon,
   ProductPrice,
   ProductName,
   EditIcon,
   DeleteIcon,
-  CheckboxContainer,
+  ToggleButtonContainer,
+  ToggleButton,
+  SearchInput,
+  IconContainer,
+  Image,
   CheckboxLabel,
+  CheckboxContainer,
   CheckboxInput,
-  IconContainer
+  CardButton
 } from './StyledProdutos';
 import { useAuth } from '../Login/authContext';
 
@@ -40,7 +42,7 @@ interface Produto {
   productDescription: string;
   codeBar: string;
   categoryId: string;
-  bulk: boolean; // Alterado para corresponder ao nome do campo na API
+  bulk: boolean;
   imageUrl: string;
 }
 
@@ -49,17 +51,16 @@ const CadastrarProduto: React.FC = () => {
   const [preco, setPreco] = useState('');
   const [descricao, setDescricao] = useState('');
   const [codigoBarras, setCodigoBarras] = useState('');
-  const [isBulk, setIsBulk] = useState(false); // Estado para checkbox "Produto a granel"
+  const [isBulk, setIsBulk] = useState(false);
   const [categorias, setCategorias] = useState<Categoria[]>([]);
   const [categoriaSelecionada, setCategoriaSelecionada] = useState('');
-  const [searchTerm, setSearchTerm] = useState('');
   const [produtos, setProdutos] = useState<Produto[]>([]);
   const [editId, setEditId] = useState<string | null>(null);
   const [imageUrl, setImageUrl] = useState('');
+  const [isCadastroVisible, setIsCadastroVisible] = useState(true);
+  const [searchTerm, setSearchTerm] = useState('');
 
   const { token } = useAuth();
-  
-
 
   useEffect(() => {
     const fetchCategorias = async () => {
@@ -78,6 +79,23 @@ const CadastrarProduto: React.FC = () => {
     fetchCategorias();
   }, [token]);
 
+  useEffect(() => {
+    const fetchProdutos = async () => {
+      try {
+        const response = await axios.get(`http://localhost:8080/products/search?productName=${searchTerm}`, {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        });
+        setProdutos(response.data);
+      } catch (error) {
+        console.error('Erro ao buscar produtos:', error);
+      }
+    };
+
+    fetchProdutos();
+  }, [searchTerm, token]);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -87,7 +105,7 @@ const CadastrarProduto: React.FC = () => {
       productDescription: descricao,
       codeBar: codigoBarras,
       categoryId: categoriaSelecionada,
-      bulk: isBulk, 
+      bulk: isBulk,
       imageUrl: imageUrl
     };
 
@@ -109,6 +127,8 @@ const CadastrarProduto: React.FC = () => {
             Authorization: `Bearer ${token}`
           }
         });
+        // Atualizar a lista de produtos
+        setProdutos([...produtos, data as Produto]);
       }
 
       // Limpar os campos após o cadastro ou atualização
@@ -117,58 +137,20 @@ const CadastrarProduto: React.FC = () => {
       setDescricao('');
       setCodigoBarras('');
       setCategoriaSelecionada('');
-      setIsBulk(false); // Reinicia o estado do checkbox para false após o cadastro ou atualização
-      setImageUrl('')
+      setIsBulk(false);
+      setImageUrl('');
     } catch (error) {
       console.error('Erro ao cadastrar ou atualizar produto:', error);
     }
   };
 
-  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchTerm(e.target.value);
-  };
-
-  const searchProdutos = async (term: string) => {
-    try {
-      const response = await axios.get(`http://localhost:8080/products/search?productName=${term}`, {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      });
-
-      if (response.data && Array.isArray(response.data)) {
-        setProdutos(response.data);
-      } else {
-        console.error('A resposta da API não é um array:', response.data);
-        setProdutos([]);
-      }
-    } catch (error) {
-      console.error('Erro ao buscar produtos:', error);
-      setProdutos([]); // Limpa a lista em caso de erro
-    }
-  };
-
-  useEffect(() => {
-    if (searchTerm) {
-      const debounceSearch = setTimeout(() => {
-        searchProdutos(searchTerm);
-      }, 300); // Atraso de 300ms para evitar chamadas excessivas
-
-      return () => clearTimeout(debounceSearch); // Limpar timeout se o componente desmontar ou searchTerm mudar
-    } else {
-      setProdutos([]); // Limpar lista se não houver termo de pesquisa
-    }
-  }, [searchTerm]);
-
   const handleEdit = (produto: Produto) => {
-    // Lógica para edição
     setNome(produto.productName);
     setPreco(produto.productPrice.toString());
     setDescricao(produto.productDescription);
     setCodigoBarras(produto.codeBar);
     setCategoriaSelecionada(produto.categoryId);
-    setIsBulk(produto.bulk); // Define o estado do checkbox com o valor do produto editado
-    // Armazenar o ID do produto sendo editado
+    setIsBulk(produto.bulk);
     setEditId(produto.id);
     setImageUrl(produto.imageUrl);
   };
@@ -187,103 +169,123 @@ const CadastrarProduto: React.FC = () => {
   };
 
   return (
-    <>
-      <H1>Gerenciamento de produtos:</H1>
-      <ProductContainer>
-        <Section className="product-section">
-          <SectionTitle>{editId ? 'Atualizar Produto' : 'Cadastrar Produto'}</SectionTitle>
-          <Form onSubmit={handleSubmit}>
-            <Label htmlFor="nome">Nome do Produto</Label>
-            <Input
-              type="text"
-              id="nome"
-              value={nome}
-              onChange={(e) => setNome(e.target.value)}
-              required
-            />
-            <Label htmlFor="codigoBarras">Código de barras</Label>
-            <Input
-              type="text"
-              id="codigoBarras"
-              value={codigoBarras}
-              onChange={(e) => setCodigoBarras(e.target.value)}
-              required
-            />
-            <Label htmlFor="preco">Preço</Label>
-            <Input
-              type="number"
-              id="preco"
-              value={preco}
-              onChange={(e) => setPreco(e.target.value)}
-              required
-            />
-            <Label htmlFor="descricao">Imagem URL</Label>
-            <Input
-              type="text"
-              id="imageUrl"
-              value={imageUrl}
-              onChange={(e) => setImageUrl(e.target.value)}
-            />
-            <Label htmlFor="categoria">Categoria</Label>
-            <Select
-              id="categoria"
-              value={categoriaSelecionada}
-              onChange={(e) => setCategoriaSelecionada(e.target.value)}
-            >
-              <option value="">Selecione uma categoria</option>
-              {categorias.map((categoria) => (
-                <option key={categoria.id} value={categoria.id}>{categoria.categoryName}</option>
-              ))}
-            </Select>
-            <CheckboxContainer>
-              <CheckboxLabel htmlFor="isBulk">Produto a granel?</CheckboxLabel>
-              <CheckboxInput
-                type="checkbox"
-                id="isBulk"
-                checked={isBulk}
-                onChange={(e) => setIsBulk(e.target.checked)} // Atualiza o estado do checkbox
-              />
-            </CheckboxContainer>
-            <Button type="submit">{editId ? 'Atualizar' : 'Cadastrar'}</Button>
-          </Form>
-        </Section>
-        <Section className="search-section">
-          <SectionTitle>Verificar existência do produto</SectionTitle>
-          <Form onSubmit={(e) => { e.preventDefault(); searchProdutos(searchTerm); }}>
-            <Label htmlFor="search">Pesquisar produto:</Label>
-            <CardInput
-              type="text"
-              id="search"
-              value={searchTerm}
-              onChange={handleSearchChange}
-            />
-            <CardButton type="submit">
-              <SearchButtonIcon><FaSearch /></SearchButtonIcon>
-              Pesquisar
-            </CardButton>
-          </Form>
-          <Card>
-            <CardList>
-              {produtos.length > 0 ? (
-                produtos.map((produto) => (
+    <ProductContainer>
+      <ContainerWrapper>
+        <ToggleButtonContainer>
+          <ToggleButton 
+            onClick={() => setIsCadastroVisible(true)} 
+            active={isCadastroVisible}
+          >
+            CADASTRO DE PRODUTOS
+          </ToggleButton>
+          <ToggleButton 
+            onClick={() => setIsCadastroVisible(false)} 
+            active={!isCadastroVisible}
+          >
+            PRODUTOS
+          </ToggleButton>
+        </ToggleButtonContainer>
+
+        <div style={{ display: 'flex' }}>
+          {isCadastroVisible && (
+            <Section style={{ flex: 1 }}>
+              <SectionTitle>{editId ? 'Atualizar Produto' : 'Cadastrar Produto'}</SectionTitle>
+              <Form onSubmit={handleSubmit}>
+                <Label htmlFor="nome">Nome do Produto</Label>
+                <Input
+                  type="text"
+                  id="nome"
+                  value={nome}
+                  onChange={(e) => setNome(e.target.value)}
+                  required
+                />
+                <Label htmlFor="codigoBarras">Código de Barras</Label>
+                <Input
+                  type="text"
+                  id="codigoBarras"
+                  value={codigoBarras}
+                  onChange={(e) => setCodigoBarras(e.target.value)}
+                  required
+                />
+                <Label htmlFor="preco">Preço</Label>
+                <Input
+                  type="number"
+                  id="preco"
+                  value={preco}
+                  onChange={(e) => setPreco(e.target.value)}
+                  required
+                />
+                <Label htmlFor="imageUrl">Imagem URL</Label>
+                <Input
+                  type="text"
+                  id="imageUrl"
+                  value={imageUrl}
+                  onChange={(e) => setImageUrl(e.target.value)}
+                />
+                <Label htmlFor="categoria">Categoria</Label>
+                <Select
+                  id="categoria"
+                  value={categoriaSelecionada}
+                  onChange={(e) => setCategoriaSelecionada(e.target.value)}
+                >
+                  <option value="">Selecione uma categoria</option>
+                  {categorias.map((categoria) => (
+                    <option key={categoria.id} value={categoria.id}>
+                      {categoria.categoryName}
+                    </option>
+                  ))}
+                </Select>
+                <CheckboxContainer>
+                  <CheckboxLabel htmlFor="isBulk">Produto a granel?</CheckboxLabel>
+                  <CheckboxInput
+                    type="checkbox"
+                    id="isBulk"
+                    checked={isBulk}
+                    onChange={(e) => setIsBulk(e.target.checked)}
+                  />
+                </CheckboxContainer>
+                <Button type="submit">{editId ? 'Atualizar' : 'Cadastrar'}</Button>
+              </Form>
+            </Section>
+          )}
+
+          {!isCadastroVisible && (
+            <Section style={{ flex: 1 }}>
+              <SectionTitle>Produtos</SectionTitle>
+              <Form onSubmit={(e) => { e.preventDefault(); setSearchTerm(searchTerm); }}>
+                <Label htmlFor="search">Pesquisar produto:</Label>
+                <SearchInput
+                  type="text"
+                  id="search"
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  placeholder="Digite o nome do produto"
+                />
+              </Form>
+              <CardList>
+                {produtos.map((produto) => (
                   <CardItem key={produto.id}>
-                    <div>
-                      <ProductName>{produto.productName}</ProductName> - <ProductPrice>{produto.productPrice.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</ProductPrice>
-                    </div>
-                    <IconContainer>
-                      <EditIcon onClick={() => handleEdit(produto)} />
-                      <DeleteIcon onClick={() => handleDelete(produto.id)} />
-                    </IconContainer>
+                    <Card>
+                      {produto.imageUrl && <Image src={produto.imageUrl} alt={produto.productName} />}
+                      <ProductName>{produto.productName}</ProductName>
+                      <ProductPrice>R${produto.productPrice.toFixed(2)}</ProductPrice>
+                      <IconContainer>
+                        <CardButton onClick={() => handleEdit(produto)}>
+                          <EditIcon />
+                        </CardButton>
+                        <CardButton onClick={() => handleDelete(produto.id)}>
+                          <DeleteIcon />
+                        </CardButton>
+                      </IconContainer>
+                    </Card>
                   </CardItem>
-                ))
-              ) : (
-                <p>Nenhum produto encontrado</p>
-              )}
-            </CardList>
-          </Card>
-        </Section>
-      </ProductContainer>
-    </>
+                ))}
+              </CardList>
+            </Section>
+          )}
+        </div>
+      </ContainerWrapper>
+    </ProductContainer>
   );
 };
 
