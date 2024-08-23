@@ -1,14 +1,12 @@
 import styled from 'styled-components';
-import { FaEdit, FaTrashAlt } from 'react-icons/fa';
+import {  FaRegEdit, FaTrashAlt } from 'react-icons/fa';
 
-// Container principal do produto
 // Container principal do produto
 export const ProductContainer = styled.div`
   margin: 0 auto;
   display: flex;
   flex-direction: column;
-  width: 90%; /* Ajuste para centralizar o conteúdo */
-  height: 80vh;
+  width: 90%; 
   padding: 15px;
   box-sizing: border-box;
   
@@ -23,6 +21,8 @@ export const ContainerWrapper = styled.div`
   border-radius: 12px;
   box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
   background: #f8f9fa;
+  margin-top: -20px;
+
 `;
 
 // Seção para formulário e lista de produtos
@@ -30,13 +30,47 @@ export const Section = styled.div`
   flex: 1;
   display: flex;
   flex-direction: column;
-  margin-top: 10px;
   padding: 15px;
   border-radius: 10px;
   background: #f8f9fa;
   border: solid 1px #ddd;
-  overflow: auto; /* Adicione rolagem se necessário */
+  overflow: auto;  
 `;
+
+// Container dos botões de filtro
+export const ToggleButtonContainer = styled.div`
+  display: flex;
+  margin-bottom: 16px;
+`;
+
+// Botão de filtro alternado
+export const ToggleButton = styled.button<{ active: boolean }>`
+  padding: 12px 20px;
+  background-color: ${({ active }) => (active ? '#007bff' : '#ffffff')};
+  color: ${({ active }) => (active ? '#fff' : '#007bff')};
+  border: solid 1.5px #ddd;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+
+  &:not(:last-child) {
+    margin-right: 8px;
+  }
+
+  &:hover {
+    background-color: ${({ active }) => (active ? '#0056b3' : '#e2e6ea')};
+    transform: translateY(-1px);
+  }
+
+  &:active {
+    background-color: ${({ active }) => (active ? '#004494' : '#dae0e5')};
+    transform: translateY(0);
+    border: #dae0e5;
+  }
+`;
+
 // Título da seção
 export const SectionTitle = styled.h2`
   margin-bottom: 15px;
@@ -44,6 +78,7 @@ export const SectionTitle = styled.h2`
   font-weight: 700;
   color: #333;
 `;
+
 
 // Formulário de produto
 export const Form = styled.form`
@@ -75,6 +110,12 @@ export const Input = styled.input`
   }
 `;
 
+// Estilo de campo de busca
+export const SearchInput = styled(Input)`
+  width: 100%;
+`;
+
+
 // Selecionar opções
 export const Select = styled.select`
   margin-bottom: 12px;
@@ -89,6 +130,62 @@ export const Select = styled.select`
     border-color: #007bff;
     outline: none;
   }
+`;
+// Cartão de produto
+export const Card = styled.div`
+  display: flex;
+  flex-direction: column;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  overflow: hidden;
+  background-color: #fff;
+  padding: 10px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  transition: box-shadow 0.3s ease, transform 0.3s ease;
+  height: auto;
+  width: 140px;
+  box-sizing: border-box;
+
+  &:hover {
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+    transform: translateY(-2px);
+    cursor: pointer;
+  }
+`;
+
+export const ProductGrid = styled.div`
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); /* Ajuste o tamanho dos cartões */
+  gap: 15px; /* Espaçamento entre os cartões */
+  margin-top: 10px;
+`;
+
+export const CardButton = styled.button`
+  background: none;
+  border: none;
+  padding: 10px;
+  margin-right: 8px;
+  
+  transition: color 0.3s ease;
+  
+  
+  /* Adiciona espaçamento entre ícones */
+  & > *:not(:last-child) {
+    margin-right: 8px;
+  }
+
+  &:hover {
+    color: #007bff;
+  }
+`;
+
+
+// Item individual da lista de cartões
+export const CardItem = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
 `;
 
 // Botão de ação
@@ -113,29 +210,13 @@ export const Button = styled.button`
   }
 `;
 
-// Cartão de produto
-export const Card = styled.div`
-  display: flex;
-  flex-direction: column;
-  border: 1px solid #ddd;
+// Estilo da imagem do produto
+export const Image = styled.img`
+  width: 120px;
+  height: 120px; /* Tamanho fixo para evitar distorção */
+  object-fit: cover;
   border-radius: 8px;
-  overflow: hidden;
-  background-color: #fff;
-  padding: 10px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-  transition: box-shadow 0.3s ease, transform 0.3s ease;
-  height: auto;
-  width: 140px;
-  box-sizing: border-box;
-
-  &:hover {
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
-    transform: translateY(-2px);
-    cursor: pointer;
-  }
 `;
-
-
 
 // Nome do produto no cartão
 export const ProductName = styled.h3`
@@ -161,12 +242,13 @@ export const IconContainer = styled.div`
   margin-top: 8px;
 `;
 
-export const EditIcon = styled(FaEdit)`
+export const EditIcon = styled(FaRegEdit)`
   color: #007bff;
   cursor: pointer;
-  font-size: 20px;
+  font-size: 21px;
   transition: color 0.3s ease;
   margin-left: auto;
+
 
   &:hover {
     color: #0056b3;
@@ -176,75 +258,13 @@ export const EditIcon = styled(FaEdit)`
 export const DeleteIcon = styled(FaTrashAlt)`
   color: #dc3545;
   cursor: pointer;
-  font-size: 18px;
+  font-size: 19px;
   transition: color 0.3s ease;
   margin-right: -12px;
 
   &:hover {
     color: #c82333;
   }
-`;
-
-// Estilo da imagem do produto
-export const Image = styled.img`
-  width: 120px;
-  height: 120px; /* Tamanho fixo para evitar distorção */
-  object-fit: cover;
-  border-radius: 8px;
-`;
-
-// Estilo de campo de busca
-export const SearchInput = styled(Input)`
-  width: 100%;
-`;
-
-// Container dos botões de filtro
-export const ToggleButtonContainer = styled.div`
-  display: flex;
-  margin-bottom: 16px;
-`;
-
-// Botão de filtro alternado
-export const ToggleButton = styled.button<{ active: boolean }>`
-  padding: 12px 20px;
-  background-color: ${({ active }) => (active ? '#007bff' : '#ffffff')};
-  color: ${({ active }) => (active ? '#fff' : '#007bff')};
-  border: solid 1.5px #ddd;
-  border-radius: 10px;
-  cursor: pointer;
-  font-size: 15px;
-  font-weight: 700;
-  transition: background-color 0.3s ease, transform 0.2s ease;
-
-  &:not(:last-child) {
-    margin-right: 8px;
-  }
-
-  &:hover {
-    background-color: ${({ active }) => (active ? '#0056b3' : '#e2e6ea')};
-    transform: translateY(-1px);
-  }
-
-  &:active {
-    background-color: ${({ active }) => (active ? '#004494' : '#dae0e5')};
-    transform: translateY(0);
-    border: #dae0e5;
-  }
-`;
-
-export const ProductGrid = styled.div`
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); /* Ajuste o tamanho dos cartões */
-  gap: 15px; /* Espaçamento entre os cartões */
-  margin-top: 10px;
-`;
-
-// Item individual da lista de cartões
-export const CardItem = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
 `;
 
 
@@ -266,17 +286,68 @@ export const CheckboxInput = styled.input`
   margin: 10px;
 `;
 
-// Botão para ações do cartão
-export const CardButton = styled.button`
-  background: none;
+// Estilização do modal em si
+export const Modal = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5); // Fundo semi-transparente
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000; // Certifica-se de que o modal esteja acima de outros elementos
+`;
+
+// Conteúdo do modal, centrado na tela
+export const ModalContent = styled.div`
+  background-color: white;
+  padding: 30px; 
+  border-radius: 10px; // Bordas arredondadas
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3); // Sombra para dar destaque
+  max-width: 500px; // Largura máxima
+  width: 100%; // Responsividade
+  text-align: center; 
+`;
+
+// Cabeçalho do modal
+export const ModalHeader = styled.div`
+  margin-bottom: 20px; // Espaçamento inferior
+  font-size: 1.5rem; // Tamanho maior para o título
+  font-weight: bold; // Negrito para destaque
+`;
+
+// Rodapé com os botões de ação (Confirmar/Cancelar)
+export const ModalFooter = styled.div`
+  display: flex;
+  gap: 20px;    
+  margin-top: 30px;
+  margin-left: 25%;
+  
+  
+`;
+
+export const ModalButton = styled.button`
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: white;
   border: none;
+  border-radius: 4px;
   cursor: pointer;
-  font-size: 18px;
-  margin-right: 8px;
-  transition: color 0.3s ease;
+  font-size: 15px;
+
 
   &:hover {
-    color: #007bff;
+    background-color: #0056b3;
   }
 `;
 
+// Botão alternativo de Cancelar com estilo diferente
+export const CancelButton = styled(ModalButton)`
+  background-color: #dc3545; // Cor vermelha para o botão de cancelar
+
+  &:hover {
+    background-color: #c82333; // Vermelho mais escuro ao passar o mouse
+  }
+`;
