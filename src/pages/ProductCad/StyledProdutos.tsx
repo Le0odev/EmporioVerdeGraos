@@ -1,22 +1,28 @@
 import styled from 'styled-components';
-import { FaSearch, FaEdit, FaTrashAlt } from 'react-icons/fa';
+import { FaEdit, FaTrashAlt } from 'react-icons/fa';
 
 // Container principal do produto
+// Container principal do produto
 export const ProductContainer = styled.div`
+  margin: 0 auto;
   display: flex;
   flex-direction: column;
-  width: 100%;
-  height: 100vh;
-  padding: 20px;
+  width: 90%; /* Ajuste para centralizar o conteúdo */
+  height: 80vh;
+  padding: 15px;
   box-sizing: border-box;
+  
 `;
+
 
 // Container que envolve toda a aplicação de produtos
 export const ContainerWrapper = styled.div`
   display: flex;
+  padding: 20px;
   flex-direction: column;
   border-radius: 12px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+  background: #f8f9fa;
 `;
 
 // Seção para formulário e lista de produtos
@@ -24,17 +30,17 @@ export const Section = styled.div`
   flex: 1;
   display: flex;
   flex-direction: column;
-  margin: 10px;
-  padding: 20px;
-  border-radius: 12px;
-  background: #ffffff;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  margin-top: 10px;
+  padding: 15px;
+  border-radius: 10px;
+  background: #f8f9fa;
+  border: solid 1px #ddd;
+  overflow: auto; /* Adicione rolagem se necessário */
 `;
-
 // Título da seção
 export const SectionTitle = styled.h2`
-  margin-bottom: 20px;
-  font-size: 22px;
+  margin-bottom: 15px;
+  font-size: 20px;
   font-weight: 700;
   color: #333;
 `;
@@ -47,19 +53,19 @@ export const Form = styled.form`
 
 // Rótulo dos campos de formulário
 export const Label = styled.label`
-  margin-bottom: 8px;
-  font-size: 16px;
+  margin-bottom: 6px;
+  font-size: 14px;
   font-weight: 600;
   color: #555;
 `;
 
 // Campo de entrada de texto
 export const Input = styled.input`
-  margin-bottom: 16px;
-  padding: 12px;
+  margin-bottom: 12px;
+  padding: 10px;
   border: 1px solid #ddd;
   border-radius: 8px;
-  font-size: 16px;
+  font-size: 14px;
   color: #333;
   transition: border-color 0.3s ease;
 
@@ -71,11 +77,11 @@ export const Input = styled.input`
 
 // Selecionar opções
 export const Select = styled.select`
-  margin-bottom: 16px;
-  padding: 12px;
+  margin-bottom: 12px;
+  padding: 10px;
   border: 1px solid #ddd;
   border-radius: 8px;
-  font-size: 16px;
+  font-size: 14px;
   color: #333;
   transition: border-color 0.3s ease;
 
@@ -87,12 +93,12 @@ export const Select = styled.select`
 
 // Botão de ação
 export const Button = styled.button`
-  padding: 12px;
+  padding: 10px;
   background-color: #007bff;
   color: #fff;
   border: none;
   border-radius: 8px;
-  font-size: 16px;
+  font-size: 14px;
   cursor: pointer;
   transition: background-color 0.3s ease, transform 0.2s ease;
 
@@ -115,108 +121,76 @@ export const Card = styled.div`
   border-radius: 8px;
   overflow: hidden;
   background-color: #fff;
-  padding: 12px;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  padding: 10px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   transition: box-shadow 0.3s ease, transform 0.3s ease;
-  max-width: 100%;
-  height: auto; /* Ajusta a altura automaticamente com base no conteúdo */
+  height: auto;
+  width: 140px;
   box-sizing: border-box;
 
   &:hover {
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
     transform: translateY(-2px);
     cursor: pointer;
   }
 `;
 
-// Lista de cartões de produtos
-export const CardList = styled.div`
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-  gap: 16px;
-  margin-top: 20px;
-  padding: 20px;
-  box-sizing: border-box;
-`;
 
-// Item individual da lista de cartões
-export const CardItem = styled.div`
-  display: flex;
-  align-items: center;
-`;
 
 // Nome do produto no cartão
 export const ProductName = styled.h3`
-  font-size: 18px;
-  margin: 8px 0 4px;
+  font-size: 16px;
+  margin: 6px 0 4px;
   font-weight: 700;
   color: #333;
   text-align: center;
 `;
 
-// Preço do produto no cartão
 export const ProductPrice = styled.p`
   font-size: 16px;
   margin: 4px 0;
-  color: #007bff;
+  color: #28a745;
+  font-weight: bold;
   text-align: center;
 `;
 
-// Ícone de edição
+export const IconContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 8px;
+`;
+
 export const EditIcon = styled(FaEdit)`
   color: #007bff;
   cursor: pointer;
-  margin-right: 8px;
+  font-size: 20px;
   transition: color 0.3s ease;
+  margin-left: auto;
 
   &:hover {
     color: #0056b3;
   }
-`;
+`
 
-// Ícone de exclusão
 export const DeleteIcon = styled(FaTrashAlt)`
   color: #dc3545;
   cursor: pointer;
+  font-size: 18px;
   transition: color 0.3s ease;
+  margin-right: -12px;
 
   &:hover {
     color: #c82333;
   }
 `;
 
-// Container para ícones de ações
-export const IconContainer = styled.div`
-  display: flex;
-  align-items: center;
-  margin-top: 8px;
-`;
-
 // Estilo da imagem do produto
 export const Image = styled.img`
-  width: 100%;
-  height: 120px; 
+  width: 120px;
+  height: 120px; /* Tamanho fixo para evitar distorção */
   object-fit: cover;
   border-radius: 8px;
-`;
-
-// Rótulo para checkbox
-export const CheckboxLabel = styled.label`
-  font-size: 16px;
-  margin-left: 8px;
-  color: #555;
-`;
-
-// Container para checkbox
-export const CheckboxContainer = styled.div`
-  display: flex;
-  align-items: center;
-  margin-bottom: 16px;
-`;
-
-// Estilo do checkbox
-export const CheckboxInput = styled.input`
-  margin-right: 8px;
 `;
 
 // Estilo de campo de busca
@@ -227,19 +201,19 @@ export const SearchInput = styled(Input)`
 // Container dos botões de filtro
 export const ToggleButtonContainer = styled.div`
   display: flex;
-  margin-bottom: 10px;
+  margin-bottom: 16px;
 `;
 
 // Botão de filtro alternado
 export const ToggleButton = styled.button<{ active: boolean }>`
-  flex: 1;
-  padding: 12px;
-  background-color: ${({ active }) => (active ? '#007bff' : '#f8f9fa')};
-  color: ${({ active }) => (active ? '#fff' : '#000')};
-  border: none;
-  border-radius: 8px;
+  padding: 12px 20px;
+  background-color: ${({ active }) => (active ? '#007bff' : '#ffffff')};
+  color: ${({ active }) => (active ? '#fff' : '#007bff')};
+  border: solid 1.5px #ddd;
+  border-radius: 10px;
   cursor: pointer;
-  font-size: 16px;
+  font-size: 15px;
+  font-weight: 700;
   transition: background-color 0.3s ease, transform 0.2s ease;
 
   &:not(:last-child) {
@@ -248,13 +222,48 @@ export const ToggleButton = styled.button<{ active: boolean }>`
 
   &:hover {
     background-color: ${({ active }) => (active ? '#0056b3' : '#e2e6ea')};
-    transform: translateY(-2px);
+    transform: translateY(-1px);
   }
 
   &:active {
     background-color: ${({ active }) => (active ? '#004494' : '#dae0e5')};
     transform: translateY(0);
+    border: #dae0e5;
   }
+`;
+
+export const ProductGrid = styled.div`
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); /* Ajuste o tamanho dos cartões */
+  gap: 15px; /* Espaçamento entre os cartões */
+  margin-top: 10px;
+`;
+
+// Item individual da lista de cartões
+export const CardItem = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+`;
+
+
+// Rótulo para checkbox
+export const CheckboxLabel = styled.label`
+  font-size: 16px;
+  color: #555;
+`;
+
+// Container para checkbox
+export const CheckboxContainer = styled.div`
+  display: flex;
+  align-items: center;
+  margin-bottom: 8px;
+`;
+
+// Estilo do checkbox
+export const CheckboxInput = styled.input`
+  margin: 10px;
 `;
 
 // Botão para ações do cartão
@@ -270,3 +279,4 @@ export const CardButton = styled.button`
     color: #007bff;
   }
 `;
+
