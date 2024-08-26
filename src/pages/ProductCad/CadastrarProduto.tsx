@@ -31,7 +31,8 @@ import {
   ModalHeader,
   ModalFooter,
   ModalButton,
-  CancelButton
+  CancelButton,
+  FlexContainer
 } from './StyledProdutos';
 import { useAuth } from '../Login/authContext';
 
@@ -49,6 +50,10 @@ interface Produto {
   categoryId: string;
   bulk: boolean;
   imageUrl: string;
+  productQuantity?: number;
+  estoquePeso?: number;
+  stockAlertLimit: number;
+  
 }
 
 const CadastrarProduto: React.FC = () => {
@@ -62,6 +67,9 @@ const CadastrarProduto: React.FC = () => {
   const [produtos, setProdutos] = useState<Produto[]>([]);
   const [editId, setEditId] = useState<string | null>(null);
   const [imageUrl, setImageUrl] = useState('');
+  const [estoque, setEstoque] = useState('');
+  const [estoquePeso, setEstoquePeso] = useState('');
+  const [stockAlertLimit, setStockAlertLimit] = useState('');
   const [isCadastroVisible, setIsCadastroVisible] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -117,7 +125,11 @@ const CadastrarProduto: React.FC = () => {
       codeBar: codigoBarras,
       categoryId: categoriaSelecionada,
       bulk: isBulk,
-      imageUrl: imageUrl
+      imageUrl: imageUrl,
+      productQuantity: isBulk ? undefined : parseFloat(estoque),
+      estoquePeso: isBulk ? parseFloat(estoquePeso) : undefined,
+      stockAlertLimit: parseFloat(stockAlertLimit)
+      
     };
 
     try {
@@ -152,6 +164,9 @@ const CadastrarProduto: React.FC = () => {
     setCategoriaSelecionada('');
     setIsBulk(false);
     setImageUrl('');
+    setEstoque('');
+    setEstoquePeso('');
+    setStockAlertLimit('');
   };
 
   const handleEdit = (produto: Produto) => {
@@ -163,6 +178,9 @@ const CadastrarProduto: React.FC = () => {
     setIsBulk(produto.bulk);
     setEditId(produto.id);
     setImageUrl(produto.imageUrl);
+    setEstoque(produto.productQuantity ? produto.productQuantity.toString() : '');
+    setEstoquePeso(produto.estoquePeso ? produto.estoquePeso.toString() : '');
+    setStockAlertLimit(produto.stockAlertLimit.toString()); 
 
     setIsCadastroVisible(true);
   };
@@ -240,15 +258,30 @@ const CadastrarProduto: React.FC = () => {
                 onChange={(e) => setCodigoBarras(e.target.value)}
                 placeholder="Digite o código de barras"
               />
-              <Label htmlFor="preco">Preço</Label>
-              <Input
-                type="number"
-                id="preco"
-                value={preco}
-                onChange={(e) => setPreco(e.target.value)}
-                placeholder="Digite o preço"
-                required
-              />
+               <FlexContainer>
+                <div>
+                  <Label htmlFor="preco">Preço</Label>
+                  <Input
+                    type="number"
+                    id="preco"
+                    value={preco}
+                    onChange={(e) => setPreco(e.target.value)}
+                    placeholder="Digite o preço"
+                    required
+                  />
+                </div>
+                <div>
+                <CheckboxContainer>
+                <CheckboxLabel htmlFor="isBulk">Produto a granel?</CheckboxLabel>
+                <CheckboxInput
+                  type="checkbox"
+                  id="isBulk"
+                  checked={isBulk}
+                  onChange={(e) => setIsBulk(e.target.checked)}
+                />
+              </CheckboxContainer>
+              </div>
+            </FlexContainer>
               <Label htmlFor="imageUrl">Imagem URL</Label>
               <Input
                 type="text"
@@ -257,7 +290,31 @@ const CadastrarProduto: React.FC = () => {
                 onChange={(e) => setImageUrl(e.target.value)}
                 placeholder="Cole a URL da imagem"
               />
-              <Label htmlFor="categoria">Categoria</Label>
+              <FlexContainer>
+                <div>
+                  <Label htmlFor="estoque">Estoque</Label>
+                  <Input
+                    type="number"
+                    id="estoque"
+                    value={isBulk ? estoquePeso : estoque}
+                    onChange={(e) => isBulk ? setEstoquePeso(e.target.value) : setEstoque(e.target.value)}
+                    placeholder={isBulk ? "Digite o peso em kg" : "Digite a quantidade em estoque"}
+                    required
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="stockAlertLimit">Limite de estoque</Label>
+                  <Input
+                    type="number"
+                    id="stockAlertLimit"
+                    value={stockAlertLimit}
+                    onChange={(e) => setStockAlertLimit(e.target.value)}
+                    placeholder="Digite o limite de estoque"
+                    required
+                  />
+                </div>
+            </FlexContainer>
+            <Label htmlFor="categoria">Categoria</Label>
               <Select
                 id="categoria"
                 value={categoriaSelecionada}
@@ -270,16 +327,7 @@ const CadastrarProduto: React.FC = () => {
                   </option>
                 ))}
               </Select>
-              <CheckboxContainer>
-                <CheckboxLabel htmlFor="isBulk">Produto a granel?</CheckboxLabel>
-                <CheckboxInput
-                  type="checkbox"
-                  id="isBulk"
-                  checked={isBulk}
-                  onChange={(e) => setIsBulk(e.target.checked)}
-                />
-              </CheckboxContainer>
-              <Button type="submit">
+            <Button type="submit">
                 {editId ? 'Atualizar Produto' : 'Cadastrar Produto'}
               </Button>
             </Form>

@@ -8,7 +8,9 @@ import { CriarVenda } from '../pages/PDV/CriarVenda';
 import RelatorioVendas from '../pages/Reports/Relatorio';
 import Catalog from '../pages/Catalog/Catalog';
 import Cart from '../pages/Catalog/Cart';
-
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css'; 
+import AlertEstoque from './AlertEstoque';
 const AppContainer = styled.div`
   display: flex;
 `;
@@ -47,6 +49,8 @@ export const AppRoutes = () => {
           <Route path="/catalogo" element={<Catalog />} />
           <Route path="/cart" element={<Cart />} />
         </Routes>
+        <AlertEstoque />
+        <ToastContainer /> 
       </MainContent>
     </AppContainer>
   );

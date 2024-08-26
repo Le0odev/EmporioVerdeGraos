@@ -86,6 +86,18 @@ export const Form = styled.form`
   flex-direction: column;
 `;
 
+export const FlexContainer = styled.div`
+  display: flex;
+  gap: 20px;
+  margin-bottom: 8px;
+
+  div {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+`;
+
 // Rótulo dos campos de formulário
 export const Label = styled.label`
   margin-bottom: 6px;
