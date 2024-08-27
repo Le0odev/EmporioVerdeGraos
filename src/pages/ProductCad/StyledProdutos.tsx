@@ -162,7 +162,6 @@ export const Card = styled.div`
 export const ProductGrid = styled.div`
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); /* Ajuste o tamanho dos cartões */
-  gap: 15px; /* Espaçamento entre os cartões */
   margin-top: 10px;
 `;
 
@@ -303,7 +302,7 @@ export const CheckboxWrapper = styled.div`
   display: flex;
   align-items: center;
   cursor: pointer;
-  margin: 5px;
+  margin-top: 5px;
   font-size: 24px; /* Ajuste o tamanho dos ícones aqui */
 `;
 

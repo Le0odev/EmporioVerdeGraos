@@ -7,8 +7,10 @@ import 'react-toastify/dist/ReactToastify.css';
 interface Product {
   id: string;
   productName: string;
-  productQuantity: number;
-  stockAlertLimit: number;
+  productQuantity: number; // Quantidade para produtos não a granel
+  stockAlertLimit: number; // Limite para alerta de estoque
+  isBulk: boolean; // Indica se o produto é a granel
+  estoquePeso: number; // Peso do estoque para produtos a granel
 }
 
 const AlertEstoque: React.FC = () => {
@@ -20,10 +22,22 @@ const AlertEstoque: React.FC = () => {
     console.log('Produtos recebidos:', products);
     products.forEach((product) => {
       console.log(`Verificando produto: ${product.productName}`);
-      if (product.productQuantity <= 0) {
-        toast.error(`Produto ${product.productName} está esgotado!`);
-      } else if (product.productQuantity <= product.stockAlertLimit) {
-        toast.warn(`Produto ${product.productName} está perto do limite!`);
+      console.log(`Peso: ${product.estoquePeso}`);
+      console.log(`Quantidade: ${product.productQuantity}`);
+
+      if (product.isBulk) {
+        if (product.productQuantity >= 0) {
+          console.log(`o ${product.productQuantity} está correto`)
+        } else if (product.estoquePeso <= product.stockAlertLimit) {
+          toast.warn(`Produto ${product.productName} está perto do limite!`);
+        }
+      } else {
+        // Verifica o estoque baseado na quantidade para produtos não a granel
+        if (product.productQuantity <= 0) {
+          toast.error(`Produto ${product.productName} está esgotado!`);
+        } else if (product.productQuantity <= product.stockAlertLimit) {
+          toast.warn(`Produto ${product.productName} está perto do limite!`);
+        }
       }
     });
   };
@@ -31,18 +45,16 @@ const AlertEstoque: React.FC = () => {
   const handleApiCall = async () => {
     setIsLoading(true);
     try {
-      const response = await axios.get('http://localhost:8080/products', {
+      const response = await axios.get('http://localhost:8080/products/all', {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
 
-      console.log('Dados da API:', response.data);
       setProducts(response.data);
       checkStockLevels(response.data);
     } catch (error) {
       console.error('Erro ao obter produtos:', error);
-      toast.error('Falha ao obter produtos.');
     } finally {
       setIsLoading(false);
     }
@@ -52,9 +64,7 @@ const AlertEstoque: React.FC = () => {
     handleApiCall();
   }, [token]);
 
-  return (
-    <></>
-  );
+  return null; // Retorna null já que o componente não renderiza nada
 };
 
 export default AlertEstoque;

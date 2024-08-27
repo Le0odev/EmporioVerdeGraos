@@ -276,9 +276,9 @@ const CadastrarProduto: React.FC = () => {
                   />
                 </div>
                 <div>
-                  <CheckboxWrapper onClick={toggleCheckbox}>
-                  <Label htmlFor='checkbox'>Produto a granel?</Label>
 
+                  <CheckboxWrapper onClick={toggleCheckbox}>
+                  <Label htmlFor='checkbox'>Produto a granel? Cheque abaixo</Label>
                   {isBulk ? (
                     <FaCheckSquare color="#28a745" />
                   ) : (
