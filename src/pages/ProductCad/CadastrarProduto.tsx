@@ -21,9 +21,6 @@ import {
   SearchInput,
   IconContainer,
   Image,
-  CheckboxLabel,
-  CheckboxContainer,
-  CheckboxInput,
   CardButton,
   ProductGrid,
   Modal,
@@ -32,9 +29,13 @@ import {
   ModalFooter,
   ModalButton,
   CancelButton,
-  FlexContainer
+  FlexContainer,
+  CheckboxWrapper,
+  CheckboxStyled,
+  CheckboxIcon
 } from './StyledProdutos';
 import { useAuth } from '../Login/authContext';
+import { FaCheck, FaCheckSquare, FaRegSquare } from 'react-icons/fa';
 
 interface Categoria {
   id: string;
@@ -219,6 +220,10 @@ const CadastrarProduto: React.FC = () => {
     }).format(price);
   };
 
+  const toggleCheckbox = () => {
+    setIsBulk(prev => !prev);
+  };
+
   return (
     <ProductContainer>
       <ContainerWrapper>
@@ -271,15 +276,15 @@ const CadastrarProduto: React.FC = () => {
                   />
                 </div>
                 <div>
-                <CheckboxContainer>
-                <CheckboxLabel htmlFor="isBulk">Produto a granel?</CheckboxLabel>
-                <CheckboxInput
-                  type="checkbox"
-                  id="isBulk"
-                  checked={isBulk}
-                  onChange={(e) => setIsBulk(e.target.checked)}
-                />
-              </CheckboxContainer>
+                  <CheckboxWrapper onClick={toggleCheckbox}>
+                  <Label htmlFor='checkbox'>Produto a granel?</Label>
+
+                  {isBulk ? (
+                    <FaCheckSquare color="#28a745" />
+                  ) : (
+                    <FaRegSquare color="#444" />
+                  )}
+                </CheckboxWrapper>
               </div>
             </FlexContainer>
               <Label htmlFor="imageUrl">Imagem URL</Label>

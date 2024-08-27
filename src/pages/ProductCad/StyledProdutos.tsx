@@ -1,6 +1,10 @@
 import styled from 'styled-components';
 import {  FaRegEdit, FaTrashAlt } from 'react-icons/fa';
 
+interface CheckboxStyledProps {
+  checked: boolean;
+}
+
 // Container principal do produto
 export const ProductContainer = styled.div`
   margin: 0 auto;
@@ -86,17 +90,7 @@ export const Form = styled.form`
   flex-direction: column;
 `;
 
-export const FlexContainer = styled.div`
-  display: flex;
-  gap: 20px;
-  margin-bottom: 8px;
 
-  div {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-  }
-`;
 
 // Rótulo dos campos de formulário
 export const Label = styled.label`
@@ -280,23 +274,45 @@ export const DeleteIcon = styled(FaTrashAlt)`
 `;
 
 
-// Rótulo para checkbox
-export const CheckboxLabel = styled.label`
-  font-size: 16px;
-  color: #555;
+
+
+// Altere a FlexContainer se necessário para manter outros elementos
+export const FlexContainer = styled.div`
+  display: flex;
+  gap: 20px;
+  margin-bottom: 1px;
+
+  /* Mantenha a flexibilidade, mas evite afetar o alinhamento do checkbox e do label */
+  div {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
 `;
 
-// Container para checkbox
-export const CheckboxContainer = styled.div`
+export const CheckboxStyled = styled.div<CheckboxStyledProps>`
   display: flex;
   align-items: center;
-  margin-bottom: 8px;
+  gap: 8px;
+  cursor: pointer;
+  font-size: 16px;
+  color: ${({ checked }) => (checked ? '#28a745' : '#444')};
 `;
 
-// Estilo do checkbox
-export const CheckboxInput = styled.input`
-  margin: 10px;
+export const CheckboxWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  margin: 5px;
+  font-size: 24px; /* Ajuste o tamanho dos ícones aqui */
 `;
+
+// Estilo do ícone do checkbox
+export const CheckboxIcon = styled.div<CheckboxStyledProps>`
+   
+  background-color: ${({ checked }) => (checked ? '#28a745' : 'transparent')};
+`;
+
 
 // Estilização do modal em si
 export const Modal = styled.div`
