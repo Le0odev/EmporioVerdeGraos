@@ -10,7 +10,9 @@ import Catalog from '../pages/Catalog/Catalog';
 import Cart from '../pages/Catalog/Cart';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css'; 
-import AlertEstoque from './AlertEstoque';
+import ListaDeProdutos from '../components/Notifies/ListaProdutos';
+import ListaProdutosGerenciamento from '../components/Notifies/ListaProdutosGerenciamento';
+
 const AppContainer = styled.div`
   display: flex;
 `;
@@ -48,9 +50,10 @@ export const AppRoutes = () => {
           <Route path="/relatorio" element={<RelatorioVendas />} />
           <Route path="/catalogo" element={<Catalog />} />
           <Route path="/cart" element={<Cart />} />
+          <Route path="/lista-pedidos" element={<ListaProdutosGerenciamento />} /> {/* Adicionar nova rota */}
         </Routes>
-        <AlertEstoque />
-        <ToastContainer /> 
+        <ListaDeProdutos />
+        <ToastContainer />
       </MainContent>
     </AppContainer>
   );

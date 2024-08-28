@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
+import { toast } from 'react-toastify';
+
+
 import {
   ProductContainer,
   ContainerWrapper,
@@ -54,8 +57,14 @@ interface Produto {
   productQuantity?: number;
   estoquePeso?: number;
   stockAlertLimit: number;
-  
+
 }
+
+interface ErrorResponse {
+  message: string;
+  // Adicione outras propriedades conforme a resposta de erro da sua API
+}
+
 
 const CadastrarProduto: React.FC = () => {
   const [nome, setNome] = useState('');
@@ -150,11 +159,29 @@ const CadastrarProduto: React.FC = () => {
         });
         setProdutos([...produtos, data as Produto]);
       }
-
+      
       resetForm();
+      toast.success('Produto cadastrado com sucesso!.');
+
     } catch (error) {
-      console.error('Erro ao cadastrar ou atualizar produto:', error);
-    }
+      console.error('Erro ao realizar checkout:', error);
+      
+      if (axios.isAxiosError(error)) {
+          const axiosError = error as AxiosError<ErrorResponse>;
+          console.log('Status do erro:', axiosError.response?.status);
+          console.log('Dados do erro:', axiosError.response?.data);
+
+          let errorMessage = 'Erro ao finalizar a venda. Por favor, tente novamente mais tarde.';
+
+          if (axiosError.response?.data?.message) {
+              errorMessage = axiosError.response.data.message;
+          }
+
+          toast.error(errorMessage);
+      } else {
+          toast.error('Erro desconhecido ao finalizar a venda. Por favor, tente novamente mais tarde.');
+      }
+  }
   };
 
   const resetForm = () => {

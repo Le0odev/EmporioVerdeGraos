@@ -37,6 +37,8 @@ import {
   ModalWrapper
 } from './StyledVenda';
 import jsPDF from 'jspdf';
+import ListaProdutos from '../../components/Notifies/ListaProdutos';
+import { toast } from 'react-toastify';
 
 interface Produto {
   id: number;
@@ -46,6 +48,10 @@ interface Produto {
   peso?: number | null;
   bulk: boolean;
   imageUrl: string;
+}
+
+interface ErrorResponse {
+  message: string;
 }
 
 const CriarVenda: React.FC = () => {
@@ -177,24 +183,30 @@ const CriarVenda: React.FC = () => {
       setAutoAddFeedback('');
       setSearchTermByName('')
       setDesconto(0);
+      toast.success('Venda finalizada com sucesso..');
 
       
 
-  
+
     } catch (error) {
       console.error('Erro ao realizar checkout:', error);
+      
       if (axios.isAxiosError(error)) {
-        const axiosError = error as AxiosError;
-        console.log('Status do erro:', axiosError.response?.status);
-        console.log('Dados do erro:', axiosError.response?.data);
-  
-        let errorMessage = 'Erro ao finalizar a venda. Por favor, tente novamente mais tarde.';
-  
-        alert(errorMessage);
+          const axiosError = error as AxiosError<ErrorResponse>;
+          console.log('Status do erro:', axiosError.response?.status);
+          console.log('Dados do erro:', axiosError.response?.data);
+
+          let errorMessage = 'Erro ao finalizar a venda. Por favor, tente novamente mais tarde.';
+
+          if (axiosError.response?.data?.message) {
+              errorMessage = axiosError.response.data.message;
+          }
+
+          toast.error(errorMessage);
       } else {
-        alert('Erro desconhecido ao finalizar a venda. Por favor, tente novamente mais tarde.');
+          toast.error('Erro desconhecido ao finalizar a venda. Por favor, tente novamente mais tarde.');
       }
-    }
+  }
   };
 
   useEffect(() => {
@@ -489,7 +501,6 @@ const CriarVenda: React.FC = () => {
           </div>
         </ModalWrapper>
       )}
-
     
     </VendaContainer>
   );

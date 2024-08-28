@@ -95,6 +95,9 @@ const Sidebar: React.FC = () => {
       <NavLink to="/catalogo">
       <MdViewList /> Catálogo    
       </NavLink>
+      <NavLink to="/lista-pedidos">
+      <MdViewList /> Catálogo    
+      </NavLink>
     </SidebarContainer>
   );
 };
