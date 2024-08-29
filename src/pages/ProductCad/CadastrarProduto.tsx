@@ -127,7 +127,7 @@ const CadastrarProduto: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
+  
     const data = {
       productName: nome,
       productPrice: parseFloat(preco),
@@ -139,11 +139,11 @@ const CadastrarProduto: React.FC = () => {
       productQuantity: isBulk ? undefined : parseFloat(estoque),
       estoquePeso: isBulk ? parseFloat(estoquePeso) : undefined,
       stockAlertLimit: parseFloat(stockAlertLimit)
-      
     };
-
+  
     try {
       if (editId) {
+        // Atualização de produto
         await axios.put(`http://localhost:8080/products/${editId}`, data, {
           headers: {
             Authorization: `Bearer ${token}`
@@ -151,18 +151,19 @@ const CadastrarProduto: React.FC = () => {
         });
         setProdutos(produtos.map(produto => produto.id === editId ? { ...produto, ...data } : produto));
         setEditId(null);
+        toast.success('Produto atualizado com sucesso!');
       } else {
+        // Criação de produto
         await axios.post('http://localhost:8080/products/cadastrar', data, {
           headers: {
             Authorization: `Bearer ${token}`
           }
         });
         setProdutos([...produtos, data as Produto]);
+        toast.success('Produto cadastrado com sucesso!');
       }
       
       resetForm();
-      toast.success('Produto cadastrado com sucesso!.');
-
     } catch (error) {
       console.error('Erro ao realizar checkout:', error);
       
@@ -170,19 +171,20 @@ const CadastrarProduto: React.FC = () => {
           const axiosError = error as AxiosError<ErrorResponse>;
           console.log('Status do erro:', axiosError.response?.status);
           console.log('Dados do erro:', axiosError.response?.data);
-
+  
           let errorMessage = 'Erro ao finalizar a venda. Por favor, tente novamente mais tarde.';
-
+  
           if (axiosError.response?.data?.message) {
               errorMessage = axiosError.response.data.message;
           }
-
+  
           toast.error(errorMessage);
       } else {
           toast.error('Erro desconhecido ao finalizar a venda. Por favor, tente novamente mais tarde.');
       }
-  }
+    }
   };
+  
 
   const resetForm = () => {
     setNome('');
@@ -211,6 +213,7 @@ const CadastrarProduto: React.FC = () => {
     setStockAlertLimit(produto.stockAlertLimit.toString()); 
 
     setIsCadastroVisible(true);
+    
   };
 
   const handleDelete = (produto: Produto) => {
@@ -360,7 +363,7 @@ const CadastrarProduto: React.FC = () => {
                 ))}
               </Select>
             <Button type="submit">
-                {editId ? 'Atualizar Produto' : 'Cadastrar Produto'}
+                {editId ? 'Atualizar Produto'  : 'Cadastrar Produto'}
               </Button>
             </Form>
           </Section>

@@ -1,10 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useAuth } from '../../pages/Login/authContext';
 
-// Tipagem dos produtos
 interface Produto {
   id: number;
   productName: string;
@@ -46,16 +45,18 @@ const ListaProdutos: React.FC = () => {
       const notificationState = localStorage.getItem(notificationId);
 
       if (quantidade === 0) {
-        adicionarProdutoPedidos(id);
-        notificacaoEsgotado(productName);
-        localStorage.setItem(notificationId, 'esgotado');
+        if (notificationState !== 'esgotado') {
+          adicionarProdutoPedidos(id);
+          notificacaoEsgotado(productName);
+          localStorage.setItem(notificationId, 'esgotado');
+        }
       } else if (quantidade <= stockAlertLimit) {
         if (notificationState !== 'notificado') {
           notificacaoLimite(id, productName);
           localStorage.setItem(notificationId, 'notificado');
         }
       } else {
-        if (notificationState === 'notificado') {
+        if (notificationState) {
           // Remover notificação se o estoque for suficiente novamente
           localStorage.removeItem(notificationId);
         }
@@ -80,7 +81,6 @@ const ListaProdutos: React.FC = () => {
 
   const handleNotificacaoClick = (produtoId: number) => {
     adicionarProdutoAtencao(produtoId);
-    // Atualiza o estado da notificação para garantir que não seja duplicada
     localStorage.setItem(`produto-${produtoId}`, 'notificado');
   };
 
@@ -117,7 +117,7 @@ const ListaProdutos: React.FC = () => {
     localStorage.setItem('produtosPedidos', JSON.stringify(novaListaPedidos));
   };
 
-  return <></>; // Componente vazio, pois só estamos usando notificações
+  return <></>;
 };
 
 export default ListaProdutos;

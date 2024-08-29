@@ -34,7 +34,8 @@ import {
   PaymentButtonsContainer,
   DiscountInput,
   PaymentButton,
-  ModalWrapper
+  ModalWrapper,
+  LabelQuantidade
 } from './StyledVenda';
 import jsPDF from 'jspdf';
 import ListaProdutos from '../../components/Notifies/ListaProdutos';
@@ -48,6 +49,8 @@ interface Produto {
   peso?: number | null;
   bulk: boolean;
   imageUrl: string;
+  productQuantity: number;
+  estoquePeso: number;
 }
 
 interface ErrorResponse {
@@ -150,8 +153,8 @@ const CriarVenda: React.FC = () => {
 
   const handleCheckout = async () => {
     try {
-      if ( !formaDePagamento) {
-        alert('Por favor, preencha o desconto e a forma de pagamento antes de finalizar a venda.');
+      if (!formaDePagamento) {
+        toast.warning('Por favor, preencha o desconto e a forma de pagamento antes de finalizar a venda.');
         return;
       }
   
@@ -176,18 +179,19 @@ const CriarVenda: React.FC = () => {
       });
   
       console.log('Resposta da API após checkout:', response.data);
-      
+  
+      // Limpar carrinho e outros estados após checkout
       setCarrinho([]);
       setShowPrintModal(true); // Abrir modal de impressão após o checkout
       toggleModal();
       setAutoAddFeedback('');
-      setSearchTermByName('')
+      setSearchTermByName('');
       setDesconto(0);
-      toast.success('Venda finalizada com sucesso..');
-
-      
-
-
+      toast.success('Venda finalizada com sucesso.');
+  
+      // Chamar a função de impressão apenas após a venda ser finalizada com sucesso
+      handlePrintReceipt();
+  
     } catch (error) {
       console.error('Erro ao realizar checkout:', error);
       
@@ -424,6 +428,7 @@ const CriarVenda: React.FC = () => {
                         </div>
                       ) : (
                         <div>
+                          <LabelQuantidade >Disponivel: {item.productQuantity}</LabelQuantidade>
                           <QuantityControl>
                             <FaMinus onClick={() => updateQuantity(item.id, (item.quantidade || 0) - 1)} />
                             <span>{item.quantidade}</span>
@@ -492,10 +497,8 @@ const CriarVenda: React.FC = () => {
             <h2>Deseja finalizar a venda?</h2>
             
             <div>
-              <Button onClick={() => {
-                handleCheckout();
-                handlePrintReceipt();
-              }}>Confirmar</Button>
+            <Button onClick={handleCheckout}>Confirmar</Button>
+
               <Button onClick={() => setShowModal(false)}>Cancelar</Button>
             </div>
           </div>

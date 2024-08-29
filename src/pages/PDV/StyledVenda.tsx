@@ -149,7 +149,7 @@ export const ProductName = styled.span`
   font-weight: bold;
   margin-bottom: 8px;
   text-align: center;
-  font-size: 1rem;
+  font-size: 1.1rem;
   color: ${colors.text};
   font-family: ${fonts.secondary};
 `;
@@ -446,3 +446,14 @@ export const CartTitle = styled.h3`
   margin-top: -1rem; // Ajusta a margem superior
   color: #333;
 `;
+
+export const LabelEstoqueKg = styled.label`
+
+color: red;
+
+
+`;
+
+export const LabelQuantidade = styled.label`
+  font-size: 13px;
+` 
