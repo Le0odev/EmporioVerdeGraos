@@ -1,12 +1,9 @@
 import React from 'react';
-import { AiOutlineAppstore, AiOutlineBook, AiOutlineProduct } from 'react-icons/ai';
-import { BiBook } from 'react-icons/bi';
-import { CiLogin, CiShoppingCart } from 'react-icons/ci';
-import { FaBook, FaBoxes } from 'react-icons/fa';
-import { GiArchiveResearch } from 'react-icons/gi';
-import { MdLibraryBooks, MdOutlineCategory, MdViewList } from 'react-icons/md';
+import { AiOutlineProduct } from 'react-icons/ai';
+import { CiLogin } from 'react-icons/ci';
+import { MdAddShoppingCart, MdOutlineCategory, MdProductionQuantityLimits, MdViewList } from 'react-icons/md';
 import { TbReportMoney } from 'react-icons/tb';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import styled from 'styled-components';
 
 const SidebarContainer = styled.nav`
@@ -18,8 +15,6 @@ const SidebarContainer = styled.nav`
   height: 100vh;
   width: 250px;
   position: fixed;
-  border-radius: 1px  ;
-
 `;
 
 const LogoContainer = styled.div`
@@ -30,14 +25,14 @@ const LogoContainer = styled.div`
 `;
 
 const LogoImage = styled.img`
-  width: 80px;
-  height: 80px;
+  width: 60px;
+  height: 60px;
   margin-bottom: 0.5rem;
   border-radius: 50%;
 `;
 
 const LogoText = styled.div`
-  font-size: 1.3rem;
+  font-size: 1.1rem;
   font-weight: bold;
   color: white;
   text-transform: uppercase;
@@ -45,23 +40,31 @@ const LogoText = styled.div`
   padding-bottom: 0.5rem;
 `;
 
-const NavLink = styled(Link)`
+const NavLink = styled(Link)<{ isActive: boolean }>`
   display: flex;
   align-items: center;
   font-size: 1rem;
   color: #f7f7f7;
   text-decoration: none;
-  margin: 0.5rem 0;
-  padding: 0.7rem 1rem;
-  width: 100%;
+  margin: 0.65rem 0;
+  padding: 0.55rem 1rem;
+  width: ${({ isActive }) => (isActive ? 'calc(100% + 36px)' : '100%')};
   box-sizing: border-box;
-  transition: background-color 0.3s, color 0.3s;
-
+  transition: background-color 0.3s, color 0.3s, width 0.3s;
+  background-color: ${({ isActive }) => (isActive ? '#ccc' : 'transparent')};
+  color: ${({ isActive }) => (isActive ? '#333' : '#f7f7f7')};
+  border-radius: 3px;
+  overflow: hidden;
+  
+  ${({ isActive }) =>
+    isActive &&
+    `
+      padding-left: 1.5rem;
+    `}
   
   &:hover {
     color: #333;
     background-color: #ccc;
-    border-radius: 4px;
   }
 
   svg {
@@ -71,32 +74,34 @@ const NavLink = styled(Link)`
 `;
 
 const Sidebar: React.FC = () => {
+  const location = useLocation();
+
   return (
     <SidebarContainer>
       <LogoContainer>
         <LogoImage src="/src/assets/logo.png" alt="Company Logo" />
         <LogoText>Verde Grãos</LogoText>
       </LogoContainer>
-      <NavLink to="/login">
+      <NavLink to="/login" isActive={location.pathname === '/login'}>
         <CiLogin /> Login
       </NavLink>
-      <NavLink to="/cadastrar-produto">
+      <NavLink to="/cadastrar-produto" isActive={location.pathname === '/cadastrar-produto'}>
         <AiOutlineProduct /> Cadastrar Produto
       </NavLink>
-      <NavLink to="/cadastrar-categoria">
+      <NavLink to="/cadastrar-categoria" isActive={location.pathname === '/cadastrar-categoria'}>
         <MdOutlineCategory /> Cadastrar Categoria
       </NavLink>
-      <NavLink to="/criar-venda">
-        <CiShoppingCart /> Criar Venda
+      <NavLink to="/criar-venda" isActive={location.pathname === '/criar-venda'}>
+        <MdAddShoppingCart /> Criar Venda
       </NavLink>
-      <NavLink to="/relatorio">
+      <NavLink to="/relatorio" isActive={location.pathname === '/relatorio'}>
         <TbReportMoney /> Relatório
       </NavLink>
-      <NavLink to="/catalogo">
-      <MdViewList /> Catálogo    
+      <NavLink to="/lista-pedidos" isActive={location.pathname === '/lista-pedidos'}>
+        <MdProductionQuantityLimits /> Lista de compras
       </NavLink>
-      <NavLink to="/lista-pedidos">
-      <MdViewList /> Catálogo    
+      <NavLink to="/catalogo" isActive={location.pathname === '/catalogo'}>
+        <MdViewList /> Catálogo
       </NavLink>
     </SidebarContainer>
   );

@@ -4,6 +4,8 @@ import {  FiShoppingCart } from 'react-icons/fi';
 import { useCart } from '../../../pages/Catalog/CartContext'; 
 import { useLocation } from 'react-router-dom'; // Importa o useLocation para pegar a rota atual
 import { FaArrowLeftLong } from "react-icons/fa6";
+import { MdAddShoppingCart, MdArrowLeft, MdShoppingCart, MdShoppingCartCheckout } from 'react-icons/md';
+import { FaShoppingBag, FaShoppingBasket } from 'react-icons/fa';
 
 interface HeaderCartProps {
   handleGoToCart: () => void;
@@ -31,7 +33,7 @@ const HeaderCart: React.FC<HeaderCartProps> = ({ handleGoToCart, showBackButton 
       )}
       <Title>Empório Verde Grãos</Title>
       <IconButton onClick={handleGoToCart}>
-        <FiShoppingCart />
+        <FaShoppingBag />
         {itemCount > 0 && <span>{itemCount}</span>}
       </IconButton>
     </Header>

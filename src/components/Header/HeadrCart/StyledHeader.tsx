@@ -51,6 +51,7 @@ export const Title = styled.h1`
 `;
 
 export const IconButton = styled.button`
+  margin-top: 1px;
   background: none;
   border: none;
   color: ${colors.secondary};
@@ -64,13 +65,13 @@ export const IconButton = styled.button`
 
   span {
     position: absolute;
-    top: 8px; // Ajuste conforme necessário
-    right: 8px; // Ajuste conforme necessário
+    top: 13px; // Ajuste conforme necessário
+    right: 11px; // Ajuste conforme necessário
     background: red;
     color: white;
     border-radius: 50%;
-    padding: 1px 5px;
-    font-size: 13px;
+    padding: 1.5px 6px;
+    font-size: 12px;
     font-weight: bold;
     display: flex;
     align-items: center;
@@ -101,7 +102,8 @@ export const LogoImage = styled.img`
 export const BackButton = styled.button`
   background: none;
   border: none;
-  font-size: 1.5rem;
+  margin-top: 5px;
+  font-size: 1.2rem;
   cursor: pointer;
   color: #f7fafc;
 `;
