@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios, { AxiosError } from 'axios';
-import { FaPlus, FaMinus, FaTrashAlt } from 'react-icons/fa';
+import { FaPlus, FaMinus } from 'react-icons/fa';
 import { useAuth } from '../Login/authContext';
 import {
   VendaContainer,
@@ -9,37 +9,42 @@ import {
   Form,
   Label,
   Input,
-  Button,
   ProductGrid,
-  ProductCard,
   ProductImage,
   ProductName,
   ProductPrice,
-  QuantityControl,
-  CheckoutButton,
+  Button,
+  EmptyCartMessage,
   CartList,
   CartItem,
   CartItemDetails,
-  CartActions,
+  CartItemName,
+  CartItemPrice,
+  QuantityControl, 
+  TrashIcon,
+  GranelInput,
   SubtotalContainer,
   SubtotalLabel,
-  SubtotalAmount, 
-  EmptyCartMessage,
+  SubtotalAmount,
   CheckoutSection,
-  LabelPeso,
-  TrashIcon,
-  CartTitle,
-  AlertMessage,
-  GranelInput,
-  PaymentButtonsContainer,
-  DiscountInput,
-  PaymentButton,
+  CheckoutButton,
   ModalWrapper,
-  LabelQuantidade
+  ModalContent,
+  ProductCard2,
+  PaymentButtonsContainer,
+  PaymentButton,
+  AlertMessage,
+  CartActions,
+  LabelPeso,
+  LabelPrice,
+  PriceDiv,
+  DecrementButton,
+  QuantityDisplay,
+  IncrementButton,
 } from './StyledVenda';
 import jsPDF from 'jspdf';
-import ListaProdutos from '../../components/Notifies/ListaProdutos';
 import { toast } from 'react-toastify';
+
 
 interface Produto {
   id: number;
@@ -384,20 +389,20 @@ const CriarVenda: React.FC = () => {
           />
           <Button type="submit">Pesquisar</Button>
         </Form>
-        {autoAddFeedback && <AlertMessage>{autoAddFeedback}</AlertMessage>}
+        {autoAddFeedback && <AlertMessage >{autoAddFeedback}</AlertMessage>}
         <ProductGrid>
           {produtos.map((produto) => (
-            <ProductCard key={produto.id} onClick={() => addToCart(produto)}>
+            <ProductCard2 key={produto.id} onClick={() => addToCart(produto)}>
               <ProductImage src={produto.imageUrl} alt={produto.productName} />
               <ProductName>{produto.productName}</ProductName>
               <ProductPrice>{produto.productPrice.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</ProductPrice>
               <Button type="button">Adicionar</Button>
-            </ProductCard>
+            </ProductCard2>
           ))}
         </ProductGrid>
       </SearchSection>
       <VendaSection>
-        <CartTitle>Checkout</CartTitle>
+        <Label >Checkout</Label>
         <CartList>
           {carrinho.length === 0 ? (
             <EmptyCartMessage>Seu carrinho está vazio.</EmptyCartMessage>
@@ -408,35 +413,42 @@ const CriarVenda: React.FC = () => {
                   <div style={{ display: 'flex', alignItems: 'center' }}>
                     <ProductImage src={item.imageUrl} alt={item.productName} style={{ width: '50px', height: '50px', marginRight: '10px' }} />
                     <div>
-                      <ProductName>{item.productName}</ProductName>
+                      <CartItemName>{item.productName}</CartItemName>
+                      
                       {item.bulk ? (
                         <div>
-                          <LabelPeso htmlFor={`weight_${item.id}`}>Peso em gramas:</LabelPeso>
-                          <div style={{ position: 'relative' }}>
-                            <GranelInput
-                              placeholder='Gramas:'
-                              type="number"
-                              id={`weight_${item.id}`}
-                              value={item.peso || ''}
-                              onChange={(e) => updateWeight(item.id, parseFloat(e.target.value))}
-                              style={{ paddingRight: '20px' }}
-                            />
-                          </div>
-                          <ProductPrice>
+                          <LabelPeso>Disponivel: {item.estoquePeso}KG</LabelPeso>
+                          <PriceDiv >R${item.productPrice.toFixed(2)} </PriceDiv>
+                          <GranelInput
+                            placeholder='Gramas:'
+                            type="number"
+                            id={`weight_${item.id}`}
+                            value={item.peso || ''}
+                            onChange={(e) => updateWeight(item.id, parseFloat(e.target.value))}
+                          />
+                          <CartItemPrice>
                             Subtotal: {(item.productPrice * (item.peso || 0) / 1000).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}
-                          </ProductPrice>
+                          </CartItemPrice>
                         </div>
                       ) : (
+                        
                         <div>
-                          <LabelQuantidade >Disponivel: {item.productQuantity}</LabelQuantidade>
+                          <LabelPeso>Disponível: {item.productQuantity}UN</LabelPeso>
+                          <PriceDiv >
+                            R$: {item.productPrice.toFixed(2)}
+                          </PriceDiv>
                           <QuantityControl>
-                            <FaMinus onClick={() => updateQuantity(item.id, (item.quantidade || 0) - 1)} />
-                            <span>{item.quantidade}</span>
-                            <FaPlus onClick={() => updateQuantity(item.id, (item.quantidade || 0) + 1)} />
+                            <DecrementButton onClick={() => updateQuantity(item.id, (item.quantidade || 0) - 1)}>
+                              <FaMinus />
+                            </DecrementButton>
+                            <QuantityDisplay>{item.quantidade}</QuantityDisplay>
+                            <IncrementButton onClick={() => updateQuantity(item.id, (item.quantidade || 0) + 1)}>
+                              <FaPlus />
+                            </IncrementButton>
                           </QuantityControl>
-                          <ProductPrice>
+                          <CartItemPrice>
                             Subtotal: {(item.productPrice * (item.quantidade || 0)).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}
-                          </ProductPrice>
+                          </CartItemPrice>
                         </div>
                       )}
                     </div>
@@ -451,60 +463,48 @@ const CriarVenda: React.FC = () => {
         </CartList>
         {carrinho.length > 0 && (
           <>
-            
             <CheckoutSection>
-
-            <Form>
+              <Form>
                 <Label htmlFor='desconto'>Desconto (%):</Label>
-                <DiscountInput
+                <Input
+                  placeholder='Insira o desconto...'
                   type='number'
                   id='desconto'
-                  value={desconto || '' }
+                  value={desconto || ''}
                   onChange={(e) => setDesconto(parseFloat(e.target.value))}
-                      />
+                />
               </Form>
-
               <PaymentButtonsContainer>
-                  <PaymentButton  onClick={() => setFormaDePagamento('Cartão')}
-                                  selected={formaDePagamento === 'Cartão'}>
-                      Cartão
-                    </PaymentButton>
-                    <PaymentButton  onClick={() => setFormaDePagamento('Dinheiro')} 
-                                    selected={formaDePagamento === 'Dinheiro'}>
-                      Dinheiro
-                  </PaymentButton>
-                  <PaymentButton  onClick={() => setFormaDePagamento('PIX')}
-                                  selected={formaDePagamento === 'PIX'}>                                               
-                      PIX
-                  </PaymentButton>
+                <PaymentButton onClick={() => setFormaDePagamento('Cartão')} selected={formaDePagamento === 'Cartão'}>
+                  Cartão
+                </PaymentButton>
+                <PaymentButton onClick={() => setFormaDePagamento('Dinheiro')} selected={formaDePagamento === 'Dinheiro'}>
+                  Dinheiro
+                </PaymentButton>
+                <PaymentButton onClick={() => setFormaDePagamento('PIX')} selected={formaDePagamento === 'PIX'}>
+                  PIX
+                </PaymentButton>
               </PaymentButtonsContainer>
-
               <SubtotalContainer>
-              <SubtotalLabel>Subtotal:</SubtotalLabel>
-              <SubtotalAmount>R$ {subtotalComDesconto.toFixed(2)}</SubtotalAmount>
-            </SubtotalContainer>
-
-            <CheckoutButton onClick={() => {
-            setShowModal(true);
-          }}>Finalizar Venda</CheckoutButton>          
+                <SubtotalLabel>Subtotal:</SubtotalLabel>
+                <SubtotalAmount>R$ {subtotalComDesconto.toFixed(2)}</SubtotalAmount>
+              </SubtotalContainer>
+              <CheckoutButton onClick={() => setShowModal(true)}>Finalizar Venda</CheckoutButton>
             </CheckoutSection>
           </>
         )}
       </VendaSection>
       {showModal && (
         <ModalWrapper>
-          <div>
+          <ModalContent>
             <h2>Deseja finalizar a venda?</h2>
-            
             <div>
-            <Button onClick={handleCheckout}>Confirmar</Button>
-
+              <Button onClick={handleCheckout}>Confirmar</Button>
               <Button onClick={() => setShowModal(false)}>Cancelar</Button>
             </div>
-          </div>
+          </ModalContent>
         </ModalWrapper>
       )}
-    
     </VendaContainer>
   );
 };

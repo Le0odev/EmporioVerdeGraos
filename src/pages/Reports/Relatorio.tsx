@@ -330,10 +330,10 @@ const Relatorio: React.FC = () => {
                     <ItemTitle>{item.productName}</ItemTitle>
                     <ItemDetails>
                       {item.quantity > 0 && (
-                        <span>Quantidade: {item.quantity} unidades - R${item.productPrice.toFixed(2)} por unidade</span>
+                        <span>Quantidade: {item.quantity} unidades - R${item.productPrice.toFixed(2)} (UN)</span>
                       )}
                       {item.weight > 0 && (
-                        <span>Peso: {item.weight} g - R${item.productPrice.toFixed(2)} por kg</span>
+                        <span>Peso: {item.weight} g - R${item.productPrice.toFixed(2)} (KG)</span>
                       )}
                       <br />
                       Subtotal: R${item.subtotal.toFixed(2)}

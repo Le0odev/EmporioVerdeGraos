@@ -10,8 +10,8 @@ export const ProductContainer = styled.div`
   margin: 0 auto;
   display: flex;
   flex-direction: column;
-  width: 90%; 
-  padding: 15px;
+  width: 80%; 
+  padding: 5px;
   box-sizing: border-box;
   
 `;

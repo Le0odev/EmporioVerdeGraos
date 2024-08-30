@@ -48,7 +48,7 @@ const NavLink = styled(Link)<{ isActive: boolean }>`
   text-decoration: none;
   margin: 0.65rem 0;
   padding: 0.55rem 1rem;
-  width: ${({ isActive }) => (isActive ? 'calc(100% + 36px)' : '100%')};
+  width: ${({ isActive }) => (isActive ? 'calc(100% + 15px)' : '100%')};
   box-sizing: border-box;
   transition: background-color 0.3s, color 0.3s, width 0.3s;
   background-color: ${({ isActive }) => (isActive ? '#ccc' : 'transparent')};
