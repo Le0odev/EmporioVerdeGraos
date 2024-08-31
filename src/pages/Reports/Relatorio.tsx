@@ -6,13 +6,10 @@ import {
   SalesList,
   SalesItem,
   FilterContainer,
-  FilterLabel,
   FilterInput,
   TotalContainer,
   PaginationContainer,
   PaginationButton,
-  ButtonGroup,
-  InputGroup,
   Button,
   ModalContainer,
   ModalContent,
@@ -24,7 +21,16 @@ import {
   ItemDetails,
   ItemList,
   SaleInfo,
-  Item
+  Item,
+  PeriodContainer,
+  DateInputContainer,
+  DateLabel,
+  DateInput,
+  FilterButton,
+  FilterLabel,
+  DateInputsWrapper,
+  ButtonGroup,
+  InputGroup
 } from './StyledReport';
 import { useAuth } from '../Login/authContext';
 import { format } from 'date-fns';
@@ -114,7 +120,7 @@ const Relatorio: React.FC = () => {
         headers: { Authorization: `Bearer ${token}` },
       });
       const salesData: Sale[] = response.data;
-      setSales([]);  // Limpa a lista de vendas para evitar exibir lista quando filtrado por período
+      setSales([]); 
       setGroupedSales([]);
       groupSalesByDate(salesData);
       calculateTotalByPeriod(salesData);
@@ -211,7 +217,7 @@ const Relatorio: React.FC = () => {
       {filterOption === 'day' && (
         <FilterContainer>
           <FilterLabel htmlFor="date">Filtrar por Data:</FilterLabel>
-          <InputGroup>
+          <InputGroup >
             <FilterInput
               type="date"
               id="date"
@@ -245,22 +251,28 @@ const Relatorio: React.FC = () => {
       )}
 
       {filterOption === 'period' && (
-        <FilterContainer>
-          <FilterLabel>Filtrar por Período:</FilterLabel>
-          <InputGroup>
-            <FilterInput
-              type="date"
-              value={startDate}
-              onChange={(e) => setStartDate(e.target.value)}
+        <PeriodContainer>
+        <DateInputsWrapper>
+          <DateInputContainer>
+            <DateLabel>Período Inicial:</DateLabel>
+            <DateInput
+            type="date"
+            value={startDate}
+            onChange={(e) => setStartDate(e.target.value) } />
+          </DateInputContainer>
+  
+          <DateInputContainer>
+            <DateLabel>Período Final:</DateLabel>
+            <DateInput
+            type="date"
+            value={endDate}
+            onChange={(e) => setEndDate(e.target.value)}
             />
-            <FilterInput
-              type="date"
-              value={endDate}
-              onChange={(e) => setEndDate(e.target.value)}
-            />
-            <Button onClick={fetchSalesByPeriod}>Filtrar</Button>
-          </InputGroup>
-        </FilterContainer>
+          </DateInputContainer>
+        </DateInputsWrapper>
+  
+        <FilterButton onClick={fetchSalesByPeriod}>Filtrar</FilterButton>
+      </PeriodContainer>
       )}
 
       {filterOption === 'day' && paginatedSales.length > 0 && (
@@ -268,7 +280,7 @@ const Relatorio: React.FC = () => {
           {paginatedSales.map((sale) => (
             <SalesItem key={sale.id} onClick={() => handleSaleClick(sale)}>
               <div>Data: {formatDate(sale.saleDate)}</div>
-              <div>Total: R${sale.saleTotals.toFixed(2)}</div>
+              <h4>Total: R${sale.saleTotals.toFixed(2)}</h4>
             </SalesItem>
           ))}
 

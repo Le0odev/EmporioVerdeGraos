@@ -3,6 +3,19 @@ import axios from 'axios';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useAuth } from '../../pages/Login/authContext';
+import {
+  AddButton,
+  AttentionIcon,
+  Container,
+  NoProductsText,
+  OrderIcon,
+  ProductItem,
+  ProductList,
+  ProductText,
+  SectionTitle,
+  Modal,
+  ModalContent,
+} from './StyledList';
 
 interface Produto {
   id: number;
@@ -17,6 +30,11 @@ const ListaProdutosGerenciamento: React.FC = () => {
   const [produtos, setProdutos] = useState<Produto[]>([]);
   const [produtosAtencao, setProdutosAtencao] = useState<Produto[]>([]);
   const [produtosPedidos, setProdutosPedidos] = useState<Produto[]>([]);
+  const [modalOpenPedido, setModalOpenPedido] = useState(false);
+  const [distribuidor, setDistribuidor] = useState('');
+  const [quantidade, setQuantidade] = useState('');
+  const [selectedProdutos, setSelectedProdutos] = useState<Produto[]>([]);
+  const [produtoQuantidade, setProdutoQuantidade] = useState<{ [key: number]: string }>({});
   const { token } = useAuth();
 
   useEffect(() => {
@@ -109,38 +127,131 @@ const ListaProdutosGerenciamento: React.FC = () => {
     return () => clearInterval(intervalId);
   }, [produtos]);
 
-  return (
-    <div>
-      <div>
-        <h1>Produtos em Atenção</h1>
-        <ul>
-          {produtosAtencao.length > 0 ? (
-            produtosAtencao.map(produto => (
-              <li key={produto.id} onClick={() => handleNotificacaoClick(produto)}>
-                {produto.productName} - {produto.bulk ? `${produto.estoquePeso} kg` : `${produto.productQuantity} unidades`}
-              </li>
-            ))
-          ) : (
-            <p>Nenhum produto em atenção.</p>
-          )}
-        </ul>
-      </div>
+  const handleSubmitPedido = () => {
+    if (!distribuidor || selectedProdutos.length === 0) {
+      toast.error('Preencha todos os campos.');
+      return;
+    }
 
-      <div>
-        <h1>Lista de Pedidos</h1>
-        <ul>
-          {produtosPedidos.length > 0 ? (
-            produtosPedidos.map(produto => (
-              <li key={produto.id}>
-                {produto.productName} - {produto.bulk ? `${produto.estoquePeso} kg` : `${produto.productQuantity} unidades`}
-              </li>
-            ))
-          ) : (
-            <p>Nenhum produto em pedido.</p>
-          )}
-        </ul>
-      </div>
-    </div>
+    const messageLines = [`Pedido para o distribuidor: ${distribuidor}`];
+    
+    selectedProdutos.forEach(produto => {
+      const quantidade = produtoQuantidade[produto.id];
+      if (quantidade) {
+        messageLines.push(
+          `${produto.productName} - Quantidade: ${quantidade}`
+        );
+      }
+    });
+
+    const message = messageLines.join('\n');
+    const encodedMessage = encodeURIComponent(message);
+    const numeroWhatsApp = '5581995773288'; // Substitua pelo número desejado
+    const url = `https://wa.me/${numeroWhatsApp}?text=${encodedMessage}`;
+
+    window.open(url, '_blank');
+    
+    // Fechar o modal e limpar os estados
+    setModalOpenPedido(false);
+    setDistribuidor('');
+    setQuantidade('');
+    setSelectedProdutos([]);
+    setProdutoQuantidade({});
+  };
+
+  return (
+    <>
+      <Container>
+        <div>
+          <SectionTitle>Produtos em Atenção</SectionTitle>
+          <ProductList>
+            {produtosAtencao.length > 0 ? (
+              produtosAtencao.map(produto => (
+                <ProductItem key={produto.id} onClick={() => handleNotificacaoClick(produto)}>
+                  <AttentionIcon />
+                  <ProductText>
+                    {produto.productName} - <span>{produto.bulk ? `${produto.estoquePeso} kg` : `${produto.productQuantity} unidades`}</span>
+                  </ProductText>
+                </ProductItem>
+              ))
+            ) : (
+              <NoProductsText>Nenhum produto em atenção.</NoProductsText>
+            )}
+          </ProductList>
+        </div>
+
+        <div>
+          <SectionTitle>Lista de Pedidos</SectionTitle>
+          <ProductList>
+            {produtosPedidos.length > 0 ? (
+              produtosPedidos.map(produto => (
+                <ProductItem key={produto.id}>
+                  <OrderIcon />
+                  <ProductText>
+                    {produto.productName} - <span>{produto.bulk ? `${produto.estoquePeso} kg` : `${produto.productQuantity} unidades`}</span>
+                  </ProductText>
+                </ProductItem>
+              ))
+            ) : (
+              <NoProductsText>Nenhum produto em pedido.</NoProductsText>
+            )}
+          </ProductList>
+        </div>
+
+        {/* Botões de ação */}
+        <AddButton onClick={() => setModalOpenPedido(true)}>Enviar Pedido</AddButton>
+      </Container>
+
+      {modalOpenPedido && (
+        <Modal>
+          <ModalContent>
+            <h2>Enviar Pedido</h2>
+            <input
+              type="text"
+              placeholder="Nome do distribuidor"
+              value={distribuidor}
+              onChange={(e) => setDistribuidor(e.target.value)}
+            />
+            <h3>Selecione os produtos:</h3>
+            {produtosPedidos.map(produto => (
+              <div key={produto.id}>
+                <label>
+                  <input
+                    type="checkbox"
+                    checked={selectedProdutos.some(p => p.id === produto.id)}
+                    onChange={(e) => {
+                      if (e.target.checked) {
+                        setSelectedProdutos(prev => [...prev, produto]);
+                      } else {
+                        setSelectedProdutos(prev => prev.filter(p => p.id !== produto.id));
+                        setProdutoQuantidade(prev => {
+                          const { [produto.id]: _, ...rest } = prev;
+                          return rest;
+                        });
+                      }
+                    }}
+                  />
+                  {produto.productName}
+                </label>
+                {selectedProdutos.some(p => p.id === produto.id) && (
+                  <input
+                    type="text"
+                    placeholder={produto.bulk ? 'Quantidade (kg)' : 'Quantidade (unidades)'}
+                    value={produtoQuantidade[produto.id] || ''}
+                    onChange={(e) => setProdutoQuantidade(prev => ({
+                      ...prev,
+                      [produto.id]: e.target.value
+                    }))}
+                  />
+                )}
+              </div>
+            ))}
+            <button onClick={handleSubmitPedido}>Enviar Pedido</button>
+            <button onClick={() => setModalOpenPedido(false)}>Cancelar</button>
+          </ModalContent>
+        </Modal>
+      )}
+    </>
   );
 };
 

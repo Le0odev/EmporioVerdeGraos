@@ -159,7 +159,7 @@ const CriarVenda: React.FC = () => {
   const handleCheckout = async () => {
     try {
       if (!formaDePagamento) {
-        toast.warning('Por favor, preencha o desconto e a forma de pagamento antes de finalizar a venda.');
+        toast.warning('Por favor, preencha a forma de pagamento antes de finalizar a venda.');
         return;
       }
   

@@ -272,8 +272,6 @@ export const QuantityDisplay = styled.span`
 `;
 
 export const IncrementButton = styled.button`
-  background-color: ${colors.primary};
-  color: #fff;
   border: none;
   padding: 0 0.4rem; /* Reduziu o padding */
   cursor: pointer;
@@ -283,19 +281,15 @@ export const IncrementButton = styled.button`
   height: 23px; /* Reduziu a altura */
 
   &:hover {
-    background-color: ${colors.primary}CC;
     transform: scale(1.05);
   }
 
   &:active {
-    background-color: ${colors.primary}AA;
     transform: scale(1.1);
   }
 `;
 
 export const DecrementButton = styled.button`
-  background-color: #333;
-  color: #fff;
   border: none;
   padding: 0 0.4rem; /* Reduziu o padding */
   cursor: pointer;
@@ -305,12 +299,10 @@ export const DecrementButton = styled.button`
   height: 23px; /* Reduziu a altura */
 
   &:hover {
-    background-color: ${colors.text};
     transform: scale(1.05);
   }
 
   &:active {
-    background-color: ${colors.text};
     transform: scale(1.1);
   }
 `;

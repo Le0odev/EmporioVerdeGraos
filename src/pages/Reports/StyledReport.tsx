@@ -6,9 +6,10 @@ interface ButtonProps {
 
 // Container principal
 export const Container = styled.div`
-  padding: 30px;
-  max-width: 1000px;
-  margin: 40px auto;
+  padding: 25px;
+  width: 70%;
+  max-width: 100%px;
+  margin: 0px auto;
   background-color: #f8f9fa;
   border-radius: 12px;
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
@@ -32,13 +33,6 @@ export const FilterContainer = styled.div`
   gap: 15px;
 `;
 
-// Rótulo dos filtros
-export const FilterLabel = styled.label`
-  font-size: 18px;
-  color: #555;
-  margin-bottom: 8px;
-  display: block;
-`;
 
 // Entrada para os filtros
 export const FilterInput = styled.input`
@@ -46,14 +40,13 @@ export const FilterInput = styled.input`
   border: 1px solid #ccc;
   border-radius: 4px;
   width: 100%;
-  max-width: 220px; /* Aumentei um pouco o max-width para mais conforto */
+  max-width: 220px;
   font-size: 16px;
   box-sizing: border-box;
-  margin-right: 10px;
   outline: none;
 
   &:focus {
-    border-color: #007bff; /* Adiciona um destaque na borda ao focar */
+    border-color: #007bff;
     box-shadow: 0 0 0 3px rgba(38, 143, 255, 0.25);
   }
 `;
@@ -100,6 +93,12 @@ export const SalesItem = styled.li`
     font-size: 16px; // Tamanho da fonte
   }
 
+  & > h4 {
+    color: #28a745; // Cor do texto
+    font-family: 'Roboto', sans-serif; // Fonte do texto
+    font-size: 16px; // Tamanho da fonte
+  }
+
   // Alterando a cor e o estilo do rótulo da data e do total
   & > div span {
     color: #007bff; // Cor do rótulo
@@ -110,7 +109,7 @@ export const SalesItem = styled.li`
 // Container para o total de vendas
 export const TotalContainer = styled.div`
   font-size: 20px;
-  color: #343a40;
+  color: #28a745;
   margin: 20px 0;
   padding: 15px;
   background-color: #f8f9fa;
@@ -122,13 +121,18 @@ export const TotalContainer = styled.div`
   // Alterando a cor e o estilo da fonte
   font-family: 'Roboto', sans-serif; // Fonte do texto
   font-size: 18px; // Tamanho da fonte
+  font-weight: bold;
 
   // Alterando a cor e o estilo do rótulo da data e do total
   & span {
-    color: #007bff; // Cor do rótulo
+    color: #28a745; // Cor do rótulo
     font-weight: 500; // Peso da fonte do rótulo
   }
 `;
+
+
+
+
 // Botão geral
 export const Button = styled.button<ButtonProps>`
   background-color: ${props => (props.active ? '#007bff' : '#fff')};
@@ -147,22 +151,50 @@ export const Button = styled.button<ButtonProps>`
   }
 `;
 
-// Grupo de botões
-export const ButtonGroup = styled.div`
-  display: flex;
-  flex-direction: row;
-  gap: 12px;
-  flex-wrap: wrap;
-  margin-bottom: 20px; /* Adicionado para separar do filtro */
+export const PeriodContainer = styled.div`
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 10px;
 `;
 
-// Grupo de entradas
-export const InputGroup = styled.div`
+export const DateInputsWrapper = styled.div`
   display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 10px;
-  margin-top: 10px; /* Adicionado para separar do rótulo */
+  flex-direction: row;
+  gap: 20px; /* Adiciona espaço entre os campos */
+  
+`;
+
+export const DateInputContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
+
+export const DateLabel = styled.label`
+  margin-top: 8px;
+  margin-bottom: 5px;
+  color: #333;
+  font-size: 14px;
+  font-weight: bold;
+`;
+
+export const DateInput = styled.input`
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  margin-bottom: 12px;
+`;
+
+export const FilterButton = styled.button`
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+
+  &:hover {
+    background-color: #0056b3;
+  }
 `;
 
 // Container do modal
@@ -184,7 +216,7 @@ export const ModalContent = styled.div`
   background: #fff;
   border-radius: 10px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  max-width: 600px;
+  max-width: 500px;
   width: 100%;
   padding: 20px;
   position: relative;
@@ -254,6 +286,13 @@ export const Item = styled.li`
   }
 `;
 
+export const FilterLabel = styled.label`
+  font-size: 14px;
+  font-weight: bold;
+  margin-right: 8px;
+  color: #333;
+`;
+
 export const ItemTitle = styled.div`
   font-weight: bold;
   color: #333;
@@ -263,7 +302,25 @@ export const ItemDetails = styled.div`
   margin-top: 5px;
   line-height: 1.5;
 `;
-;
+
+
+// Grupo de entradas
+export const InputGroup = styled.div`
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 10px; /* Adicionado para separar do rótulo */
+`;
+
+// Grupo de botões
+export const ButtonGroup = styled.div`
+  display: flex;
+  flex-direction: row;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 20px; /* Adicionado para separar do filtro */
+`;
 
 export const PaginationContainer = styled.div`
   display: flex;
