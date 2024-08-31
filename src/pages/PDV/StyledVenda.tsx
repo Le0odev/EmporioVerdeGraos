@@ -232,7 +232,7 @@ export const CartItemName = styled.span`
 `;
 
 // Preço do produto no carrinho
-export const CartItemPrice = styled.span`
+export const CartItemPrice = styled.div`
   font-size: 0.9rem;
   font-weight: bold;
   color: ${colors.accent};
@@ -249,7 +249,7 @@ export const PriceDiv = styled.div`
 
 export const QuantityControl = styled.div`
   display: flex;
-  margin-top: 9px;
+  margin-top: 12px;
   margin-bottom: 4px;
   align-items: center;
   border: 1px solid #ccc;

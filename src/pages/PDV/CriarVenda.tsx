@@ -94,6 +94,7 @@ const CriarVenda: React.FC = () => {
 
         setAutoAddFeedback(`Produto "${produtoEncontrado.productName}" adicionado automaticamente.`);
         setSearchTermByCodeBar('');
+        setAutoAddFeedback('');
         
         
       } else {
@@ -462,8 +463,7 @@ const CriarVenda: React.FC = () => {
           )}
         </CartList>
         {carrinho.length > 0 && (
-          <>
-            <CheckoutSection>
+          <CheckoutSection>
               <Form>
                 <Label htmlFor='desconto'>Desconto (%):</Label>
                 <Input
@@ -491,7 +491,6 @@ const CriarVenda: React.FC = () => {
               </SubtotalContainer>
               <CheckoutButton onClick={() => setShowModal(true)}>Finalizar Venda</CheckoutButton>
             </CheckoutSection>
-          </>
         )}
       </VendaSection>
       {showModal && (
