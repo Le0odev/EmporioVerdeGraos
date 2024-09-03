@@ -22,3 +22,6 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+src/components/Notifies/ListaProdutosGerenciamento.tsx
+src/components/Notifies/ListaProdutosGerenciamento.tsx
+src/components/Notifies/StyledList.tsx
