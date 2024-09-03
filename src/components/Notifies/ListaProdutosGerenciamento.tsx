@@ -15,6 +15,8 @@ import {
   SectionTitle,
   Modal,
   ModalContent,
+  SubButton,
+  SelectCategory,
 } from './StyledList';
 
 interface Produto {
@@ -24,6 +26,12 @@ interface Produto {
   estoquePeso?: number;
   productQuantity?: number;
   stockAlertLimit: number;
+  categoryId: number;
+}
+
+interface Categoria {
+  id: number;
+  categoryName: string;
 }
 
 const ListaProdutosGerenciamento: React.FC = () => {
@@ -31,10 +39,19 @@ const ListaProdutosGerenciamento: React.FC = () => {
   const [produtosAtencao, setProdutosAtencao] = useState<Produto[]>([]);
   const [produtosPedidos, setProdutosPedidos] = useState<Produto[]>([]);
   const [modalOpenPedido, setModalOpenPedido] = useState(false);
+  const [modalOpenAdicionar, setModalOpenAdicionar] = useState(false);
   const [distribuidor, setDistribuidor] = useState('');
   const [quantidade, setQuantidade] = useState('');
   const [selectedProdutos, setSelectedProdutos] = useState<Produto[]>([]);
   const [produtoQuantidade, setProdutoQuantidade] = useState<{ [key: number]: string }>({});
+  const [novoProdutoNome, setNovoProdutoNome] = useState('');
+  const [listaProdutosAdicionados, setListaProdutosAdicionados] = useState<Produto[]>(() => {
+    // Recupera os produtos adicionados manualmente do localStorage
+    const savedProducts = localStorage.getItem('produtosAdicionados');
+    return savedProducts ? JSON.parse(savedProducts) : [];
+  });
+  const [categorias, setCategorias] = useState<Categoria[]>([]);
+  const [categoriaSelecionada, setCategoriaSelecionada] = useState<number | null>(null);
   const { token } = useAuth();
 
   useEffect(() => {
@@ -49,13 +66,34 @@ const ListaProdutosGerenciamento: React.FC = () => {
         const produtos = response.data;
         setProdutos(produtos);
         atualizarListas(produtos);
+        console.log(response.data)
       } catch (error) {
         console.error('Erro ao buscar produtos:', error);
       }
     };
 
+    const fetchCategorias = async () => {
+      try {
+        const response = await axios.get('http://localhost:8080/category', {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        });
+
+        setCategorias(response.data);
+      } catch (error) {
+        console.error('Erro ao buscar categorias:', error);
+      }
+    };
+
     fetchProdutos();
+    fetchCategorias();
   }, [token]);
+
+  useEffect(() => {
+    // Atualizar localStorage sempre que a lista de produtos adicionados manualmente mudar
+    localStorage.setItem('produtosAdicionados', JSON.stringify(listaProdutosAdicionados));
+  }, [listaProdutosAdicionados]);
 
   const atualizarListas = (produtos: Produto[]) => {
     const produtosAtencaoAtualizados: Produto[] = [];
@@ -84,7 +122,7 @@ const ListaProdutosGerenciamento: React.FC = () => {
     setProdutosAtencao(produtosAtencaoAtualizados);
     setProdutosPedidos(produtosPedidosAtualizados);
 
-    // Atualizar localStorage
+    // Atualizar localStorage para as listas de atenção e pedidos
     localStorage.setItem('produtosAtencao', JSON.stringify(produtosAtencaoAtualizados.map(produto => produto.id)));
     localStorage.setItem('produtosPedidos', JSON.stringify(produtosPedidosAtualizados.map(produto => produto.id)));
   };
@@ -119,14 +157,6 @@ const ListaProdutosGerenciamento: React.FC = () => {
     }
   };
 
-  useEffect(() => {
-    const intervalId = setInterval(() => {
-      atualizarListas(produtos); // Atualizar listas a cada 10 segundos
-    }, 10000);
-
-    return () => clearInterval(intervalId);
-  }, [produtos]);
-
   const handleSubmitPedido = () => {
     if (!distribuidor || selectedProdutos.length === 0) {
       toast.error('Preencha todos os campos.');
@@ -159,14 +189,57 @@ const ListaProdutosGerenciamento: React.FC = () => {
     setProdutoQuantidade({});
   };
 
+  const handleAdicionarProduto = () => {
+    if (!novoProdutoNome) {
+      toast.error('Insira o nome do produto.');
+      return;
+    }
+
+    const novoProduto: Produto = {
+      id: Date.now(), // Gerar um ID único temporário
+      productName: novoProdutoNome,
+      bulk: false,
+      estoquePeso: 0,
+      productQuantity: 0,
+      stockAlertLimit: 0,
+      categoryId: 0, // Adicione um ID de categoria padrão se necessário
+    };
+
+    // Adiciona o produto à lista local e aos produtos pedidos
+    setListaProdutosAdicionados(prev => [...prev, novoProduto]);
+    adicionarProdutoPedido(novoProduto.id);
+    setNovoProdutoNome('');
+    setModalOpenAdicionar(false);
+    toast.success('Produto adicionado à lista e aos pedidos.');
+  };
+
+  const produtosFiltradosPorCategoria = (produtos: Produto[]) => {
+    if (categoriaSelecionada === null) {
+      return produtos;
+    }
+    return produtos.filter(produto => produto.categoryId === categoriaSelecionada);
+  };
+
   return (
     <>
       <Container>
         <div>
+          <SectionTitle>Filtrar por Categoria</SectionTitle>
+          <SelectCategory onChange={(e) => setCategoriaSelecionada(Number(e.target.value))}>
+            <option value="">Selecione uma categoria</option>
+            {categorias.map(categoria => (
+              <option key={categoria.id} value={categoria.id}>
+                {categoria.categoryName}
+              </option>
+            ))}
+          </SelectCategory>
+        </div>
+  
+        <div>
           <SectionTitle>Produtos em Atenção</SectionTitle>
           <ProductList>
-            {produtosAtencao.length > 0 ? (
-              produtosAtencao.map(produto => (
+            {produtosFiltradosPorCategoria(produtosAtencao).length > 0 ? (
+              produtosFiltradosPorCategoria(produtosAtencao).map(produto => (
                 <ProductItem key={produto.id} onClick={() => handleNotificacaoClick(produto)}>
                   <AttentionIcon />
                   <ProductText>
@@ -179,12 +252,12 @@ const ListaProdutosGerenciamento: React.FC = () => {
             )}
           </ProductList>
         </div>
-
+  
         <div>
           <SectionTitle>Lista de Pedidos</SectionTitle>
           <ProductList>
-            {produtosPedidos.length > 0 ? (
-              produtosPedidos.map(produto => (
+            {produtosFiltradosPorCategoria([...produtosPedidos, ...listaProdutosAdicionados]).length > 0 ? (
+              produtosFiltradosPorCategoria([...produtosPedidos, ...listaProdutosAdicionados]).map(produto => (
                 <ProductItem key={produto.id}>
                   <OrderIcon />
                   <ProductText>
@@ -197,11 +270,11 @@ const ListaProdutosGerenciamento: React.FC = () => {
             )}
           </ProductList>
         </div>
-
-        {/* Botões de ação */}
-        <AddButton onClick={() => setModalOpenPedido(true)}>Enviar Pedido</AddButton>
+  
+        <AddButton onClick={() => setModalOpenAdicionar(true)}>Adicionar Produto</AddButton>
+        <SubButton onClick={() => setModalOpenPedido(true)}>Enviar Pedido</SubButton>
       </Container>
-
+  
       {modalOpenPedido && (
         <Modal>
           <ModalContent>
@@ -213,41 +286,65 @@ const ListaProdutosGerenciamento: React.FC = () => {
               onChange={(e) => setDistribuidor(e.target.value)}
             />
             <h3>Selecione os produtos:</h3>
-            {produtosPedidos.map(produto => (
+            {[...produtosPedidos, ...listaProdutosAdicionados].map(produto => (
               <div key={produto.id}>
                 <label>
                   <input
                     type="checkbox"
                     checked={selectedProdutos.some(p => p.id === produto.id)}
-                    onChange={(e) => {
-                      if (e.target.checked) {
-                        setSelectedProdutos(prev => [...prev, produto]);
-                      } else {
-                        setSelectedProdutos(prev => prev.filter(p => p.id !== produto.id));
-                        setProdutoQuantidade(prev => {
-                          const { [produto.id]: _, ...rest } = prev;
-                          return rest;
-                        });
-                      }
+                    onChange={() => {
+                      setSelectedProdutos(prev => {
+                        if (prev.some(p => p.id === produto.id)) {
+                          return prev.filter(p => p.id !== produto.id);
+                        } else {
+                          return [...prev, produto];
+                        }
+                      });
                     }}
                   />
                   {produto.productName}
+                  {produto.bulk ? (
+                    <input
+                      type="number"
+                      placeholder="Peso (kg)"
+                      value={produtoQuantidade[produto.id] || ''}
+                      onChange={(e) => setProdutoQuantidade(prev => ({
+                        ...prev,
+                        [produto.id]: e.target.value
+                      }))}
+                    />
+                  ) : (
+                    <input
+                      type="number"
+                      placeholder="Quantidade"
+                      value={produtoQuantidade[produto.id] || ''}
+                      onChange={(e) => setProdutoQuantidade(prev => ({
+                        ...prev,
+                        [produto.id]: e.target.value
+                      }))}
+                    />
+                  )}
                 </label>
-                {selectedProdutos.some(p => p.id === produto.id) && (
-                  <input
-                    type="text"
-                    placeholder={produto.bulk ? 'Quantidade (kg)' : 'Quantidade (unidades)'}
-                    value={produtoQuantidade[produto.id] || ''}
-                    onChange={(e) => setProdutoQuantidade(prev => ({
-                      ...prev,
-                      [produto.id]: e.target.value
-                    }))}
-                  />
-                )}
               </div>
             ))}
-            <button onClick={handleSubmitPedido}>Enviar Pedido</button>
-            <button onClick={() => setModalOpenPedido(false)}>Cancelar</button>
+            <button onClick={handleSubmitPedido}>Enviar</button>
+            <button onClick={() => setModalOpenPedido(false)}>Fechar</button>
+          </ModalContent>
+        </Modal>
+      )}
+  
+      {modalOpenAdicionar && (
+        <Modal>
+          <ModalContent>
+            <h2>Adicionar Novo Produto</h2>
+            <input
+              type="text"
+              placeholder="Nome do produto"
+              value={novoProdutoNome}
+              onChange={(e) => setNovoProdutoNome(e.target.value)}
+            />
+            <button onClick={handleAdicionarProduto}>Adicionar</button>
+            <button onClick={() => setModalOpenAdicionar(false)}>Fechar</button>
           </ModalContent>
         </Modal>
       )}

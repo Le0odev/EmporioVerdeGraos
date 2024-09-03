@@ -1,222 +1,169 @@
 import styled from 'styled-components';
+import { FaExclamationTriangle, FaCartPlus } from 'react-icons/fa';
 
-// Container principal
 export const Container = styled.div`
-  padding: 20px;
-  width: 80%;
-  max-width: 1200px;
-  margin: 0 auto;
-  background-color: #f4f5f7;
-  border-radius: 12px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  padding: 20px;
+  gap: 20px; // Espaçamento entre seções
 `;
 
-// Títulos das seções
 export const SectionTitle = styled.h2`
-  font-size: 1.5rem;
-  margin-bottom: 15px;
-  color: #333;
-  font-weight: 600;
+  font-size: 16px; // Tamanho reduzido
+  margin-bottom: 10px; // Espaçamento ajustado
+  border-bottom: 1px solid #ddd; // Linha inferior para separar seções
+  padding-bottom: 5px; // Espaço adicional para a linha
 `;
 
-// Lista de produtos
-export const ProductList = styled.ul`
-  list-style: none;
-  padding: 0;
+export const ProductList = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 12px; // Espaçamento entre itens
+  max-height: 400px;
+  overflow-y: auto;
+  padding: 0 10px; // Padding ajustado para alinhar com o Container
+`;
+
+export const ProductItem = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px; // Padding ajustado
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background-color: #f9f9f9;
+  transition: transform 0.2s;
+  cursor: pointer;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); // Sombra para destaque
+
+  &:hover {
+    transform: scale(1.02);
+  }
+`;
+
+export const ProductText = styled.p`
+  font-size: 14px; // Tamanho ajustado
   margin: 0;
-  width: 100%;
-`;
+  font-weight: bold;
 
-// Item de produto
-export const ProductItem = styled.li`
-  display: flex;
-  align-items: center;
-  padding: 12px;
-  border: 1px solid #e0e0e0;
-  margin-bottom: 10px;
-  border-radius: 8px;
-  background-color: #fff;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-  cursor: pointer;
-  transition: background-color 0.3s, box-shadow 0.3s;
-
-  &:hover {
-    background-color: #f1f1f1;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  }
-`;
-
-// Ícone de atenção
-export const AttentionIcon = styled.div`
-  width: 24px;
-  height: 24px;
-  background-color: #f57c00;
-  border-radius: 50%;
-  margin-right: 12px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #fff;
-  font-size: 14px;
-`;
-
-// Ícone de pedido
-export const OrderIcon = styled.div`
-  width: 24px;
-  height: 24px;
-  background-color: #2196f3;
-  border-radius: 50%;
-  margin-right: 12px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #fff;
-  font-size: 14px;
-`;
-
-// Texto do produto
-export const ProductText = styled.span`
-  font-size: 1rem;
-  color: #333;
-  
   span {
-    font-weight: 600;
-    color: #007bff;
+    font-weight: normal;
   }
 `;
 
-// Texto para nenhum produto
+export const AttentionIcon = styled(FaExclamationTriangle)`
+  color: #ffcc00;
+  margin-right: 8px; // Espaço entre ícone e texto
+`;
+
+export const OrderIcon = styled(FaCartPlus)`
+  color: #4caf50;
+  margin-right: 8px;
+`;
+
 export const NoProductsText = styled.p`
-  font-size: 1rem;
-  color: #888;
-  text-align: center;
+  font-size: 14px;
+  color: #999;
+  text-align: center; // Centraliza o texto
 `;
 
-// Botões de ação
 export const AddButton = styled.button`
-  background-color: #28a745;
-  color: #fff;
+  background-color: #4caf50;
+  color: white;
   border: none;
-  padding: 10px 20px;
-  border-radius: 8px;
+  padding: 12px 20px; // Padding ajustado
+  border-radius: 6px; // Borda arredondada ajustada
   cursor: pointer;
-  margin-top: 10px;
-  transition: background-color 0.3s, transform 0.2s;
-  font-size: 0.875rem;
-  font-weight: 500;
+  transition: background-color 0.2s;
+  margin-top: 10px; // Espaçamento superior
 
   &:hover {
-    background-color: #218838;
-    transform: scale(1.03);
-  }
-
-  &:active {
-    background-color: #1e7e34;
+    background-color: #45a049;
   }
 `;
 
-// Botão de enviar pedido
-export const SendOrderButton = styled.button`
-  background-color: #007bff;
-  color: #fff;
+export const SubButton = styled.button`
+  background-color: #008cba;
+  color: white;
   border: none;
-  padding: 10px 20px;
-  border-radius: 8px;
+  padding: 12px 20px; // Padding ajustado
+  border-radius: 6px; // Borda arredondada ajustada
   cursor: pointer;
-  margin-top: 10px;
-  font-size: 0.875rem;
-  font-weight: 500;
-  transition: background-color 0.3s, transform 0.2s;
+  transition: background-color 0.2s;
+  margin-top: 10px; // Espaçamento superior
 
   &:hover {
-    background-color: #0056b3;
-    transform: scale(1.03);
-  }
-
-  &:active {
-    background-color: #004494;
+    background-color: #007bb5;
   }
 `;
 
-// Modal
 export const Modal = styled.div`
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.4);
+  background-color: rgba(0, 0, 0, 0.5);
   display: flex;
   align-items: center;
   justify-content: center;
 `;
 
-// Conteúdo do modal
 export const ModalContent = styled.div`
-  background: #fff;
+  background-color: white;
   padding: 20px;
-  border-radius: 10px;
+  border-radius: 8px;
+  max-width: 400px;
   width: 90%;
-  max-width: 500px;
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
-  display: flex;
-  flex-direction: column;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2); // Sombra ajustada
 
   h2 {
-    margin-bottom: 15px;
-    font-size: 1.5rem;
-    color: #333;
-    font-weight: 600;
+    margin-top: 0;
+    font-size: 18px; // Fonte ajustada
   }
 
-  input[type="text"] {
-    width: 100%;
-    padding: 10px;
-    margin-bottom: 15px;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    font-size: 1rem;
-    color: #333;
+  h3 {
+    margin: 15px 0 10px; // Margens ajustadas
+    font-size: 16px;
+  }
+
+  input[type="text"],
+  input[type="number"] {
+    width: calc(100% - 20px); // Largura ajustada
+    padding: 10px; // Padding ajustado
+    margin-bottom: 12px; // Margem ajustada
+    border: 1px solid #ddd;
+    border-radius: 6px;
   }
 
   button {
-    background-color: #007bff;
-    color: #fff;
+    margin-top: 10px; // Margem ajustada
+    background-color: #4caf50;
+    color: white;
     border: none;
-    padding: 10px 18px;
-    border-radius: 8px;
+    padding: 12px;
+    border-radius: 6px;
     cursor: pointer;
-    font-size: 0.875rem;
-    font-weight: 500;
-    transition: background-color 0.3s, transform 0.2s;
-    margin-right: 10px;
+    transition: background-color 0.2s;
+    width: 100%;
 
     &:hover {
-      background-color: #0056b3;
-      transform: scale(1.03);
-    }
-
-    &:active {
-      background-color: #004494;
+      background-color: #45a049;
     }
   }
+`;
 
-  button + button {
-    background-color: #dc3545;
+export const SelectCategory = styled.select`
+  padding: 10px; // Padding ajustado
+  font-size: 1rem; // Tamanho da fonte ajustado
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  width: 100%;
+  max-width: 300px; // Largura ajustada
+  margin-bottom: 20px; // Espaçamento ajustado
+  cursor: pointer;
 
-    &:hover {
-      background-color: #c82333;
-    }
-
-    &:active {
-      background-color: #bd2130;
-    }
-  }
-
-  div {
-    margin-bottom: 10px;
+  option {
+    font-size: 1rem; // Tamanho da fonte ajustado
   }
 `;
