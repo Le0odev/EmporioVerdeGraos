@@ -4,7 +4,7 @@ import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useAuth } from '../../../pages/Login/authContext';
 import {
-  AddButton,
+  
   AttentionIcon,
   Container,
   NoProductsText,
@@ -13,8 +13,6 @@ import {
   ProductList,
   ProductText,
   SectionTitle,
-  Modal,
-  ModalContent,
   SubButton,
   SelectCategory,
   ContainerButton,
@@ -156,27 +154,10 @@ const ListaProdutosGerenciamento: React.FC = () => {
     }
   };
 
-  const handleAdicionarProduto = () => {
-    if (!novoProdutoNome) {
-      toast.error('Insira o nome do produto.');
-      return;
-    }
-
-    const novoProduto: Produto = {
-      id: Date.now(),
-      productName: novoProdutoNome,
-      bulk: false,
-      estoquePeso: 0,
-      productQuantity: 0,
-      stockAlertLimit: 0,
-      categoryId: 0,
-    };
-
-    setListaProdutosAdicionados(prev => [...prev, novoProduto]);
-    adicionarProdutoPedido(novoProduto.id);
-    setNovoProdutoNome('');
-    setModalOpenAdicionar(false);
-    toast.success('Produto adicionado à lista e aos pedidos.');
+  const limparProdutosAdicionados = () => {
+    localStorage.removeItem('produtosAdicionados');
+    setListaProdutosAdicionados([]);
+    toast.success('Produtos adicionados foram removidos.');
   };
 
   const produtosFiltradosPorCategoria = (produtos: Produto[]) => {
@@ -237,26 +218,9 @@ const ListaProdutosGerenciamento: React.FC = () => {
           </ProductList>
         </div>
         <ContainerButton>
-          <AddButton onClick={() => setModalOpenAdicionar(true)}>Adicionar Produto</AddButton>
           <SubButton onClick={() => navigate('/lista-pedidos/enviar-pedido')}>Enviar Pedido</SubButton>
         </ContainerButton>
       </Container>
-  
-      {modalOpenAdicionar && (
-        <Modal>
-          <ModalContent>
-            <h2>Adicionar Novo Produto</h2>
-            <input
-              type="text"
-              placeholder="Nome do produto"
-              value={novoProdutoNome}
-              onChange={(e) => setNovoProdutoNome(e.target.value)}
-            />
-            <button onClick={handleAdicionarProduto}>Adicionar</button>
-            <button onClick={() => setModalOpenAdicionar(false)}>Fechar</button>
-          </ModalContent>
-        </Modal>
-      )}
     </>
   );
 };

@@ -3,29 +3,31 @@ import { FaExclamationTriangle, FaCartPlus } from 'react-icons/fa';
 
 export const Container = styled.div`
   display: flex;
-  margin: 0 auto;
-  width: 80%;
   flex-direction: column;
-  padding: 15px;
-  gap: 10px;
-  border: solid 1px #d0d0d0; 
+  width: 90%;
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 16px;
+  border: 1px solid #ddd; 
   border-radius: 8px;
-  background-color: #f5f5f5; 
+  background-color: #f8f8f8; 
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 `;
 
 export const SectionTitle = styled.h2`
   font-size: 16px;
-  margin-bottom: 8px;
-  border-bottom: 2px solid #b0b0b0; // Linha de separação em cinza
-  padding-bottom: 4px;
   color: #333;
+  margin-top:10px;
+  margin-bottom: 12px;
+  border-bottom: 2px solid #ddd;
+  padding-bottom: 4px;
 `;
 
 export const ProductList = styled.div`
   display: flex;
   flex-direction: column;
   gap: 8px;
-  max-height: 350px;
+  max-height: 300px;
   overflow-y: auto;
   padding: 0 8px;
 `;
@@ -35,152 +37,86 @@ export const ProductItem = styled.div`
   justify-content: space-between;
   align-items: center;
   padding: 8px;
-  border: 1px solid #dcdcdc; // Borda cinza clara
+  border: 1px solid #e0e0e0; 
   border-radius: 4px;
-  background-color: #ffffff; // Fundo branco para os cards
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15); // Sombra leve
+  background-color: #fff; 
+  transition: box-shadow 0.3s ease, transform 0.3s ease;
   cursor: pointer;
-  transition: background-color 0.2s, box-shadow 0.2s;
 
   &:hover {
-    background-color: #f0f0f0;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); // Sombra mais forte no hover
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
+    transform: translateY(-1px);
   }
 `;
 
 export const ProductText = styled.p`
-  font-size: 14px;
+  font-size: 13px;
   margin: 0;
-  font-weight: 500;
+  font-weight: 600;
   color: #444;
 
   span {
-    font-weight: normal;
+    font-weight: 400;
     color: #666;
   }
 `;
 
 export const AttentionIcon = styled(FaExclamationTriangle)`
+  font-size: 14px;
   color: #e67e22;
-  margin-left: 6px;
 `;
 
 export const OrderIcon = styled(FaCartPlus)`
+  font-size: 14px;
   color: #27ae60;
-  margin-left: 6px;
 `;
 
 export const NoProductsText = styled.p`
   font-size: 12px;
-  color: #999;
+  color: #777;
   text-align: center;
+  padding: 16px 0;
 `;
 
 export const AddButton = styled.button`
-  background-color: #27ae60;
-  color: white;
+  background-color: #28a745;
+  color: #fff;
   border: none;
   padding: 8px 12px;
   border-radius: 4px;
   cursor: pointer;
-  transition: background-color 0.2s;
-  margin-top: 8px;
+  font-size: 14px;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
 
   &:hover {
-    background-color: #229954;
+    background-color: #218838;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   }
 `;
 
 export const SubButton = styled.button`
-  background-color: #2980b9;
+  background-color: #007bff;
   color: white;
   border: none;
-  padding: 8px 12px;
+  padding: 8px 14px;
   border-radius: 4px;
   cursor: pointer;
-  transition: background-color 0.2s;
-  margin-top: 8px;
+  font-size: 14px;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
 
   &:hover {
-    background-color: #2471a3;
-  }
-`;
-
-export const Modal = styled.div`
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 1000; // Garantir que o modal fique acima de outros elementos
-`;
-
-export const ModalContent = styled.div`
-  background-color: #ffffff;
-  padding: 24px;
-  border-radius: 8px;
-  max-width: 600px; // Ajustar para um tamanho maior
-  width: 90%;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-
-  h2 {
-    margin-top: 0;
-    font-size: 18px; // Tamanho maior para melhor legibilidade
-    color: #333;
-  }
-
-  h3 {
-    margin: 12px 0 8px;
-    font-size: 16px; // Tamanho maior para melhor legibilidade
-    color: #555;
-  }
-
-  input[type="text"],
-  input[type="number"] {
-    width: calc(100% - 16px);
-    padding: 12px;
-    margin-bottom: 8px;
-    border: 1px solid #dcdcdc; // Borda cinza clara
-    border-radius: 4px;
-  }
-
-  button {
-    background-color: #27ae60;
-    color: white;
-    border: none;
-    padding: 12px;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: background-color 0.2s;
-    width: 100%;
-    margin-top: 8px;
-
-    &:hover {
-      background-color: #229954;
-    }
-  }
-
-  .button-group {
-    display: flex;
-    justify-content: space-between;
-    gap: 10px;
+    background-color: #0069d9;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   }
 `;
 
 export const SelectCategory = styled.select`
   padding: 8px;
   font-size: 0.9rem;
-  border: 1px solid #dcdcdc; // Borda cinza clara
+  border: 1px solid #ccc; 
   border-radius: 4px;
   width: 100%;
-  max-width: 280px;
+  max-width: 250px;
   margin-bottom: 16px;
   cursor: pointer;
 
@@ -189,7 +125,9 @@ export const SelectCategory = styled.select`
   }
 `;
 
-export const ContainerButton = styled.div `
+export const ContainerButton = styled.div`
+  margin-top: 14px;
   display: flex;
-  gap: 15px;
+  gap: 12px;
+  justify-content: flex-end;
 `;
