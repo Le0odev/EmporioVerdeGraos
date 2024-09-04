@@ -96,7 +96,7 @@ export const Form = styled.form`
 export const Label = styled.label`
   margin-bottom: 6px;
   font-size: 14px;
-  font-weight: 600;
+  font-weight: 500;
   color: #555;
 `;
 

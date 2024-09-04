@@ -32,7 +32,7 @@ const LogoImage = styled.img`
 `;
 
 const LogoText = styled.div`
-  font-size: 1.1rem;
+  font-size: 1rem;
   font-weight: bold;
   color: white;
   text-transform: uppercase;
@@ -43,11 +43,11 @@ const LogoText = styled.div`
 const NavLink = styled(Link)<{ isActive: boolean }>`
   display: flex;
   align-items: center;
-  font-size: 1rem;
+  font-size: 0.95rem;
   color: #f7f7f7;
   text-decoration: none;
-  margin: 0.65rem 0;
-  padding: 0.55rem 1rem;
+  margin: 0.60rem 0;
+  padding: 0.50rem 1rem;
   width: ${({ isActive }) => (isActive ? 'calc(100% + 15px)' : '100%')};
   box-sizing: border-box;
   transition: background-color 0.3s, color 0.3s, width 0.3s;
