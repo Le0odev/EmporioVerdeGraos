@@ -322,33 +322,35 @@ export const ButtonGroup = styled.div`
   margin-bottom: 20px; /* Adicionado para separar do filtro */
 `;
 
+// Container da Paginação
 export const PaginationContainer = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  margin: 20px 0;
+  margin: 15px 0;
+  gap: 8px; // Adicionando espaço entre os botões
 `;
 
-export const PaginationButton = styled.button<{ active?: boolean }>`
-  background-color: ${({ active }) => (active ? '#007bff' : '#f8f9fa')};
-  color: ${({ active }) => (active ? '#ffffff' : '#007bff')};
-  border: 1px solid #007bff;
+// Botões de Paginação
+export const PaginationButton = styled.button`
+  background-color: #28a745;  // Verde como na categoria
+  color: white;
+  border: none;
   border-radius: 4px;
-  padding: 10px 15px;
-  margin: 0 5px;
-  font-size: 16px;
+  padding: 8px 12px;
+  font-size: 14px;
   cursor: pointer;
-  transition: background-color 0.3s ease, color 0.3s ease;
+  transition: background-color 0.3s ease, transform 0.2s ease;
 
   &:hover {
-    background-color: ${({ active }) => (active ? '#0056b3' : '#e2e6ea')};
-    color: ${({ active }) => (active ? '#ffffff' : '#0056b3')};
+    background-color: #218838; // Sombra mais escura ao passar o mouse
+    transform: scale(1.05); // Pequeno efeito de escala ao passar o mouse
   }
 
   &:disabled {
     background-color: #e2e6ea;
-    border-color: #e2e6ea;
     color: #6c757d;
     cursor: not-allowed;
   }
 `;
+

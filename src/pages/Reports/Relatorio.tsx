@@ -347,6 +347,7 @@ const Relatorio: React.FC = () => {
                       {item.weight > 0 && (
                         <span>Peso: {item.weight} g - R${item.productPrice.toFixed(2)} (KG)</span>
                       )}
+                      
                       <br />
                       Subtotal: R${item.subtotal.toFixed(2)}
                     </ItemDetails>

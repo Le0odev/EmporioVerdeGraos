@@ -292,17 +292,19 @@ const CriarVenda: React.FC = () => {
     const lineHeight = 4.5; // Aumente o espaçamento entre as linhas aqui
   
     carrinho.forEach((item, index) => {
-      const line1 = `Produto: ${item.productName}`;
-      const line2 = item.bulk ? `Peso: ${item.peso}g` : `Quantidade: ${item.quantidade}`;
-      const line3 = `Subtotal: R$ ${item.bulk ? (item.productPrice * (item.peso || 0) / 1000).toFixed(2) : (item.productPrice * (item.quantidade || 0)).toFixed(2)}`;
+      const line1 = `${item.productName}`;
+      const line2 = `Preço: ${item.productPrice.toFixed(2)}`;
+      const line3 = item.bulk ? `Peso: ${item.peso}g` : `Quantidade: ${item.quantidade}`;
+      const line4 = `Subtotal: R$ ${item.bulk ? (item.productPrice * (item.peso || 0) / 1000).toFixed(2) : (item.productPrice * (item.quantidade || 0)).toFixed(2)}`;
   
       doc.setFontSize(10);
       doc.text(line1, 10, currentY);
       doc.text(line2, 10, currentY + lineHeight);
       doc.text(line3, 10, currentY + lineHeight * 2);
+      doc.text(line4, 10, currentY + lineHeight * 3);
   
       // Adicionar linha divisória após cada item
-      doc.line(10, currentY + lineHeight * 3, 70, currentY + lineHeight * 3);
+      doc.line(10, currentY + lineHeight * 4, 70, currentY + lineHeight * 4);
   
       currentY += lineHeight * 4; // Ajuste o multiplicador conforme necessário para o espaçamento entre os itens
     });
