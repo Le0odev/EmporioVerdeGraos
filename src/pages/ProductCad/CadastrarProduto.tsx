@@ -35,10 +35,13 @@ import {
   FlexContainer,
   CheckboxWrapper,
   CheckboxStyled,
-  CheckboxIcon
+  CheckboxIcon,
+  
 } from './StyledProdutos';
 import { useAuth } from '../Login/authContext';
 import { FaCheck, FaCheckSquare, FaRegSquare } from 'react-icons/fa';
+import { FiSearch } from 'react-icons/fi';
+import { SearchBar, SearchContainer, SearchIcon } from '../../components/StyledSearch';
 
 interface Categoria {
   id: string;
@@ -370,12 +373,17 @@ const CadastrarProduto: React.FC = () => {
         ) : (
           <Section>
             <SectionTitle>Lista de Produtos</SectionTitle>
-            <SearchInput
-              type="text"
-              placeholder="Buscar por nome"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-            />
+            <SearchContainer>
+            <SearchIcon>
+            <FiSearch />
+           </SearchIcon>
+            <SearchBar
+            type="text"
+            placeholder="Buscar produtos..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
+           </SearchContainer>
             <ProductGrid>
               {produtos.map((produto) => (
                 <Card key={produto.id}>

@@ -44,6 +44,8 @@ import {
 } from './StyledVenda';
 import jsPDF from 'jspdf';
 import { toast } from 'react-toastify';
+import { SearchBar, SearchContainer, SearchIcon } from '../../components/StyledSearch';
+import { FiSearch } from 'react-icons/fi';
 
 
 interface Produto {
@@ -383,13 +385,17 @@ const CriarVenda: React.FC = () => {
           />
         </Form>
         <Form onSubmit={handleSearchByNameSubmit}>
-          <Input
-            type='text'
-            placeholder='Procure um produto...'
-            id='searchName'
+        <SearchContainer>
+            <SearchIcon>
+            <FiSearch />
+           </SearchIcon>
+            <SearchBar
+            type="text"
+            placeholder="Buscar produtos..."
             value={searchTermByName}
             onChange={(e) => setSearchTermByName(e.target.value)}
           />
+           </SearchContainer>
           <Button type="submit">Pesquisar</Button>
         </Form>
         {autoAddFeedback && <AlertMessage >{autoAddFeedback}</AlertMessage>}

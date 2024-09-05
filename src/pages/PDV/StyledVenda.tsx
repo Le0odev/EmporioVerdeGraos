@@ -87,8 +87,10 @@ export const Input = styled.input`
   font-size: 14px;
   transition: border-color 0.3s ease;
   font-family: ${fonts.secondary};
+  
 
   &:focus {
+    outline: none;
     border-color: ${colors.primary};
   }
 
