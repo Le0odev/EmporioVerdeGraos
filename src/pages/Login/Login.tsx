@@ -2,16 +2,10 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import { useMutation } from 'react-query';
 import { useNavigate } from 'react-router-dom';
-import { Form, Label, Input, Button, H2 } from './StyledLogin';
+import { Form, Label, Input, Button, FormContainer, LogoContainer, LogoImage, Title, ErrorMessage, LoginContainer } from './StyledLogin';
 import axios from 'axios';
 import { useAuth } from '../Login/authContext'; // Importa o contexto de autenticação
 
-const LoginContainer = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin: 10rem;
-`;
 
 interface LoginFormData {
   username: string;
@@ -68,28 +62,33 @@ const LoginForm: React.FC = () => {
 
   return (
     <LoginContainer>
-      <Form onSubmit={handleSubmit}>
-        <H2>Login</H2>
-        <Label htmlFor="username">Username</Label>
-        <Input
-          type="text"
-          id="username"
-          name="username"
-          value={formData.username}
-          onChange={handleChange}
-          required
-        />
-        <Label htmlFor="password">Password</Label>
-        <Input
-          type="password"
-          id="password"
-          name="password"
-          value={formData.password}
-          onChange={handleChange}
-          required
-        />
-        <Button type="submit">Login</Button>
-      </Form>
+      <FormContainer>
+        <LogoContainer>
+          <LogoImage src= "/src/assets/logo.png" alt="Company Logo" />
+        </LogoContainer>
+        <Title>Login</Title>
+        <Form onSubmit={handleSubmit}>
+          <Label htmlFor="username">Username</Label>
+          <Input
+            type="text"
+            id="username"
+            name="username"
+            value={formData.username}
+            onChange={handleChange}
+            required
+          />
+          <Label htmlFor="password">Password</Label>
+          <Input
+            type="password"
+            id="password"
+            name="password"
+            value={formData.password}
+            onChange={handleChange}
+            required
+          />
+          <Button type="submit">Login</Button>
+        </Form>
+      </FormContainer>
     </LoginContainer>
   );
 };

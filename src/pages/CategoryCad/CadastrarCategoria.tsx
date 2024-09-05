@@ -167,7 +167,6 @@ const CadastrarCategoria: React.FC = () => {
 
   return (
     <>
-      <H1>Gerenciamento de Categorias</H1>
       <CategoriaContainer>
         <Section>
           <SectionTitle>{editId ? 'Atualizar Categoria' : 'Cadastrar Categoria'}</SectionTitle>

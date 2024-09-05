@@ -19,14 +19,16 @@ const AppContainer = styled.div`
 `;
 
 const MainContent = styled.div<{ showSidebar: boolean }>`
-  flex: 1;
+  flex: 2;
   padding: 1.5rem;
   background-color: #ccc;
   margin-left: ${(props) => (props.showSidebar ? '250px' : '0')};
-  transition: margin-left 0.3s;
+  transition: margin-left 00.3s;
 
   @media (max-width: 768px) {
-    padding: 0.6rem;
+    padding: 0;
+    margin-left: 0;
+
   }
 `;
 

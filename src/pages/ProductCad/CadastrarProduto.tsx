@@ -21,7 +21,6 @@ import {
   DeleteIcon,
   ToggleButtonContainer,
   ToggleButton,
-  SearchInput,
   IconContainer,
   Image,
   CardButton,
