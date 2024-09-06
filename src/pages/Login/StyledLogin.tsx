@@ -9,7 +9,7 @@ export const LoginContainer = styled.div`
   padding: 20px;
 
   @media (max-width: 768px) {
-    margin-top: 100px;
+    margin-top: 50%;
     display: block;
     padding: 0; // Remover padding adicional em mobile
     justify-content: center; 

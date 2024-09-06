@@ -16,10 +16,13 @@ import EnviarPedido from '../components/Notifies/EnviarPedido/EnviarPedido';
 
 const AppContainer = styled.div`
   display: flex;
+  
+
+
 `;
 
 const MainContent = styled.div<{ showSidebar: boolean }>`
-  flex: 2;
+  flex: 1;
   padding: 1.5rem;
   background-color: #ccc;
   margin-left: ${(props) => (props.showSidebar ? '250px' : '0')};
@@ -28,6 +31,7 @@ const MainContent = styled.div<{ showSidebar: boolean }>`
   @media (max-width: 768px) {
     padding: 0;
     margin-left: 0;
+    background-image: url("https://images.pexels.com/photos/4033325/pexels-photo-4033325.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1")
 
   }
 `;

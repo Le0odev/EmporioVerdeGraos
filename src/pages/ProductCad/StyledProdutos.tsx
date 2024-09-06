@@ -1,6 +1,4 @@
 
-
-
 import styled from 'styled-components';
 import { FaRegEdit, FaTrashAlt } from 'react-icons/fa';
 
@@ -42,6 +40,11 @@ export const Button = styled.button`
     background-color: #004494;
     transform: translateY(0);
   }
+
+  @media (max-width: 768px)     
+    font-size: 18px;
+
+  }
 `;
 
 export const CheckboxStyled = styled.div<CheckboxStyledProps>`
@@ -59,6 +62,18 @@ export const CheckboxWrapper = styled.div`
   cursor: pointer;
   margin-top: 4px;
   font-size: 22px;
+
+  @media (max-width: 768px) {
+    padding: 10px;
+    font-size: 26px;
+    margin-bottom: 10px;
+    border: 1px solid #ddd;
+
+  label {
+    font-size: 18px;
+  }
+  }
+
 `;
 
 export const CheckboxIcon = styled.div<CheckboxStyledProps>`
@@ -159,8 +174,10 @@ export const ProductContainer = styled.div`
   padding: 5px;
   box-sizing: border-box;
 
+
   @media (max-width: 768px) {
-    width: 95%;
+    width: 100%;
+    padding: 1.1rem;
   }
 `;
 
@@ -175,8 +192,9 @@ export const ContainerWrapper = styled.div`
   margin-top: -10px;
 
   @media (max-width: 768px) {
+    
     margin-top: 5rem;
-    padding: 10px;
+    padding: 20px;
   }
 `;
 
@@ -192,6 +210,7 @@ export const Section = styled.div`
 
   @media (max-width: 768px) {
     flex-direction: column;
+    
   }
 `;
 
@@ -199,9 +218,10 @@ export const Section = styled.div`
 export const ToggleButtonContainer = styled.div`
   display: flex;
   margin-bottom: 12px;
+  gap: 10px;
 
-  @media (max-width: 768px) {
-    flex-direction: column;
+  @media (max-width: 768px)     
+    font-size: 16px;
   }
 `;
 
@@ -216,9 +236,10 @@ export const ToggleButton = styled.button<{ active: boolean }>`
   font-size: 13px;
   font-weight: 500;
   transition: background-color 0.3s ease, transform 0.2s ease;
+  gap: 10px;
 
   &:not(:last-child) {
-    margin-right: 6px;
+
   }
 
   &:hover {
@@ -230,6 +251,8 @@ export const ToggleButton = styled.button<{ active: boolean }>`
     background-color: ${({ active }) => (active ? '#004494' : '#dae0e5')};
     transform: translateY(0);
   }
+
+  
 `;
 
 
@@ -250,7 +273,7 @@ export const Select = styled.select`
   }
 
   @media (max-width: 768px) {
-    width: 177px;
+    font-size: 20px;
     padding: 8px;
   }
 `;
@@ -308,6 +331,14 @@ export const Label = styled.label`
   font-size: 14px;
   font-weight: 500;
   color: #555;
+
+  @media (max-width: 768px) {
+  
+    font-size: 0px;
+
+  }
+
+
 `;
 
 // Campo de entrada de texto
@@ -326,7 +357,9 @@ export const Input = styled.input`
   }
 
   @media (max-width: 768px) {
-    padding: 8px;
+    padding: 14px;
+    font-size: 18px;
+
   }
 `;
 
@@ -343,9 +376,6 @@ export const ProductGrid = styled.div`
     grid-gap: 8px;
   }
 `;
-
-
-
 
 // Estilo da imagem do produto
 export const Image = styled.img`
@@ -364,7 +394,7 @@ export const Image = styled.img`
 
 // Nome do produto no cartão
 export const ProductName = styled.h3`
-  font-size: 16px;
+  font-size: 14px;
   margin: 6px 0 4px;
   font-weight: 700;
   color: #333;
@@ -374,7 +404,6 @@ export const ProductName = styled.h3`
     font-size: 12px;
   }
 
-  
 `;
 
 export const ProductPrice = styled.p`
@@ -417,9 +446,6 @@ export const DeleteIcon = styled(FaTrashAlt)`
   }
 `;
 
-
-
-
 // Altere a FlexContainer se necessário para manter outros elementos
 export const FlexContainer = styled.div`
   display: flex;
@@ -433,12 +459,12 @@ export const FlexContainer = styled.div`
   }
   
   @media (max-width: 768px) {
-    
-  input {
-    width: 167px;  
+  flex-direction: column;
+  gap: 0px;
 
+  input {
+    font-size: 20px;
   }
-  
   }
 
 `;

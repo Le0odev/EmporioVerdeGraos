@@ -9,4 +9,17 @@
 body{
     background-color: #ccc;
     
+
+    
+
+
 }
+
+
+@media (max-width: 768px) {
+    body {
+    padding: 0;
+    margin-left: 0;
+    background-image: url("https://images.pexels.com/photos/4033325/pexels-photo-4033325.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1")
+    }
+  }

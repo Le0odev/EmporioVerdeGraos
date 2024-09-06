@@ -37,7 +37,8 @@ export const Header = styled.header`
 `;
 
 export const CatalogContainer = styled.div`
-  margin-top: 4rem;
+  margin: 10px;
+  margin-top: 4.5rem;
   background-color: ${colors.background};
   padding: 2rem;
   min-height: calc(100vh - 4rem);

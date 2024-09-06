@@ -310,7 +310,7 @@ const CadastrarProduto: React.FC = () => {
                 <div>
 
                   <CheckboxWrapper onClick={toggleCheckbox}>
-                  <Label htmlFor='checkbox'>Produto a granel? Cheque abaixo</Label>
+                  <Label htmlFor='checkbox'>Produto a granel?</Label>
                   {isBulk ? (
                     <FaCheckSquare color="#28a745" />
                   ) : (
@@ -392,7 +392,7 @@ const CadastrarProduto: React.FC = () => {
                     <ProductPrice>{formatPrice(produto.productPrice)}</ProductPrice>
                   </CardItem>
                   <CardButton>
-                  <EditIcon style={{ marginRight: '8px' }} onClick={() => handleEdit(produto)} />
+                  <EditIcon  onClick={() => handleEdit(produto)} />
                   <DeleteIcon onClick={() => handleDelete(produto)} />
                   </CardButton>
                 </Card>
