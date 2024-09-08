@@ -50,12 +50,13 @@ const Cart: React.FC = () => {
 
   return (
     <>
-      <CartContainer>
-        <HeaderCart
+    <HeaderCart
           showBackButton
           handleBack={handleBackToCatalog}
           handleGoToCart={handleGoToCart}
         />
+      <CartContainer>
+        
         <h1>Carrinho</h1>
         {cartItems.length === 0 ? (
           <p>Seu carrinho está vazio.</p>
@@ -101,7 +102,6 @@ const Cart: React.FC = () => {
               <CheckoutButton>Finalizar Compra</CheckoutButton>
             </CartSummaryContainer>
       </CartContainer>
-      <Footer />
     </>
   );
 };

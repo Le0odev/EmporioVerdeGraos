@@ -27,7 +27,7 @@ export const Button = styled.button`
   color: #fff;
   border: none;
   border-radius: 6px;
-  font-size: 13px;
+  font-size: 16px;
   cursor: pointer;
   transition: background-color 0.3s ease, transform 0.2s ease;
 
@@ -42,7 +42,8 @@ export const Button = styled.button`
   }
 
   @media (max-width: 768px)     
-    font-size: 18px;
+    font-size: 15px;
+    padding: 10px;
 
   }
 `;
@@ -65,12 +66,13 @@ export const CheckboxWrapper = styled.div`
 
   @media (max-width: 768px) {
     padding: 10px;
-    font-size: 26px;
+    font-size: 20px;
     margin-bottom: 10px;
     border: 1px solid #ddd;
 
   label {
-    font-size: 18px;
+    font-size: 14px;
+    
   }
   }
 
@@ -78,38 +80,6 @@ export const CheckboxWrapper = styled.div`
 
 export const CheckboxIcon = styled.div<CheckboxStyledProps>`
   background-color: ${({ checked }) => (checked ? '#28a745' : 'transparent')};
-`;
-
-// Estilização do modal em si
-export const Modal = styled.div`
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 1000;
-`;
-
-// Conteúdo do modal, centrado na tela
-export const ModalContent = styled.div`
-  background-color: white;
-  padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-  max-width: 400px;
-  width: 90%;
-  text-align: center;
-`;
-
-// Cabeçalho do modal
-export const ModalHeader = styled.div`
-  margin-bottom: 15px;
-  font-size: 1.25rem;
-  font-weight: bold;
 `;
 
 // Rodapé com os botões de ação (Confirmar/Cancelar)
@@ -133,6 +103,31 @@ export const ModalButton = styled.button`
   }
 `;
 
+// Altere a FlexContainer se necessário para manter outros elementos
+export const FlexContainer = styled.div`
+  display: flex;
+  gap: 20px;
+  margin-bottom: 1px;
+
+  div {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  @media (max-width: 768px) {
+  flex-direction: column;
+  gap: 0px;
+
+  input {
+    font-size: 14px;
+    padding: 10px;
+  }
+  }
+
+`;
+
+
 // Botão alternativo de Cancelar com estilo diferente
 export const CancelButton = styled(ModalButton)`
   background-color: #dc3545;
@@ -142,44 +137,7 @@ export const CancelButton = styled(ModalButton)`
   }
 `;
 
-export const CardButton = styled.button`
-  background: none;
-  border: none;
-  padding: 8px;
-  margin-right: 6px;
-  transition: color 0.3s ease;
 
-  & > *:not(:last-child) {
-    margin-right: 6px;
-  }
-
-  &:hover {
-    color: #007bff;
-  }
-`;
-
-// Item individual da lista de cartões
-export const CardItem = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-`;
-
-export const ProductContainer = styled.div`
-  margin: 0 auto;
-  display: flex;
-  flex-direction: column;
-  width: 90%;
-  padding: 5px;
-  box-sizing: border-box;
-
-
-  @media (max-width: 768px) {
-    width: 100%;
-    padding: 1.1rem;
-  }
-`;
 
 // Container que envolve toda a aplicação de produtos
 export const ContainerWrapper = styled.div`
@@ -193,7 +151,7 @@ export const ContainerWrapper = styled.div`
 
   @media (max-width: 768px) {
     
-    margin-top: 5rem;
+    margin-top: 4rem;
     padding: 20px;
   }
 `;
@@ -221,7 +179,7 @@ export const ToggleButtonContainer = styled.div`
   gap: 10px;
 
   @media (max-width: 768px)     
-    font-size: 16px;
+    font-size: 14px;
   }
 `;
 
@@ -233,7 +191,7 @@ export const ToggleButton = styled.button<{ active: boolean }>`
   border: solid 1px #ddd;
   border-radius: 8px;
   cursor: pointer;
-  font-size: 13px;
+  font-size: 15px;
   font-weight: 500;
   transition: background-color 0.3s ease, transform 0.2s ease;
   gap: 10px;
@@ -254,56 +212,6 @@ export const ToggleButton = styled.button<{ active: boolean }>`
 
   
 `;
-
-
-
-// Selecionar opções
-export const Select = styled.select`
-  margin-bottom: 12px;
-  padding: 10px;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  font-size: 14px;
-  color: #333;
-  transition: border-color 0.3s ease;
-
-  &:focus {
-    border-color: #007bff;
-    outline: none;
-  }
-
-  @media (max-width: 768px) {
-    font-size: 20px;
-    padding: 8px;
-  }
-`;
-
-// Cartão de produto
-export const Card = styled.div`
-  display: flex;
-  flex-direction: column;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  overflow: hidden;
-  background-color: #fff;
-  padding: 10px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-  transition: box-shadow 0.3s ease, transform 0.3s ease;
-  height: auto;
-  width: 140px;
-  box-sizing: border-box;
-
-  &:hover {
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
-    transform: translateY(-2px);
-    cursor: pointer;
-  }
-
-  @media (max-width: 768px) {
-    width: 100%;
-  }
-`;
-
 
 
 // Título da seção
@@ -357,13 +265,96 @@ export const Input = styled.input`
   }
 
   @media (max-width: 768px) {
-    padding: 14px;
-    font-size: 18px;
 
   }
 `;
 
 
+// Selecionar opções
+export const Select = styled.select`
+  margin-bottom: 12px;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 14px;
+  color: #333;
+  transition: border-color 0.3s ease;
+
+  &:focus {
+    border-color: #007bff;
+    outline: none;
+  }
+
+  @media (max-width: 768px) {
+    font-size: 14px;
+    padding: 8px;
+  }
+`;
+
+// Cartão de produto
+export const Card = styled.div`
+  display: flex;
+  flex-direction: column;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  overflow: hidden;
+  background-color: #fff;
+  padding: 10px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  transition: box-shadow 0.3s ease, transform 0.3s ease;
+  height: auto;
+  width: 140px;
+  box-sizing: border-box;
+
+  &:hover {
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+    transform: translateY(-2px);
+    cursor: pointer;
+  }
+
+  @media (max-width: 768px) {
+    width: 100%;
+  }
+`;
+
+export const CardButton = styled.button`
+  background: none;
+  border: none;
+  padding: 8px;
+  margin-right: 6px;
+  transition: color 0.3s ease;
+
+  & > *:not(:last-child) {
+    margin-right: 6px;
+  }
+
+  &:hover {
+    color: #007bff;
+  }
+`;
+
+// Item individual da lista de cartões
+export const CardItem = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+`;
+
+export const ProductContainer = styled.div`
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  width: 90%;
+  padding: 5px;
+  box-sizing: border-box;
+
+
+  @media (max-width: 768px) {
+    width: 100%;
+    padding: 1.1rem;
+  }
+`;
 
 
 export const ProductGrid = styled.div`
@@ -446,26 +437,34 @@ export const DeleteIcon = styled(FaTrashAlt)`
   }
 `;
 
-// Altere a FlexContainer se necessário para manter outros elementos
-export const FlexContainer = styled.div`
+// Estilização do modal em si
+export const Modal = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
   display: flex;
-  gap: 20px;
-  margin-bottom: 1px;
-
-  div {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-  }
-  
-  @media (max-width: 768px) {
-  flex-direction: column;
-  gap: 0px;
-
-  input {
-    font-size: 20px;
-  }
-  }
-
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
 `;
 
+// Conteúdo do modal, centrado na tela
+export const ModalContent = styled.div`
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  max-width: 400px;
+  width: 90%;
+  text-align: center;
+`;
+
+// Cabeçalho do modal
+export const ModalHeader = styled.div`
+  margin-bottom: 15px;
+  font-size: 1.25rem;
+  font-weight: bold;
+`;

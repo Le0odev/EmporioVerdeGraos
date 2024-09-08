@@ -4,18 +4,17 @@ import styled from 'styled-components';
 
 // Container do carrinho
 export const CartContainer = styled.div`
-  margin-top: 4rem;
-  background-color: #ffffff;
-  border: 1px solid #e6e6e6;
-  border-radius: 12px;
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+  width: 90%; // Diminui a largura do container
+  max-width: 600px; // Define um tamanho máximo para não expandir muito em telas maiores
+  margin: 0 auto; // Centraliza o container
+  background-color: #fff;
   padding: 1rem;
-  width: 100%;
-  max-width: 700px;
-  position: relative;
-  overflow: hidden;
-  
-  s
+  border-radius: 16px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+
+  @media (max-width: 768px) {
+    width: 95%; // Para dispositivos móveis, ajusta a largura para ficar um pouco mais estreita
+  }
 `;
 
 // Item do carrinho

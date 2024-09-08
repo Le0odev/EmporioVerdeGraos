@@ -23,7 +23,6 @@ export const Header = styled.header`
   align-items: center;
   justify-content: space-between;
   box-shadow: 0 4px 8px ${colors.shadow};
-  position: fixed;
   top: 0;
   left: 0;
   width: 100%;
@@ -33,6 +32,7 @@ export const Header = styled.header`
 
   @media (max-width: 768px) {
     padding: 0.75rem 1rem;
+    margin-bottom: 10px
   }
 `;
 

@@ -107,8 +107,8 @@ const Catalog: React.FC = () => {
 
   return (
     <>
+      <HeaderCart handleGoToCart={handleGoToCart} />
       <CatalogContainer>
-        <HeaderCart handleGoToCart={handleGoToCart} />
         <SearchContainer>
           <SearchIcon>
             <FiSearch />
@@ -150,7 +150,6 @@ const Catalog: React.FC = () => {
           </ProductList>
         )}
       </CatalogContainer>
-      <Footer />
       <WeightModal
         isOpen={modalOpen}
         onClose={() => setModalOpen(false)}

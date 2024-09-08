@@ -29,7 +29,6 @@ const SidebarContainer = styled.nav<{ isOpen: boolean }>`
 
   // Comportamento em telas pequenas
   @media (max-width: 768px) {
-    width: 200px;
     transform: ${({ isOpen }) => (isOpen ? 'translateX(0)' : 'translateX(-100%)')};
     box-shadow: ${({ isOpen }) => (isOpen ? '0 0 10px rgba(0,0,0,0.5)' : 'none')};
   }
