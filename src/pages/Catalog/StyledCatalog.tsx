@@ -38,7 +38,7 @@ export const Header = styled.header`
 
 export const CatalogContainer = styled.div`
   margin: 10px;
-  margin-top: 4.5rem;
+  margin-top: rem;
   background-color: ${colors.background};
   padding: 2rem;
   min-height: calc(100vh - 4rem);
@@ -264,7 +264,7 @@ export const ProductName = styled.h3`
   border-top: 1px solid ${colors.border};
 
   @media (max-width: 768px) {
-    font-size: 0.875rem;
+    font-size: 0.7rem;
   }
 `;
 
@@ -290,4 +290,3 @@ export const LogoImage = styled.img`
     width: 2.5rem;
   }
 `;
-

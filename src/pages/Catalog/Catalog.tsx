@@ -21,7 +21,6 @@ import {
 import { Category, Product } from './Product';
 import { FiSearch } from 'react-icons/fi';
 import { useNavigate } from 'react-router-dom';
-import { Footer } from '../../components/Footer/Footer';
 import HeaderCart from '../../components/Header/HeadrCart/HeaderCart';
 
 const Catalog: React.FC = () => {
@@ -43,7 +42,7 @@ const Catalog: React.FC = () => {
     const fetchCategories = async () => {
       setLoading(true);
       try {
-        const response = await axios.get('http://localhost:8080/public/catalog/categories');
+        const response = await axios.get('https://systemallback-end-production.up.railway.app/public/catalog/categories');
         setCategories(response.data);
       } catch (error) {
         console.error('Erro ao buscar categorias:', error);
@@ -60,7 +59,7 @@ const Catalog: React.FC = () => {
     const fetchProducts = async () => {
       setLoading(true);
       try {
-        const response = await axios.get('http://localhost:8080/public/catalog/search', {
+        const response = await axios.get('https://systemallback-end-production.up.railway.app/public/catalog/search', {
           params: {
             productName: searchTerm,
             categoryId: selectedCategory,
@@ -107,8 +106,9 @@ const Catalog: React.FC = () => {
 
   return (
     <>
+      <HeaderCart handleGoToCart={handleGoToCart} />
+
       <CatalogContainer>
-        <HeaderCart handleGoToCart={handleGoToCart} />
         <SearchContainer>
           <SearchIcon>
             <FiSearch />
@@ -150,7 +150,6 @@ const Catalog: React.FC = () => {
           </ProductList>
         )}
       </CatalogContainer>
-      <Footer />
       <WeightModal
         isOpen={modalOpen}
         onClose={() => setModalOpen(false)}

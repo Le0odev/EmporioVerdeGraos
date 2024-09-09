@@ -92,7 +92,7 @@ const CadastrarProduto: React.FC = () => {
   useEffect(() => {
     const fetchCategorias = async () => {
       try {
-        const response = await axios.get('http://localhost:8080/category', {
+        const response = await axios.get('https://systemallback-end-production.up.railway.app/category', {
           headers: {
             Authorization: `Bearer ${token}`
           }
@@ -110,7 +110,7 @@ const CadastrarProduto: React.FC = () => {
     const fetchProdutos = async () => {
       if (searchTerm.trim()) { 
         try {
-          const response = await axios.get(`http://localhost:8080/products/search?productName=${searchTerm}`, {
+          const response = await axios.get(`https://systemallback-end-production.up.railway.app/products/search?productName=${searchTerm}`, {
             headers: {
               Authorization: `Bearer ${token}`
             }
@@ -146,7 +146,7 @@ const CadastrarProduto: React.FC = () => {
     try {
       if (editId) {
         // Atualização de produto
-        await axios.put(`http://localhost:8080/products/${editId}`, data, {
+        await axios.put(`https://systemallback-end-production.up.railway.app/products/${editId}`, data, {
           headers: {
             Authorization: `Bearer ${token}`
           }
@@ -156,7 +156,7 @@ const CadastrarProduto: React.FC = () => {
         toast.success('Produto atualizado com sucesso!');
       } else {
         // Criação de produto
-        await axios.post('http://localhost:8080/products/cadastrar', data, {
+        await axios.post('https://systemallback-end-production.up.railway.app/products/cadastrar', data, {
           headers: {
             Authorization: `Bearer ${token}`
           }
@@ -227,7 +227,7 @@ const CadastrarProduto: React.FC = () => {
     if (!produtoAExcluir) return;
 
     try {
-      await axios.delete(`http://localhost:8080/products/delete/${produtoAExcluir.id}`, {
+      await axios.delete(`https://systemallback-end-production.up.railway.app/products/delete/${produtoAExcluir.id}`, {
         headers: {
           Authorization: `Bearer ${token}`
         }

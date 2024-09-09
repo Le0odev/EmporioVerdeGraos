@@ -7,8 +7,12 @@ export const CategoriaContainer = styled.div`
   justify-content: space-between;
   padding: 20px;
   gap: 20px;
+
   @media (max-width: 768px) {
     flex-direction: column;
+    padding: 10px;
+    margin-top: 4.5rem;
+    gap: 10px;
   }
 `;
 
@@ -20,6 +24,11 @@ export const Section = styled.section`
   border-radius: 8px;
   box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
   max-width: 600px;
+
+  @media (max-width: 768px) {
+    max-width: 100%;
+    padding: 15px;
+  }
 `;
 
 // Título da seção
@@ -27,6 +36,10 @@ export const SectionTitle = styled.h2`
   font-size: 20px;
   margin-bottom: 20px;
   color: #333;
+
+  @media (max-width: 768px) {
+    font-size: 18px;
+  }
 `;
 
 // Formulário para cadastrar ou editar categoria
@@ -41,6 +54,10 @@ export const Label = styled.label`
   font-size: 14px;
   font-weight: 500;
   color: #555;
+
+  @media (max-width: 768px) {
+    font-size: 13px;
+  }
 `;
 
 // Entrada de texto para o formulário
@@ -49,9 +66,15 @@ export const Input = styled.input`
   border: 1px solid #ccc;
   border-radius: 4px;
   font-size: 14px;
+
   &:focus {
     border-color: #007bff;
     outline: none;
+  }
+
+  @media (max-width: 768px) {
+    padding: 8px;
+    font-size: 13px;
   }
 `;
 
@@ -65,8 +88,14 @@ export const Button = styled.button`
   cursor: pointer;
   font-size: 16px;
   margin-top: 10px;
+
   &:hover {
     background-color: #218838;
+  }
+
+  @media (max-width: 768px) {
+    padding: 8px 12px;
+    font-size: 14px;
   }
 `;
 
@@ -76,6 +105,11 @@ export const H1 = styled.h1`
   color: #333;
   text-align: center;
   margin-bottom: 30px;
+
+  @media (max-width: 768px) {
+    font-size: 20px;
+    margin-bottom: 20px;
+  }
 `;
 
 // Cartão que contém a lista de categorias
@@ -84,7 +118,11 @@ export const Card = styled.div`
   background-color: #f9f9f9;
   border-radius: 8px;
   box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1); 
-  `;
+
+  @media (max-width: 768px) {
+    margin-top: 15px;
+  }
+`;
 
 // Lista de itens no cartão
 export const CardList = styled.ul`
@@ -92,8 +130,6 @@ export const CardList = styled.ul`
   list-style: none;
   padding: 0;
   margin: 0;
-
-  
 `;
 
 // Cada item na lista de categorias
@@ -103,24 +139,33 @@ export const CardItem = styled.li`
   justify-content: space-between;
   align-items: center;
   border-bottom: 1px solid #e6e6e6;
-  
+
   &:last-child {
     border-bottom: none;
+  }
+
+  @media (max-width: 768px) {
+    padding: 8px 15px;
   }
 `;
 
 // Botão dentro do cartão para ações como editar ou excluir
 export const CardButton = styled.button`
   padding: 10px 15px;
-
-  background-color:  #007bff;
+  background-color: #007bff;
   color: white;
   border: none;
   border-radius: 4px;
   cursor: pointer;
   font-size: 16px;
+
   &:hover {
-    color: #0056b3;
+    background-color: #0056b3;
+  }
+
+  @media (max-width: 768px) {
+    padding: 8px 12px;
+    font-size: 18px;
   }
 `;
 
@@ -131,9 +176,15 @@ export const CardInput = styled.input`
   border-radius: 4px;
   font-size: 14px;
   width: 100%;
+
   &:focus {
     border-color: #007bff;
     outline: none;
+  }
+
+  @media (max-width: 768px) {
+    padding: 8px;
+    font-size: 13px;
   }
 `;
 
@@ -143,20 +194,21 @@ export const SearchContainer = styled.div`
   align-items: center;
   gap: 10px;
   margin-top: 10px;
-`;
 
-// Ícone de pesquisa
-export const SearchButtonIcon = styled.span`
-  display: flex;
-  align-items: center;
-  font-size: 14px;
-  gap: 10px;
+  @media (max-width: 768px) {
+    gap: 5px;
+    margin-top: 8px;
+  }
 `;
 
 // Nome da categoria dentro do cartão
 export const CategoryName = styled.span`
   font-weight: bold;
   color: #333;
+
+  @media (max-width: 768px) {
+    font-size: 15px;
+  }
 `;
 
 // Ícone de edição
@@ -164,8 +216,14 @@ export const EditIcon = styled(FaEdit)`
   color: #007bff;
   cursor: pointer;
   margin-right: 10px;
+
   &:hover {
     color: #0056b3;
+  }
+
+  @media (max-width: 768px) {
+    margin-right: 8px;
+    font-size:18px;
   }
 `;
 
@@ -173,8 +231,13 @@ export const EditIcon = styled(FaEdit)`
 export const DeleteIcon = styled(FaTrashAlt)`
   color: #dc3545;
   cursor: pointer;
+
   &:hover {
     color: #c82333;
+  }
+
+  @media (max-width: 768px) {
+    font-size: 16px;
   }
 `;
 
@@ -184,6 +247,11 @@ export const PaginationContainer = styled.div`
   justify-content: center;
   margin-top: 20px;
   gap: 5px;
+
+  @media (max-width: 768px) {
+    gap: 3px;
+    margin-top: 15px;
+  }
 `;
 
 // Botão de paginação
@@ -195,7 +263,24 @@ export const PaginationButton = styled.button<{ disabled?: boolean }>`
   border-radius: 4px;
   cursor: ${({ disabled }) => (disabled ? 'not-allowed' : 'pointer')};
   font-size: 14px;
+
   &:hover {
     background-color: ${({ disabled }) => (disabled ? '#e9ecef' : '#0056b3')};
   }
+
+  @media (max-width: 768px) {
+    padding: 6px 10px;
+    font-size: 13px;
+  }
 `;
+
+
+// Ícone de pesquisa
+export const SearchButtonIcon = styled.span`
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+  gap: 10px;
+`;
+
+

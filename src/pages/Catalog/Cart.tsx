@@ -20,7 +20,6 @@ import {
   CartSummaryTotal,
   CheckoutButton
 } from './StyledCart';
-import { Footer } from '../../components/Footer/Footer';
 import { useNavigate } from 'react-router-dom';
 
 const Cart: React.FC = () => {
@@ -50,13 +49,14 @@ const Cart: React.FC = () => {
 
   return (
     <>
-      <CartContainer>
-        <HeaderCart
+      <HeaderCart
           showBackButton
           handleBack={handleBackToCatalog}
           handleGoToCart={handleGoToCart}
         />
-        <h1>Carrinho</h1>
+        <CartContainer>
+        
+        <h1>Checkout</h1>
         {cartItems.length === 0 ? (
           <p>Seu carrinho está vazio.</p>
         ) : (
@@ -89,7 +89,6 @@ const Cart: React.FC = () => {
           
         )}
         <CartSummaryContainer>
-              <CartSummaryTitle>Resumo do Carrinho</CartSummaryTitle>
               <CartSummaryItem>
                 <span>Subtotal:</span>
                 <span>R${subtotal.toFixed(2)}</span>
@@ -101,7 +100,6 @@ const Cart: React.FC = () => {
               <CheckoutButton>Finalizar Compra</CheckoutButton>
             </CartSummaryContainer>
       </CartContainer>
-      <Footer />
     </>
   );
 };

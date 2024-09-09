@@ -5,7 +5,7 @@ import { MdAddShoppingCart, MdOutlineCategory, MdProductionQuantityLimits, MdVie
 import { TbReportMoney } from 'react-icons/tb';
 import { Link, useLocation } from 'react-router-dom';
 import styled from 'styled-components';
-import { FiMenu, FiX } from 'react-icons/fi';
+import MobileHeader from './HeaderApp/MobileHeader';
 
 // Container do Sidebar
 const SidebarContainer = styled.nav<{ isOpen: boolean }>`
@@ -19,63 +19,29 @@ const SidebarContainer = styled.nav<{ isOpen: boolean }>`
   position: fixed;
   left: 0;
   top: 0;
-  transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
-  z-index: 1001; // Para garantir que o sidebar fique acima do overlay
+  transition: transform 0.3s ease-in-out;
+  z-index: 1001;
 
-  // Comportamento em telas grandes
   @media (min-width: 769px) {
-    transform: translateX(0); // Sempre visível
+    transform: translateX(0); // Sidebar sempre visível em telas grandes
   }
 
-  // Comportamento em telas pequenas
   @media (max-width: 768px) {
     width: 200px;
     transform: ${({ isOpen }) => (isOpen ? 'translateX(0)' : 'translateX(-100%)')};
-    box-shadow: ${({ isOpen }) => (isOpen ? '0 0 10px rgba(0,0,0,0.5)' : 'none')};
   }
 `;
 
-// Sobreposição para o fundo
+// Overlay que aparece quando o menu está aberto no mobile
 const Overlay = styled.div<{ isOpen: boolean }>`
+  display: ${({ isOpen }) => (isOpen ? 'block' : 'none')};
   position: fixed;
   top: 0;
   left: 0;
-  width: 100%;
-  height: 100%;
+  right: 0;
+  bottom: 0;
   background: rgba(0, 0, 0, 0.5);
-  transition: opacity 0.3s ease-in-out;
-  opacity: ${({ isOpen }) => (isOpen ? 1 : 0)};
-  pointer-events: ${({ isOpen }) => (isOpen ? 'auto' : 'none')};
-  z-index: 1000; // Para garantir que a sobreposição fique abaixo do sidebar
-`;
-
-// Ícone de menu (três linhas) e ícone de fechar (X)
-const MenuIcon = styled(FiMenu)`
-  font-size: 2rem;
-  color: #99999;
-  position: fixed;
-  top: 20px;
-  left: 20px;
-  cursor: pointer;
-  z-index: 1002;
-
-  @media (min-width: 769px) {
-    display: none; // Esconde o ícone de menu em telas grandes
-  }
-`;
-
-const CloseIcon = styled(FiX)`
-  font-size: 2rem;
-  color: white;
-  position: fixed;
-  top: 20px;
-  left: 20px;
-  cursor: pointer;
-  z-index: 1002;
-
-  @media (min-width: 769px) {
-    display: none; // Esconde o ícone de fechar em telas grandes
-  }
+  z-index: 1000;
 `;
 
 const LogoContainer = styled.div`
@@ -129,15 +95,19 @@ const Sidebar: React.FC = () => {
   const location = useLocation();
   const [isOpen, setIsOpen] = useState(false);
 
+  // Função para alternar o menu
+  const toggleMenu = () => {
+    setIsOpen((prevState) => !prevState);
+  };
+
   return (
     <>
-      {/* Sobreposição que aparece quando o sidebar está aberto */}
-      <Overlay isOpen={isOpen} onClick={() => setIsOpen(false)} />
 
-      {/* Ícone de menu, só aparece em telas pequenas */}
-      {!isOpen && <MenuIcon aria-label="Open sidebar" onClick={() => setIsOpen(true)} />}
-      {/* Ícone de fechar, só aparece quando o sidebar está aberto */}
-      {isOpen && <CloseIcon aria-label="Close sidebar" onClick={() => setIsOpen(false)} />}
+      <MobileHeader toggleMenu={toggleMenu} />
+
+
+      {/* Sobreposição que aparece quando o sidebar está aberto */}
+      <Overlay isOpen={isOpen} onClick={toggleMenu} />
 
       {/* Sidebar que é sempre visível em telas grandes e colapsável em telas pequenas */}
       <SidebarContainer isOpen={isOpen}>

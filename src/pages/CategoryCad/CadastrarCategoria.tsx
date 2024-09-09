@@ -44,7 +44,7 @@ const CadastrarCategoria: React.FC = () => {
 
   const fetchCategorias = async () => {
     try {
-      const response = await axios.get('http://localhost:8080/category/pages', {
+      const response = await axios.get('https://systemallback-end-production.up.railway.app/category/pages', {
         params: { page: currentPage, size: pageSize },
         headers: { Authorization: `Bearer ${token}` },
       });
@@ -65,13 +65,13 @@ const CadastrarCategoria: React.FC = () => {
 
     try {
       if (editId) {
-        await axios.put(`http://localhost:8080/category/${editId}`, data, {
+        await axios.put(`https://systemallback-end-production.up.railway.app/category/${editId}`, data, {
           headers: { Authorization: `Bearer ${token}` },
         });
         setCategorias(categorias.map(categoria => categoria.id === editId ? { ...categoria, ...data } : categoria));
         setEditId(null);
       } else {
-        const response = await axios.post('http://localhost:8080/category/cadastrar', data, {
+        const response = await axios.post('https://systemallback-end-production.up.railway.app/category/cadastrar', data, {
           headers: { Authorization: `Bearer ${token}` },
         });
         setCategorias([...categorias, response.data]);
@@ -89,7 +89,7 @@ const CadastrarCategoria: React.FC = () => {
 
   const searchCategorias = async (term: string) => {
     try {
-      const response = await axios.get(`http://localhost:8080/category/search?categoryName=${term}`, {
+      const response = await axios.get(`https://systemallback-end-production.up.railway.app/category/search?categoryName=${term}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setCategorias(response.data);
@@ -118,7 +118,7 @@ const CadastrarCategoria: React.FC = () => {
 
   const handleDelete = async (id: string) => {
     try {
-      await axios.delete(`http://localhost:8080/category/${id}`, {
+      await axios.delete(`https://systemallback-end-production.up.railway.app/category/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setCategorias(categorias.filter(categoria => categoria.id !== id));

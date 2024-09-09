@@ -27,8 +27,17 @@ export const VendaContainer = styled.div`
   border-radius: 8px;
   overflow: hidden;
   margin-bottom: 1rem;
+  width: 100%;
   height: 90vh;
   box-shadow: 0 4px 8px ${colors.shadow};
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    width: 95%;
+    height: auto;
+    margin-top: 85px
+  }
+
 `;
 
 // Seção de pesquisa de produtos
@@ -39,6 +48,13 @@ export const SearchSection = styled.div`
   flex-direction: column;
   border-right: 1px solid ${colors.border};
   background-color: ${colors.secondary};
+
+   @media (max-width: 768px) {
+    border-right: none;
+    border-bottom: 1px solid ${colors.border};
+    padding: 0.5rem;
+    
+  }
 `;
 
 // Seção do carrinho de compras
@@ -48,6 +64,11 @@ export const VendaSection = styled.div`
   background-color: ${colors.background};
   display: flex;
   flex-direction: column;
+
+  @media (max-width: 768px) {
+    padding: 0.5rem;
+  }
+
 `;
 
 // Estilos para rótulos
@@ -57,6 +78,11 @@ export const Label = styled.label`
   font-weight: bold;
   font-size: 0.9rem;
   font-family: ${fonts.primary};
+
+  @media (max-width: 768px) {
+    font-size: 0.8rem;
+  }
+
 `;
 
 export const LabelPeso = styled.label`
@@ -65,6 +91,10 @@ export const LabelPeso = styled.label`
   font-weight: bold;
   font-size: 0.8rem;
   font-family: ${fonts.primary};
+
+  @media (max-width: 768px) {
+    font-size: 0.7rem;
+  }
 `;
 
 export const LabelPrice = styled.label`
@@ -73,6 +103,10 @@ export const LabelPrice = styled.label`
   color: ${colors.primary};
   font-family: ${fonts.primary};
   font-size: 0.8rem;
+
+  @media (max-width: 768px) {
+    font-size: 0.7rem;
+  }
 
 
 `;
@@ -94,7 +128,8 @@ export const Input = styled.input`
     border-color: ${colors.primary};
   }
 
-  @media (max-width: 768px) {
+   @media (max-width: 768px) {
+    padding: 8px;
     font-size: 13px;
   }
 `;
@@ -112,6 +147,11 @@ export const ProductGrid = styled.div`
   gap: 16px;
   padding: 1rem 0;
   overflow-y: auto;
+
+  @media (max-width: 768px) {
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 8px;
+  }
 `;
 
 // Card de produto
@@ -132,6 +172,10 @@ export const ProductCard2 = styled.div`
     box-shadow: 0 4px 12px ${colors.shadow};
    
   }
+
+  @media (max-width: 768px) {
+    padding: 0.5rem;
+  }
 `;
 
 // Imagem do produto
@@ -142,7 +186,10 @@ export const ProductImage = styled.img`
   margin-bottom: 1rem;
   border-radius: 5%;
 
-  
+  @media (max-width: 768px) {
+    width: 60px;
+    height: 60px;
+  }
 `;
 
 // Botão genérico
@@ -160,6 +207,11 @@ export const Button = styled.button`
     background-color: ${colors.primary}CC;
     transform: scale(1.01);
   }
+
+   @media (max-width: 768px) {
+    padding: 0.5rem 1rem;
+    font-size: 0.8rem;
+  }
 `;
 
 
@@ -172,6 +224,10 @@ export const ProductName = styled.span`
   font-size: 0.9rem;
   color: ${colors.text};
   font-family: ${fonts.secondary};
+
+  @media (max-width: 768px) {
+    font-size: 0.8rem;
+  }
 `;
 
 // Preço do produto
@@ -181,12 +237,20 @@ export const ProductPrice = styled.span`
   margin-top: 0.6rem;
   margin-bottom: 1rem;
   font-weight: bold;
+
+  @media (max-width: 768px) {
+    font-size: 1rem;
+  }
 `;
 
 // Mensagem de carrinho vazio
 export const EmptyCartMessage = styled.p`
   font-size: 1rem;
   color: ${colors.lightText};
+
+  @media (max-width: 768px) {
+    font-size: 0.9rem;
+  }
 `;
 
 // Lista de itens do carrinho
@@ -196,6 +260,10 @@ export const CartList = styled.ul`
   flex: 1;
   overflow-y: auto;
   margin: 0;
+
+   @media (max-width: 768px) {
+    padding: 0 0.5rem;
+  }
 `;
 
 // Item individual do carrinho
@@ -214,6 +282,11 @@ export const CartItem = styled.li`
   &:hover {
     background-color: ${colors.secondary};
   }
+
+  @media (max-width: 768px) {
+    padding: 0.5rem;
+    margin-bottom: 4px;
+  }
 `;
 
 // Detalhes do item do carrinho
@@ -222,6 +295,10 @@ export const CartItemDetails = styled.div`
   display: flex;
   flex-direction: column;
   margin-right: 1rem;
+
+  @media (max-width: 768px) {
+    margin-right: 0.5rem;
+  }
 `;
 
 // Nome do produto no carrinho
@@ -231,6 +308,10 @@ export const CartItemName = styled.span`
   color: ${colors.text};
   font-size: 1rem;
   font-family: ${fonts.secondary};
+
+  @media (max-width: 768px) {
+    font-size: 0.9rem;
+  }
 `;
 
 // Preço do produto no carrinho
@@ -239,6 +320,10 @@ export const CartItemPrice = styled.div`
   font-weight: bold;
   color: ${colors.accent};
   margin-top: 2px;
+
+  @media (max-width: 768px) {
+    font-size: 0.8rem;
+  }
 `;
 
 export const PriceDiv = styled.div`
@@ -246,6 +331,10 @@ export const PriceDiv = styled.div`
   font-weight: bold;
   color: ${colors.primary};
   margin-top: 2px;
+
+   @media (max-width: 768px) {
+    font-size: 0.75rem;
+  }
 
 `
 
@@ -321,6 +410,10 @@ export const TrashIcon = styled(FaTrashAlt)`
   &:hover {
     color: #c82333;
   }
+  @media (max-width: 768px) {
+    font-size: 0.9rem;
+  }
+  
 `;
 
 // Input específico para granel
@@ -420,11 +513,18 @@ export const AlertMessage = styled.div`
   margin-bottom: 15px;
 `;
 
-// CartActions
+// Ações do carrinho
 export const CartActions = styled.div`
   display: flex;
   align-items: center;
-  gap: 10px;
+  justify-content: space-between;
+  margin-top: 1rem;
+  padding: 0.5rem;
+  border-top: 1px solid ${colors.border};
+
+  @media (max-width: 768px) {
+    padding: 0.25rem;
+  }
 `;
 
 // PaymentButtonsContainer

@@ -23,7 +23,6 @@ export const Header = styled.header`
   align-items: center;
   justify-content: space-between;
   box-shadow: 0 4px 8px ${colors.shadow};
-  position: fixed;
   top: 0;
   left: 0;
   width: 100%;
@@ -31,8 +30,13 @@ export const Header = styled.header`
   border-radius: 0 0 16px 16px;
   box-sizing: border-box;
 
+  @media (min-width: 769px) {
+    display: none; /* Esconde o footer em telas maiores */
+  }
+
   @media (max-width: 768px) {
     padding: 0.75rem 1rem;
+    margin-bottom: 10px
   }
 `;
 
@@ -51,7 +55,7 @@ export const Title = styled.h1`
 `;
 
 export const IconButton = styled.button`
-  margin-top: 1px;
+  margin-top: px;
   background: none;
   border: none;
   color: ${colors.secondary};

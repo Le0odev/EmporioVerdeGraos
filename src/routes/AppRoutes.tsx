@@ -1,7 +1,6 @@
 import { Route, Routes, useLocation } from 'react-router-dom';
 import styled from 'styled-components';
 import CadastrarProduto from '../pages/ProductCad/CadastrarProduto';
-import Sidebar from '../components/Header/Sidebar';
 import Login from '../pages/Login/Login';
 import CadastrarCategoria from '../pages/CategoryCad/CadastrarCategoria';
 import { CriarVenda } from '../pages/PDV/CriarVenda';
@@ -13,13 +12,17 @@ import 'react-toastify/dist/ReactToastify.css';
 import ListaDeProdutos from '../components/Notifies/ListaProdutos';
 import ListaProdutosGerenciamento from '../components/Notifies/GerenciarProdutos/ListaProdutosGerenciamento';
 import EnviarPedido from '../components/Notifies/EnviarPedido/EnviarPedido';
+import { Footer } from '../components/Footer/Footer';
+import  Sidebar from '../components/Header/Sidebar';
+import { useState } from 'react';
 
 const AppContainer = styled.div`
   display: flex;
-  
+  flex-direction: column;
+  min-height: 100vh; // Garante que a altura da página ocupe a tela inteira
 
 
-`;
+`;  
 
 const MainContent = styled.div<{ showSidebar: boolean }>`
   flex: 1;
@@ -31,7 +34,6 @@ const MainContent = styled.div<{ showSidebar: boolean }>`
   @media (max-width: 768px) {
     padding: 0;
     margin-left: 0;
-    background-image: url("https://images.pexels.com/photos/4033325/pexels-photo-4033325.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1")
 
   }
 `;
@@ -39,6 +41,8 @@ const MainContent = styled.div<{ showSidebar: boolean }>`
 export const AppRoutes = () => {
   const location = useLocation();
   
+
+
   // Defina as rotas onde a sidebar não deve aparecer
   const noSidebarRoutes = ['/catalogo', '/cart'];
 
@@ -49,6 +53,7 @@ export const AppRoutes = () => {
     <AppContainer>
       {showSidebar && <Sidebar />} {/* Exibe a sidebar com base na condição */}
       <MainContent showSidebar={showSidebar}>
+
         <Routes>
           <Route path='/login' element={<Login />} />
           <Route path="/cadastrar-produto" element={<CadastrarProduto />} />
@@ -63,6 +68,7 @@ export const AppRoutes = () => {
         <ListaDeProdutos />
         <ToastContainer />
       </MainContent>
+      <Footer />
     </AppContainer>
   );
 };

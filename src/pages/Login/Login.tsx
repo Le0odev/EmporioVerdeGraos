@@ -18,7 +18,7 @@ interface LoginResponse {
 }
 
 const login = async (data: LoginFormData): Promise<LoginResponse> => {
-  const response = await axios.post('http://localhost:8080/login', data, {
+  const response = await axios.post('https://systemallback-end-production.up.railway.app/login', data, {
     headers: {
       'Content-Type': 'application/json',
     },

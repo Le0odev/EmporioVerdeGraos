@@ -85,7 +85,7 @@ const Relatorio: React.FC = () => {
 
   const fetchSalesByDay = async () => {
     try {
-      const response = await axios.get(`http://localhost:8080/report/day/${date}`, {
+      const response = await axios.get(`https://systemallback-end-production.up.railway.app/report/day/${date}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       const salesData: Sale[] = response.data;
@@ -101,7 +101,7 @@ const Relatorio: React.FC = () => {
 
   const fetchTotalSalesByMonth = async () => {
     try {
-      const response = await axios.get(`http://localhost:8080/report/month/${year}/${month}`, {
+      const response = await axios.get(`https://systemallback-end-production.up.railway.app/report/month/${year}/${month}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setSales([]);
@@ -116,7 +116,7 @@ const Relatorio: React.FC = () => {
 
   const fetchSalesByPeriod = async () => {
     try {
-      const response = await axios.get(`http://localhost:8080/report/period?startDate=${startDate}&endDate=${endDate}`, {
+      const response = await axios.get(`https://systemallback-end-production.up.railway.app/report/period?startDate=${startDate}&endDate=${endDate}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       const salesData: Sale[] = response.data;
@@ -177,7 +177,7 @@ const Relatorio: React.FC = () => {
 
   const handleSaleClick = async (sale: Sale) => {
     try {
-      const response = await axios.get(`http://localhost:8080/sales/${sale.id}`, {
+      const response = await axios.get(`https://systemallback-end-production.up.railway.app/sales/${sale.id}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
 

@@ -2,7 +2,7 @@
 import axios from 'axios';
 
 const axiosInstance = axios.create({
-  baseURL: 'http://localhost:8080', // Substitua com a URL da sua API
+  baseURL: 'https://systemallback-end-production.up.railway.app', // Substitua com a URL da sua API
 });
 
 axiosInstance.interceptors.request.use(
