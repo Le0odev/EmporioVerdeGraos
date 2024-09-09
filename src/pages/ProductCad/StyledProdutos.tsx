@@ -28,7 +28,6 @@ export const Button = styled.button`
   border: none;
   border-radius: 6px;
   font-size: 16px;
-  font-size: 16px;
   cursor: pointer;
   transition: background-color 0.3s ease, transform 0.2s ease;
 
@@ -43,8 +42,6 @@ export const Button = styled.button`
   }
 
   @media (max-width: 768px)     
-    font-size: 15px;
-    padding: 10px;
     font-size: 15px;
     padding: 10px;
 
@@ -70,13 +67,10 @@ export const CheckboxWrapper = styled.div`
   @media (max-width: 768px) {
     padding: 10px;
     font-size: 20px;
-    font-size: 20px;
     margin-bottom: 10px;
     border: 1px solid #ddd;
 
   label {
-    font-size: 14px;
-    
     font-size: 14px;
     
   }
@@ -134,31 +128,6 @@ export const FlexContainer = styled.div`
 `;
 
 
-// Altere a FlexContainer se necessário para manter outros elementos
-export const FlexContainer = styled.div`
-  display: flex;
-  gap: 20px;
-  margin-bottom: 1px;
-
-  div {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-  }
-  
-  @media (max-width: 768px) {
-  flex-direction: column;
-  gap: 0px;
-
-  input {
-    font-size: 14px;
-    padding: 10px;
-  }
-  }
-
-`;
-
-
 // Botão alternativo de Cancelar com estilo diferente
 export const CancelButton = styled(ModalButton)`
   background-color: #dc3545;
@@ -167,7 +136,6 @@ export const CancelButton = styled(ModalButton)`
     background-color: #c82333;
   }
 `;
-
 
 
 
@@ -183,7 +151,6 @@ export const ContainerWrapper = styled.div`
 
   @media (max-width: 768px) {
     
-    margin-top: 4rem;
     margin-top: 4rem;
     padding: 20px;
   }
@@ -213,7 +180,6 @@ export const ToggleButtonContainer = styled.div`
 
   @media (max-width: 768px)     
     font-size: 14px;
-    font-size: 14px;
   }
 `;
 
@@ -225,7 +191,6 @@ export const ToggleButton = styled.button<{ active: boolean }>`
   border: solid 1px #ddd;
   border-radius: 8px;
   cursor: pointer;
-  font-size: 15px;
   font-size: 15px;
   font-weight: 500;
   transition: background-color 0.3s ease, transform 0.2s ease;
@@ -289,7 +254,7 @@ export const Input = styled.input`
   margin-bottom: 12px;
   padding: 10px;
   border: 1px solid #ddd;
-  border-radius: 4px;
+  border-radius: 8px;
   font-size: 14px;
   color: #333;
   transition: border-color 0.3s ease;
@@ -310,7 +275,7 @@ export const Select = styled.select`
   margin-bottom: 12px;
   padding: 10px;
   border: 1px solid #ddd;
-  border-radius: 4px;
+  border-radius: 8px;
   font-size: 14px;
   color: #333;
   transition: border-color 0.3s ease;
@@ -356,8 +321,8 @@ export const CardButton = styled.button`
   background: none;
   border: none;
   padding: 8px;
+  margin-right: 6px;
   transition: color 0.3s ease;
-  
 
   & > *:not(:last-child) {
     margin-right: 6px;
@@ -452,6 +417,8 @@ export const EditIcon = styled(FaRegEdit)`
   cursor: pointer;
   font-size: 21px;
   transition: color 0.3s ease;
+  margin-left: auto;
+
 
   &:hover {
     color: #0056b3;
@@ -463,20 +430,13 @@ export const DeleteIcon = styled(FaTrashAlt)`
   cursor: pointer;
   font-size: 19px;
   transition: color 0.3s ease;
+  margin-right: -12px;
 
   &:hover {
     color: #c82333;
   }
 `;
 
-// Estilização do modal em si
-export const Modal = styled.div`
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
 // Estilização do modal em si
 export const Modal = styled.div`
   position: fixed;
