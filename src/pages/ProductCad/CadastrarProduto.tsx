@@ -41,6 +41,7 @@ import { useAuth } from '../Login/authContext';
 import { FaCheck, FaCheckSquare, FaRegSquare } from 'react-icons/fa';
 import { FiSearch } from 'react-icons/fi';
 import { SearchBar, SearchContainer, SearchIcon } from '../../components/StyledSearch';
+import { Footer } from '../../components/Footer/Footer';
 
 interface Categoria {
   id: string;
@@ -335,7 +336,7 @@ const CadastrarProduto: React.FC = () => {
                     id="estoque"
                     value={isBulk ? estoquePeso : estoque}
                     onChange={(e) => isBulk ? setEstoquePeso(e.target.value) : setEstoque(e.target.value)}
-                    placeholder={isBulk ? "Digite o peso em kg" : "Digite a quantidade em estoque"}
+                    placeholder={isBulk ? "Digite o valor de estoque em kg" : "Digite a quantidade em estoque"}
                     required
                   />
                 </div>
@@ -400,7 +401,6 @@ const CadastrarProduto: React.FC = () => {
             </ProductGrid>
           </Section>
         )}
-
         {isModalOpen && (
           <Modal>
             <ModalContent>

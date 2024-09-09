@@ -33,10 +33,10 @@ export const SocialIcon = styled.a`
   font-size: 1.4rem;
   transition: color 0.3s ease;
 
-  &:hover {
-    color: #f0a500;
-  }
-`;
+    &:hover {
+      color: #f0a500;
+    }
+  `;
 
 export const Copyright = styled.p`
   font-size: 0.75rem;

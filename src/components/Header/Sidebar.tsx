@@ -27,7 +27,6 @@ const SidebarContainer = styled.nav<{ isOpen: boolean }>`
   }
 
   @media (max-width: 768px) {
-    width: 200px;
     transform: ${({ isOpen }) => (isOpen ? 'translateX(0)' : 'translateX(-100%)')};
   }
 `;

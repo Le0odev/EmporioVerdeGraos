@@ -8,6 +8,10 @@ export const CartContainer = styled.div`
   max-width: 600px; // Define um tamanho máximo para não expandir muito em telas maiores
   margin: 0 auto; // Centraliza o container
   background-color: #fff;
+  width: 90%; // Diminui a largura do container
+  max-width: 600px; // Define um tamanho máximo para não expandir muito em telas maiores
+  margin: 0 auto; // Centraliza o container
+  background-color: #fff;
   padding: 1rem;
   border-radius: 16px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
