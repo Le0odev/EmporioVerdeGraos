@@ -32,12 +32,20 @@ const ConfirmationContainer = styled.div`
   width: 100%;
   max-width: 400px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+
+
+  @media (max-width: 768px) {
+    margin: 15px;
+  }
 `;
 
 const ConfirmationTitle = styled.h2`
   font-size: 1.5rem;
   color: #333;
   margin-bottom: 1rem;
+
+   @media (max-width: 768px) {
+  }
 `;
 
 const ConfirmationMessage = styled.p`
@@ -45,6 +53,9 @@ const ConfirmationMessage = styled.p`
   color: #666;
   margin-bottom: 2rem;
   text-align: center;
+
+  @media (max-width: 768px) {
+  }
 `;
 
 const ButtonContainer = styled.div`

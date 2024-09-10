@@ -33,9 +33,13 @@ export const VendaContainer = styled.div`
 
   @media (max-width: 768px) {
     flex-direction: column;
-    width: 95%;
+    margin: auto;
+    width: 90%;
     height: auto;
-    margin-top: 85px
+    margin-top: 5rem;
+    margin-bottom: 1rem;
+    padding: 8px;
+
   }
 
 `;

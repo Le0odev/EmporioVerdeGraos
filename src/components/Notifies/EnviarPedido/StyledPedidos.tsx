@@ -12,6 +12,12 @@ export const Container = styled.div`
   max-width: 800px;
   margin: 20px auto;
   margin-top: 0px;
+
+  @media (max-width: 768px) {
+  width: 90%;
+  margin-top: 5rem;
+  
+  }
 `;
 
 export const Title = styled.h2`

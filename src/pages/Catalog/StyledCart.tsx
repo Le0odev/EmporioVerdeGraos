@@ -16,6 +16,7 @@ export const CartContainer = styled.div`
   border-radius: 16px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 
+
   & h1{
   font-size: 20px;
   
@@ -23,7 +24,7 @@ export const CartContainer = styled.div`
 
   @media (max-width: 768px) {
     width: 95%; // Para dispositivos móveis, ajusta a largura para ficar um pouco mais estreita
-    
+    margin-bottom: 10px;
   }
 `;
 
@@ -88,11 +89,10 @@ export const CartItemQuantity = styled.p`
 
 // Container do resumo do carrinho
 export const CartSummaryContainer = styled.div`
-  margin-top: 1.5rem;
   padding-top: 1rem;
   border-top: 1px solid #e0e0e0;
   text-align: right;
-`;
+  `;
 
 // Total do resumo do carrinho
 export const CartSummaryTotal = styled.div`

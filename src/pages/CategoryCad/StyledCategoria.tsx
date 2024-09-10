@@ -73,8 +73,7 @@ export const Input = styled.input`
   }
 
   @media (max-width: 768px) {
-    padding: 8px;
-    font-size: 13px;
+    font-size: 14px;
   }
 `;
 
@@ -195,9 +194,14 @@ export const SearchContainer = styled.div`
   gap: 10px;
   margin-top: 10px;
 
+  & input {
+    font-size: 14px;
+  }
+
   @media (max-width: 768px) {
     gap: 5px;
     margin-top: 8px;
+    
   }
 `;
 

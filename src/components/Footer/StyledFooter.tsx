@@ -7,7 +7,8 @@ export const FooterContainer = styled.footer`
   padding: 0.6rem;
   text-align: center;
   margin-top: auto; /* Empurra o footer para o final */
-  
+  border-radius: 6px;
+
   @media (min-width: 769px) {
     display: none; /* Esconde o footer em telas maiores */
   }

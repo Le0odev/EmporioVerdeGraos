@@ -4,152 +4,6 @@ interface ButtonProps {
   active?: boolean;
 }
 
-// Container principal
-export const Container = styled.div`
-  padding: 25px;
-  width: 70%;
-  max-width: 100%px;
-  margin: 0px auto;
-  background-color: #f8f9fa;
-  border-radius: 12px;
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
-  overflow: hidden;
-`;
-
-// Título
-export const Title = styled.h1`
-  font-size: 32px;
-  color: #333;
-  margin-bottom: 20px;
-  font-weight: 700;
-  text-align: center;
-`;
-
-// Container para os filtros
-export const FilterContainer = styled.div`
-  margin-bottom: 30px;
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-`;
-
-
-// Entrada para os filtros
-export const FilterInput = styled.input`
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  width: 100%;
-  max-width: 220px;
-  font-size: 16px;
-  box-sizing: border-box;
-  outline: none;
-
-  &:focus {
-    border-color: #007bff;
-    box-shadow: 0 0 0 3px rgba(38, 143, 255, 0.25);
-  }
-`;
-
-
-
-// Lista de vendas
-export const SalesList = styled.ul`
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  
-
-`;
-
-// Item de venda (Card)
-export const SalesItem = styled.li`
-  padding: 20px;
-  margin-bottom: 12px;
-  background-color: #fff;
-  border-radius: 8px;
-  border: 1px solid #ddd;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  cursor: pointer;
-  transition: background-color 0.3s, transform 0.2s;
-
-  &:hover {
-    background-color: #e9ecef; // Cor de fundo ao passar o mouse
-    transform: scale(1.02);
-  }
-
-  & > div {
-    margin-bottom: 10px;
-  }
-
-  & > div:last-child {
-    margin-bottom: 0;
-  }
-
-  // Alterando a cor e o estilo da fonte
-  & > div {
-    color: #495057; // Cor do texto
-    font-family: 'Roboto', sans-serif; // Fonte do texto
-    font-size: 16px; // Tamanho da fonte
-  }
-
-  & > h4 {
-    color: #28a745; // Cor do texto
-    font-family: 'Roboto', sans-serif; // Fonte do texto
-    font-size: 16px; // Tamanho da fonte
-  }
-
-  // Alterando a cor e o estilo do rótulo da data e do total
-  & > div span {
-    color: #007bff; // Cor do rótulo
-    font-weight: 500; // Peso da fonte do rótulo
-  }
-`;
-
-// Container para o total de vendas
-export const TotalContainer = styled.div`
-  font-size: 20px;
-  color: #28a745;
-  margin: 20px 0;
-  padding: 15px;
-  background-color: #f8f9fa;
-  border-radius: 6px;
-  border: 1px solid #ddd;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  text-align: center;
-
-  // Alterando a cor e o estilo da fonte
-  font-family: 'Roboto', sans-serif; // Fonte do texto
-  font-size: 18px; // Tamanho da fonte
-  font-weight: bold;
-
-  // Alterando a cor e o estilo do rótulo da data e do total
-  & span {
-    color: #28a745; // Cor do rótulo
-    font-weight: 500; // Peso da fonte do rótulo
-  }
-`;
-
-
-
-
-// Botão geral
-export const Button = styled.button<ButtonProps>`
-  background-color: ${props => (props.active ? '#007bff' : '#fff')};
-  border: 1px solid ${props => (props.active ? '#007bff' : '#ddd')};
-  color: ${props => (props.active ? '#fff' : '#007bff')};
-  padding: 12px 20px;
-  margin: 0 5px;
-  border-radius: 6px;
-  cursor: pointer;
-  font-size: 16px;
-  transition: background-color 0.3s, color 0.3s;
-
-  &:hover {
-    background-color: ${props => (props.active ? '#0056b3' : '#f0f0f0')};
-    color: ${props => (props.active ? '#fff' : '#007bff')};
-  }
-`;
 
 export const PeriodContainer = styled.div`
   flex-direction: column;
@@ -209,6 +63,10 @@ export const ModalContainer = styled.div`
   align-items: center;
   justify-content: center;
   z-index: 1000;
+
+
+
+
 `;
 
 // Conteúdo do modal
@@ -220,6 +78,13 @@ export const ModalContent = styled.div`
   width: 100%;
   padding: 20px;
   position: relative;
+
+  @media (max-width: 480px) {
+    width: 90%;
+    padding: 15px;
+    margin-top: 80px;
+  }
+
 `;
 
 // Cabeçalho do modal
@@ -354,3 +219,178 @@ export const PaginationButton = styled.button`
   }
 `;
 
+
+
+// Container principal
+export const Container = styled.div`
+  padding: 25px;
+  width: 70%;
+  max-width: 100%;
+  margin: 0px auto;
+  background-color: #f8f9fa;
+  border-radius: 12px;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+
+  @media (max-width: 768px) {
+    width: 90%;
+    padding: 20px;
+  }
+
+  @media (max-width: 480px) {
+    width: 95%;
+    padding: 15px;
+    margin-top: 80px;
+  }
+`;
+
+// Título
+export const Title = styled.h1`
+  font-size: 32px;
+  color: #333;
+  margin-bottom: 20px;
+  font-weight: 700;
+  text-align: center;
+
+  @media (max-width: 768px) {
+    font-size: 28px;
+  }
+
+  @media (max-width: 480px) {
+    font-size: 24px;
+  }
+`;
+
+// Container para os filtros
+export const FilterContainer = styled.div`
+  margin-bottom: 30px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    gap: 10px;
+  }
+`;
+
+// Entrada para os filtros
+export const FilterInput = styled.input`
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  width: 100%;
+  max-width: 220px;
+  font-size: 16px;
+  box-sizing: border-box;
+  outline: none;
+
+  &:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 0 3px rgba(38, 143, 255, 0.25);
+  }
+
+  @media (max-width: 768px) {
+    max-width: 180px;
+  }
+
+  @media (max-width: 480px) {
+    max-width: 150px;
+    padding: 8px;
+  }
+`;
+
+// Lista de vendas
+export const SalesList = styled.ul`
+  list-style: none;
+  padding: 0;
+  margin: 0;
+`;
+
+// Item de venda (Card)
+export const SalesItem = styled.li`
+  padding: 20px;
+  margin-bottom: 12px;
+  background-color: #fff;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.2s;
+
+  &:hover {
+    background-color: #e9ecef;
+    transform: scale(1.02);
+  }
+
+  & > div {
+    margin-bottom: 10px;
+  }
+
+  @media (max-width: 768px) {
+    padding: 15px;
+    font-size: 14px;
+  }
+
+  @media (max-width: 480px) {
+    padding: 10px;
+    font-size: 12px;
+  }
+`;
+
+// Container para o total de vendas
+export const TotalContainer = styled.div`
+  font-size: 20px;
+  color: #28a745;
+  margin: 20px 0;
+  padding: 15px;
+  background-color: #f8f9fa;
+  border-radius: 6px;
+  border: 1px solid #ddd;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  text-align: center;
+
+  font-family: 'Roboto', sans-serif;
+  font-size: 18px;
+  font-weight: bold;
+
+  @media (max-width: 768px) {
+    font-size: 16px;
+    padding: 12px;
+  }
+
+  @media (max-width: 480px) {
+    font-size: 14px;
+    padding: 10px;
+  }
+`;
+
+// Botão geral
+export const Button = styled.button<ButtonProps>`
+  background-color: ${props => (props.active ? '#007bff' : '#fff')};
+  border: 1px solid ${props => (props.active ? '#007bff' : '#ddd')};
+  color: ${props => (props.active ? '#fff' : '#007bff')};
+  padding: 12px 20px;
+  margin: 0 5px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s, color 0.3s;
+
+  &:hover {
+    background-color: ${props => (props.active ? '#0056b3' : '#f0f0f0')};
+    color: ${props => (props.active ? '#fff' : '#007bff')};
+  }
+
+  @media (max-width: 768px) {
+    padding: 10px 18px;
+    font-size: 14px;
+  }
+
+  @media (max-width: 480px) {
+    padding: 8px 16px;
+    font-size: 12px;
+  }
+`;
+
+// Outros componentes seguem o mesmo padrão de adaptação para dispositivos móveis

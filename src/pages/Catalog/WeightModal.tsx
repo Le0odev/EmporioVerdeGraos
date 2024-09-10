@@ -37,6 +37,12 @@ const ModalContent = styled.div`
   width: 100%;
   text-align: center;
   animation: ${fadeIn} 0.3s ease-in-out;
+
+  @media (max-width: 768px) {
+  margin: 20px;
+  }
+
+  
 `;
 
 const Input = styled.input<{ hasError: boolean }>`

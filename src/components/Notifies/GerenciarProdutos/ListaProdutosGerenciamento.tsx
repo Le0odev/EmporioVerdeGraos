@@ -168,8 +168,7 @@ const ListaProdutosGerenciamento: React.FC = () => {
   };
 
   return (
-    <>
-      <Container>
+    <Container>
         <div>
           <SectionTitle>Filtrar por Categoria</SectionTitle>
           <SelectCategory onChange={(e) => setCategoriaSelecionada(Number(e.target.value))}>
@@ -221,7 +220,6 @@ const ListaProdutosGerenciamento: React.FC = () => {
           <SubButton onClick={() => navigate('/lista-pedidos/enviar-pedido')}>Enviar Pedido</SubButton>
         </ContainerButton>
       </Container>
-    </>
   );
 };
 

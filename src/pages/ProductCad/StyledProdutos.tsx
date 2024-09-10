@@ -69,6 +69,7 @@ export const CheckboxWrapper = styled.div`
     font-size: 20px;
     margin-bottom: 10px;
     border: 1px solid #ddd;
+    border-radius: 6px;
 
   label {
     font-size: 14px;
@@ -84,9 +85,14 @@ export const CheckboxIcon = styled.div<CheckboxStyledProps>`
 
 // Rodapé com os botões de ação (Confirmar/Cancelar)
 export const ModalFooter = styled.div`
-  display: flex;
+  display:flex; 
+  justify-content: center;
+  align-items: center;
   gap: 16px;
   margin-top: 20px;
+  padding:
+
+  
 `;
 
 export const ModalButton = styled.button`
@@ -98,9 +104,12 @@ export const ModalButton = styled.button`
   cursor: pointer;
   font-size: 14px;
 
+
   &:hover {
     background-color: #0056b3;
+
   }
+
 `;
 
 // Altere a FlexContainer se necessário para manter outros elementos
@@ -189,7 +198,7 @@ export const ToggleButton = styled.button<{ active: boolean }>`
   background-color: ${({ active }) => (active ? '#007bff' : '#ffffff')};
   color: ${({ active }) => (active ? '#fff' : '#007bff')};
   border: solid 1px #ddd;
-  border-radius: 8px;
+  border-radius: 6px;
   cursor: pointer;
   font-size: 15px;
   font-weight: 500;
@@ -254,7 +263,7 @@ export const Input = styled.input`
   margin-bottom: 12px;
   padding: 10px;
   border: 1px solid #ddd;
-  border-radius: 8px;
+  border-radius: 6px;
   font-size: 14px;
   color: #333;
   transition: border-color 0.3s ease;
@@ -275,7 +284,7 @@ export const Select = styled.select`
   margin-bottom: 12px;
   padding: 10px;
   border: 1px solid #ddd;
-  border-radius: 8px;
+  border-radius: 6px;
   font-size: 14px;
   color: #333;
   transition: border-color 0.3s ease;

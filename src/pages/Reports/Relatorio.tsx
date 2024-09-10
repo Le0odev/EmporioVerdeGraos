@@ -195,6 +195,8 @@ const Relatorio: React.FC = () => {
     setSelectedSale(null);
   };
 
+
+
   const paginatedSales = sales.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
   const totalPages = Math.ceil(sales.length / itemsPerPage);
 
@@ -321,8 +323,9 @@ const Relatorio: React.FC = () => {
       )}
 
       {isModalOpen && selectedSale && (
-        <ModalContainer>
-          <ModalContent>
+    
+       <ModalContainer onClick={handleCloseModal}>
+          <ModalContent onClick={(e) => e.stopPropagation()}>
             <ModalHeader>
               <h2>Detalhes da Venda</h2>
               <CloseButton onClick={handleCloseModal}>×</CloseButton>

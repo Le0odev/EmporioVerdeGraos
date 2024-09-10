@@ -12,6 +12,11 @@ export const Container = styled.div`
   border-radius: 8px;
   background-color: #f8f8f8; 
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+  @media (max-width: 768px) {
+  margin-top: 5rem;
+  }
+
 `;
 
 export const SectionTitle = styled.h2`
