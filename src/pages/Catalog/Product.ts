@@ -8,6 +8,8 @@ export interface Product {
   bulk: boolean;  // Se o produto é de peso ou não
   quantidade: number | null;
   peso?: number;  // Opcional, para produtos a granel
+  productQuantity: number;
+  estoquePeso: number;
 }
 
 export interface Category {

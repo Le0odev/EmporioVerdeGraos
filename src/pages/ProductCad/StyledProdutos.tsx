@@ -6,19 +6,6 @@ interface CheckboxStyledProps {
   checked: boolean;
 }
 
-const colors = {
-  primary: '#2d3748',
-  secondary: '#f7fafc',
-  accent: '#38a169',
-  text: '#1a202c',
-  lightText: '#718096',
-  border: '#e2e8f0',
-  shadow: 'rgba(0, 0, 0, 0.1)',
-  background: '#edf2f7',
-  headerBackground: '#38a169',
-  filterButtonBackground: '#2d3748',
-  selectedFilterBackground: '#38a169',
-};
 
 // Botão de ação
 export const Button = styled.button`

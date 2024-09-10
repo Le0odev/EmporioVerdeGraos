@@ -7,9 +7,9 @@ const HeaderContainer = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0.8rem 1.2rem; /* Padding ajustado para uma melhor compactação */
-  background-color: #444; /* Cor de fundo mais suave */
-  border-radius: 8px; /* Bordas mais arredondadas */
+  padding: 0.6rem 1rem; 
+  background-color: #444; 
+  border-radius: 2px; 
   color: white;
   position: fixed;
   top: 0;

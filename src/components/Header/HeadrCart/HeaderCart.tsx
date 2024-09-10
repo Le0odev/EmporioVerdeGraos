@@ -8,7 +8,7 @@ import { MdAddShoppingCart, MdArrowLeft, MdShoppingCart, MdShoppingCartCheckout 
 import { FaShoppingBag, FaShoppingBasket } from 'react-icons/fa';
 
 interface HeaderCartProps {
-  handleGoToCart: () => void;
+  handleGoToCart?: () => void;
   showBackButton?: boolean;
   handleBack?: () => void;
 }
@@ -19,7 +19,7 @@ const HeaderCart: React.FC<HeaderCartProps> = ({ handleGoToCart, showBackButton 
   const location = useLocation(); // Pega a rota atual
 
   // Condiciona a exibição da logo apenas no catálogo
-  const showLogo = location.pathname === '/catalogo'; // Ajusta conforme sua rota do catálogo
+  const showLogo = location.pathname === '/catalogo' &&  '/finalizar-compra'; // Ajusta conforme sua rota do catálogo
 
   return (
     <Header>

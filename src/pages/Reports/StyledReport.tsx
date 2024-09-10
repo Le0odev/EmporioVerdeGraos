@@ -9,6 +9,8 @@ export const PeriodContainer = styled.div`
   flex-direction: column;
   align-items: center;
   margin-bottom: 10px;
+
+
 `;
 
 export const DateInputsWrapper = styled.div`
@@ -63,7 +65,7 @@ export const ModalContainer = styled.div`
   align-items: center;
   justify-content: center;
   z-index: 1000;
-
+  
 
 
 
@@ -82,7 +84,7 @@ export const ModalContent = styled.div`
   @media (max-width: 480px) {
     width: 90%;
     padding: 15px;
-    margin-top: 80px;
+    
   }
 
 `;
@@ -305,6 +307,8 @@ export const SalesList = styled.ul`
   list-style: none;
   padding: 0;
   margin: 0;
+
+  
 `;
 
 // Item de venda (Card)
@@ -357,6 +361,7 @@ export const TotalContainer = styled.div`
   @media (max-width: 768px) {
     font-size: 16px;
     padding: 12px;
+  
   }
 
   @media (max-width: 480px) {
@@ -392,5 +397,3 @@ export const Button = styled.button<ButtonProps>`
     font-size: 12px;
   }
 `;
-
-// Outros componentes seguem o mesmo padrão de adaptação para dispositivos móveis

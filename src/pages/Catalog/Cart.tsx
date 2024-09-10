@@ -43,8 +43,12 @@ const Cart: React.FC = () => {
     navigate('/catalogo');
   };
 
+  const handleGoToFinish = () => {
+    navigate('/finalizar-compra')
+  };
+
   const handleGoToCart = () => {
-    // Não faz sentido aqui, mas poderia ser usado para outra navegação se necessário
+    navigate('/cart');
   };
 
   return (
@@ -97,7 +101,7 @@ const Cart: React.FC = () => {
               <CartSummaryTotal>
                 Total: R${subtotal.toFixed(2)}
               </CartSummaryTotal>
-              <CheckoutButton>Finalizar Compra</CheckoutButton>
+              <CheckoutButton onClick={handleGoToFinish}>Finalizar Compra</CheckoutButton>
             </CartSummaryContainer>
       </CartContainer>
     </>

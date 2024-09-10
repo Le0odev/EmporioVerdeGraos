@@ -15,6 +15,7 @@ import EnviarPedido from '../components/Notifies/EnviarPedido/EnviarPedido';
 import { Footer } from '../components/Footer/Footer';
 import  Sidebar from '../components/Header/Sidebar';
 import { useState } from 'react';
+import FinalizarCompra from '../pages/Catalog/FinalizarCompra';
 
 const AppContainer = styled.div`
   display: flex;
@@ -44,7 +45,7 @@ export const AppRoutes = () => {
 
 
   // Defina as rotas onde a sidebar não deve aparecer
-  const noSidebarRoutes = ['/catalogo', '/cart'];
+  const noSidebarRoutes = ['/catalogo', '/cart', '/finalizar-compra'];
 
   // Exibir a sidebar apenas se a rota atual não estiver na lista de rotas sem sidebar
   const showSidebar = !noSidebarRoutes.includes(location.pathname);
@@ -62,8 +63,10 @@ export const AppRoutes = () => {
           <Route path="/relatorio" element={<RelatorioVendas />} />
           <Route path="/catalogo" element={<Catalog />} />
           <Route path="/cart" element={<Cart />} />
+          <Route path="/finalizar-compra" element={<FinalizarCompra/>} />
           <Route path="/lista-pedidos" element={<ListaProdutosGerenciamento />} /> {/* Adicionar nova rota */}
           <Route path="/lista-pedidos/enviar-pedido" element={<EnviarPedido />} />
+          
         </Routes>
         <ListaDeProdutos />
         <ToastContainer />
