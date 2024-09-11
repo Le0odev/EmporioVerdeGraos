@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
-import axios from 'axios';
+import React, { useState, useEffect } from 'react';
 import { useCart } from './CartContext';
+import HeaderCart from '../../components/Header/HeadrCart/HeaderCart';
+import axios from 'axios';
 import {
   CheckoutContainer,
   AddressSection,
@@ -15,11 +16,11 @@ import {
   FreightDetails,
 } from './StyledCheckout';
 import { useNavigate } from 'react-router-dom';
-import HeaderCart from '../../components/Header/HeadrCart/HeaderCart';
+import { CartItem as CartItemType } from './Product';
+import { useAuth } from '../Login/authContext';
 
 type Region = 'Abreu e Lima' | 'Igarassu' | 'Paulista' | 'Outros';
 
-// Função para obter o valor do frete por região
 const getFreightByRegion = (region: Region): number => {
   const regionFreight: Record<Region, number> = {
     'Abreu e Lima': 7.0,
@@ -30,7 +31,6 @@ const getFreightByRegion = (region: Region): number => {
   return regionFreight[region] || 20.0; // Valor padrão para 'Outros'
 };
 
-// Função para determinar a região com base no CEP
 const getRegionFromCep = (cep: string): Region => {
   if (cep.startsWith('535')) return 'Abreu e Lima';
   if (cep.startsWith('536')) return 'Igarassu';
@@ -40,6 +40,7 @@ const getRegionFromCep = (cep: string): Region => {
 
 const FinalizarCompra: React.FC = () => {
   const { cartItems, clearCart } = useCart();
+  const { token } = useAuth();
   const [cep, setCep] = useState('');
   const [address, setAddress] = useState('');
   const [number, setNumber] = useState('');
@@ -51,23 +52,28 @@ const FinalizarCompra: React.FC = () => {
   const [freight, setFreight] = useState<number>(0);
   const navigate = useNavigate();
 
-  // Lida com a mudança do CEP e busca o endereço e região
+  const calculateSubtotal = () => {
+    return cartItems.reduce((total, item) => {
+      if (item.bulk) {
+        const weight = item.weight || 0;
+        return total + ((item.productPrice / 1000) * weight);
+      } else {
+        return total + (item.productPrice * (item.quantity || 0));
+      }
+    }, 0);
+  };
+
+  const subtotal = calculateSubtotal();
+
   const handleCepChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    let newCep = e.target.value;
-    
-    // Remove qualquer hífen ou espaços do CEP digitado
-    newCep = newCep.replace(/\D/g, '');
-    
+    const newCep = e.target.value.replace(/\D/g, '');
     setCep(newCep);
-  
+
     if (newCep.length === 8) {
       try {
         const response = await axios.get(`https://viacep.com.br/ws/${newCep}/json/`);
         if (response.data && !response.data.erro) {
-          // Preenche o campo de endereço
           setAddress(`${response.data.logradouro}, ${response.data.bairro}, ${response.data.localidade} - ${response.data.uf}`);
-          
-          // Determina a região e calcula o frete
           const region = getRegionFromCep(newCep);
           setFreight(getFreightByRegion(region));
         } else {
@@ -82,15 +88,12 @@ const FinalizarCompra: React.FC = () => {
     }
   };
 
-  // Função para selecionar o método de pagamento
   const handlePaymentSelect = (method: string) => {
     setPaymentMethod(method);
   };
 
-  // Função para finalizar o pedido
   const handleFinalizeOrder = () => {
     const errors: string[] = [];
-
     if (!cep) errors.push('CEP é obrigatório');
     if (!number) errors.push('Número é obrigatório');
     if (!paymentMethod) errors.push('Método de pagamento é obrigatório');
@@ -100,21 +103,23 @@ const FinalizarCompra: React.FC = () => {
       return;
     }
 
-    // Formata a mensagem do pedido para envio via WhatsApp
-    const orderMessage = `Pedido:\n${cartItems.map(item => `${item.productName} - Quantidade: ${item.quantity || item.weight} - Subtotal: R$${item.bulk ? (item.productPrice / 1000 * (item.weight || 0)).toFixed(2) : (item.productPrice * (item.quantity || 0)).toFixed(2)}`).join('\n')}
+    const orderMessage = `Pedido:\n${cartItems.map(item => {
+      const subtotalItem = item.bulk
+        ? ((item.productPrice / 1000) * (item.weight || 0)).toFixed(2)
+        : (item.productPrice * (item.quantity || 0)).toFixed(2);
+      return `${item.productName} - Quantidade: ${item.bulk ? (item.weight || 0) + ' kg' : item.quantity} - Subtotal: R$${subtotalItem}`;
+    }).join('\n')}
     \nEndereço: ${address}, ${number}, ${complement}
     \nMétodo de Pagamento: ${paymentMethod}${paymentMethod === 'Dinheiro' && changeAmount ? `\nTroco para: R$${changeAmount}` : ''}
     \nFrete: R$${freight.toFixed(2)}
-    \nTotal: R$${(cartItems.reduce((total, item) => total + (item.bulk ? (item.productPrice / 1000) * item.weight! : item.productPrice * item.quantity!), 0) + freight).toFixed(2)}
+    \nTotal: R$${(subtotal + freight).toFixed(2)}
     `;
 
-    // Envia o pedido via WhatsApp
     const whatsappUrl = `https://api.whatsapp.com/send?phone=5551999999999&text=${encodeURIComponent(orderMessage)}`;
     window.open(whatsappUrl, '_blank');
     clearCart();
   };
 
-  // Função para retornar ao carrinho
   const handleBackToCart = () => {
     navigate('/cart');
   };
@@ -129,7 +134,6 @@ const FinalizarCompra: React.FC = () => {
       <CheckoutContainer>
         <h1>Finalizar Compra</h1>
 
-        {/* Seção de endereço */}
         <AddressSection>
           <h2>Endereço de Entrega</h2>
           <InputField
@@ -153,7 +157,6 @@ const FinalizarCompra: React.FC = () => {
           />
         </AddressSection>
 
-        {/* Seção de pagamento */}
         <PaymentSection>
           <h2>Forma de Pagamento</h2>
           <PaymentOptionButton onClick={() => handlePaymentSelect('Maquineta')} selected={paymentMethod === 'Maquineta'}>
@@ -175,17 +178,19 @@ const FinalizarCompra: React.FC = () => {
           )}
         </PaymentSection>
 
-        {/* Resumo do pedido */}
         <SummarySection>
           <h2>Resumo do Pedido</h2>
           {cartItems.map(item => (
             <CartItemSummary key={item.id}>
               <p>{item.productName}</p>
-              <p>Subtotal: R${item.bulk ? (item.productPrice / 1000 * (item.weight || 0)).toFixed(2) : (item.productPrice * (item.quantity || 0)).toFixed(2)}</p>
+              <p>Subtotal: R${item.bulk
+                ? ((item.productPrice / 1000) * (item.weight || 0)).toFixed(2)
+                : (item.productPrice * (item.quantity || 0)).toFixed(2)}
+              </p>
             </CartItemSummary>
           ))}
-          <FreightDetails>Frete: R${freight.toFixed(2)}</FreightDetails> {/* Detalhe do frete */}
-          <TotalPrice>Total: R${(cartItems.reduce((total, item) => total + (item.bulk ? (item.productPrice / 1000) * item.weight! : item.productPrice * item.quantity!), 0) + freight).toFixed(2)}</TotalPrice>
+          <FreightDetails>Frete: R${freight.toFixed(2)}</FreightDetails>
+          <TotalPrice>Total: R${(subtotal + freight).toFixed(2)}</TotalPrice>
         </SummarySection>
 
         {formErrors.length > 0 && (
@@ -196,9 +201,8 @@ const FinalizarCompra: React.FC = () => {
           </div>
         )}
 
-        {/* Botão para finalizar a compra */}
         <CheckoutButton onClick={handleFinalizeOrder}>
-          Finalizar Pedido
+          {loading ? 'Finalizando...' : 'Finalizar Compra'}
         </CheckoutButton>
       </CheckoutContainer>
     </>

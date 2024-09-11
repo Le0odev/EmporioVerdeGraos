@@ -250,9 +250,12 @@ export const ProductImage = styled.img`
   width: 100%;
   object-fit: cover;
   background-color: ${colors.background}
+  border-radius: 6px;
+
 
   @media (max-width: 768px) {
     object-fit: cover;
+    border-radius: 6px;
   }
 `;
 

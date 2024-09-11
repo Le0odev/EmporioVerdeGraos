@@ -1,4 +1,4 @@
-import React, { createContext, useState, useContext, ReactNode } from 'react';
+import React, { createContext, useState, useContext, ReactNode, useEffect } from 'react';
 import { Product } from './Product';
 
 // Define a interface CartItem que extende Product e inclui campos adicionais
@@ -21,56 +21,84 @@ interface CartContextProps {
 
 const CartContext = createContext<CartContextProps | undefined>(undefined);
 
+// Função para carregar itens do carrinho do localStorage
+const loadCartFromLocalStorage = (): CartItem[] => {
+  const storedCart = localStorage.getItem('cartItems');
+  if (storedCart) {
+    return JSON.parse(storedCart);
+  }
+  return [];
+};
+
+// Função para salvar itens do carrinho no localStorage
+const saveCartToLocalStorage = (items: CartItem[]) => {
+  localStorage.setItem('cartItems', JSON.stringify(items));
+};
+
 export const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const [cartItems, setCartItems] = useState<CartItem[]>([]);
+  const [cartItems, setCartItems] = useState<CartItem[]>(loadCartFromLocalStorage());
 
   const addToCart = (product: Product, weight?: number) => {
     setCartItems(prevItems => {
       const itemIndex = prevItems.findIndex(item => item.id === product.id);
   
       if (itemIndex >= 0) {
-        // Item já existe no carrinho
         const updatedItems = [...prevItems];
         if (product.bulk) {
-          // Produto a granel
           updatedItems[itemIndex] = { 
             ...updatedItems[itemIndex], 
             weight: weight ?? updatedItems[itemIndex].weight 
           } as CartItem;
         } else {
-          // Produto unitário
           updatedItems[itemIndex] = { 
             ...updatedItems[itemIndex], 
             quantity: (updatedItems[itemIndex].quantity || 0) + 1 
           } as CartItem;
         }
+        saveCartToLocalStorage(updatedItems);
         return updatedItems;
       }
   
-      // Novo item no carrinho
-      return [...prevItems, { 
-        ...product, 
-        weight, 
+      const newItem: CartItem = {
+        ...product,
+        weight,
         quantity: product.bulk ? undefined : 1,
         productId: product.id,
         productQuantity: product.productQuantity || 1,
-        estoquePeso: product.estoquePeso || 0
-      } as CartItem];
+        estoquePeso: product.estoquePeso || 0,
+        categoryId: product.categoryId
+      };
+  
+      const updatedItems = [...prevItems, newItem];
+      saveCartToLocalStorage(updatedItems);
+      return updatedItems;
     });
   };
   
-  
+  // Remove um item do carrinho
   const removeFromCart = (productId: number) => {
-    setCartItems(prevItems => prevItems.filter(item => item.id !== productId));
+    setCartItems(prevItems => {
+      const updatedItems = prevItems.filter(item => item.id !== productId);
+      saveCartToLocalStorage(updatedItems);
+      return updatedItems;
+    });
   };
 
+  // Obtém a contagem total de itens no carrinho
   const getCartItemCount = () => {
     return cartItems.reduce((total, item) => total + (item.quantity || 0), 0);
   };
 
+  // Limpa todos os itens do carrinho
   const clearCart = () => {
-    setCartItems([]); // Limpa o carrinho de compras
+    setCartItems([]);
+    localStorage.removeItem('cartItems'); // Remove itens do localStorage
   };
+
+  useEffect(() => {
+    // Atualiza o localStorage sempre que cartItems muda
+    saveCartToLocalStorage(cartItems);
+  }, [cartItems]);
 
   return (
     <CartContext.Provider value={{ cartItems, addToCart, removeFromCart, getCartItemCount, clearCart }}>
@@ -78,8 +106,6 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     </CartContext.Provider>
   );
 };
-
-
 
 export const useCart = () => {
   const context = useContext(CartContext);

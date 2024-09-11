@@ -1,5 +1,6 @@
 // types.ts
 export interface CartItem {
+  categoryId: number;
   id: number;
   productName: string;
   productPrice: number;
@@ -17,7 +18,7 @@ export interface Product {
   imageUrl: string;
   bulk: boolean;
   quantidade: number | null;
-  peso?: number;  // Opcional, para produtos a granel
+  weight?: number;  // Opcional, para produtos a granel
   productQuantity?: number;
   estoquePeso: number;
   categoryId: number;

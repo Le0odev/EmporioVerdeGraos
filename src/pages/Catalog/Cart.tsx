@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useCart } from './CartContext';
 import HeaderCart from '../../components/Header/HeadrCart/HeaderCart';
+import axios from 'axios';
 import {
   CartContainer,
   CartItem,
@@ -17,30 +18,32 @@ import {
   CartSummaryItem,
   CartSummaryTotal,
   CheckoutButton,
-  SuggestionContainer,
+  SuggestedProductsContainer,
   SuggestionTitle,
-  SuggestionCard,
-  SuggestionImage,
-  SuggestionDetails,
-  SuggestionName,
-  SuggestionPrice
+  
 } from './StyledCart';
 import { useNavigate } from 'react-router-dom';
-import { CartItem as CartItemType, Product } from './Product'; // Ajuste o caminho conforme necessário
-import axios from 'axios';
+import { CartItem as CartItemType, Product } from './Product';
 import { useAuth } from '../Login/authContext';
+import WeightModalCart from './WeightModalCart';
+import SuggestionsCarousel from './SuggestionsCarousel'; // Importando o carrossel
 
+const SUGGESTION_LIMIT = 3;
 
 const Cart: React.FC = () => {
-  const { cartItems, removeFromCart } = useCart();
+  const { cartItems, removeFromCart, addToCart } = useCart();
   const [suggestions, setSuggestions] = useState<Product[]>([]);
   const { token } = useAuth();
   const navigate = useNavigate();
 
+  const [weightInput, setWeightInput] = useState<{ [key: string]: number }>({});
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [currentProduct, setCurrentProduct] = useState<Product | null>(null);
+
   const calculateSubtotal = () => {
     return cartItems.reduce((total, item) => {
       if (item.bulk) {
-        return total + ((item.productPrice / 1000) * (item.weight || 0));
+        return total + ((item.productPrice / 1000) * (item.weight || weightInput[item.id] || 0));
       } else {
         return total + (item.productPrice * (item.quantity || 0));
       }
@@ -49,35 +52,36 @@ const Cart: React.FC = () => {
 
   const subtotal = calculateSubtotal();
 
-  const fetchProducts = async (): Promise<Product[]> => {
-    const API_URL = 'https://systemallback-end-production.up.railway.app/products/all';
+  const fetchSuggestions = async () => {
     try {
-      const response = await axios.get(API_URL, {
+      const response = await axios.get('https://systemallback-end-production.up.railway.app/products/all', {
         headers: {
-          Authorization: `Bearer ${token}` // Usando o token do contexto
-        }
+          Authorization: `Bearer ${token}`,
+        },
       });
-      return response.data; // Ajuste isso conforme a estrutura da resposta da API
-    } catch (error) {
-      console.error('Failed to fetch products:', error);
-      return [];
-    }
-  };
-
-  const fetchSuggestions = async (cartItems: CartItemType[]): Promise<void> => {
-    try {
-      const allProducts = await fetchProducts();
-      const suggestedProducts = allProducts.filter(product =>
-        !cartItems.some(item => item.id === product.id)
-      );
+      const allProducts: Product[] = response.data;
+      const suggestedProducts = allProducts.filter((product) => 
+        !cartItems.some((item) => item.id === product.id)
+      ).slice(0, SUGGESTION_LIMIT);
       setSuggestions(suggestedProducts);
     } catch (error) {
-      console.error('Failed to fetch products:', error);
+      console.error('Erro ao buscar sugestões:', error);
     }
   };
 
   useEffect(() => {
-    fetchSuggestions(cartItems);
+    fetchSuggestions();
+
+    cartItems.forEach(item => {
+      const storedWeight = localStorage.getItem(`weight_${item.id}`);
+      if (storedWeight) {
+        setWeightInput(prevState => ({
+          ...prevState,
+          [item.id]: parseFloat(storedWeight)
+        }));
+      }
+    });
+
   }, [cartItems]);
 
   const handleBackToCatalog = () => {
@@ -90,6 +94,28 @@ const Cart: React.FC = () => {
     } else {
       alert('Seu carrinho está vazio. Adicione itens antes de finalizar a compra.');
     }
+  };
+
+  const handleAddToCart = (product: Product) => {
+    if (product.bulk) {
+      setCurrentProduct(product);
+      setIsModalOpen(true);
+    } else {
+      addToCart(product);
+    }
+  };
+
+  const handleWeightSubmit = (productId: string, weight: number) => {
+    setWeightInput(prevState => ({
+      ...prevState,
+      [productId]: weight
+    }));
+    
+    localStorage.setItem(`weight_${productId}`, weight.toString());
+    
+    addToCart({ ...currentProduct!, weight });
+    setCurrentProduct(null);
+    setIsModalOpen(false);
   };
 
   return (
@@ -113,9 +139,11 @@ const Cart: React.FC = () => {
                 {item.bulk ? (
                   <>
                     <CartItemPrice>Preço (KG): R${item.productPrice.toFixed(2)}</CartItemPrice>
-                    <CartItemWeight>Peso: {item.weight?.toFixed(0)} g</CartItemWeight>
+                    <CartItemWeight>
+                      Peso: {item.weight ? `${item.weight.toFixed(0)} g` : `${weightInput[item.id] ? weightInput[item.id].toFixed(0) + ' g' : 'Não definido'}`}
+                    </CartItemWeight>
                     <CartItemSubtotal>
-                      Subtotal: R${((item.productPrice / 1000) * (item.weight || 0)).toFixed(2)}
+                      Subtotal: R${((item.productPrice / 1000) * (item.weight || weightInput[item.id] || 0)).toFixed(2)}
                     </CartItemSubtotal>
                   </>
                 ) : (
@@ -135,8 +163,12 @@ const Cart: React.FC = () => {
 
         {cartItems.length > 0 && (
           <>
+            <SuggestedProductsContainer>
+              <SuggestionTitle>Você também pode gostar</SuggestionTitle>
+              <SuggestionsCarousel suggestions={suggestions} onAddToCart={handleAddToCart} />
+            </SuggestedProductsContainer>
+
             <CartSummaryContainer>
-              <CartSummaryTitle>Resumo da Compra</CartSummaryTitle>
               <CartSummaryItem>
                 <span>Subtotal:</span>
                 <span>R${subtotal.toFixed(2)}</span>
@@ -147,22 +179,16 @@ const Cart: React.FC = () => {
               </CartSummaryTotal>
               <CheckoutButton onClick={handleGoToFinish}>Finalizar Compra</CheckoutButton>
             </CartSummaryContainer>
-
-            <SuggestionContainer>
-              <SuggestionTitle>Você também pode gostar</SuggestionTitle>
-              {suggestions.map((suggestion: Product) => (
-                <SuggestionCard key={suggestion.id}>
-                  <SuggestionImage src={suggestion.imageUrl} alt={suggestion.productName} />
-                  <SuggestionDetails>
-                    <SuggestionName>{suggestion.productName}</SuggestionName>
-                    <SuggestionPrice>Preço: R${suggestion.productPrice.toFixed(2)}</SuggestionPrice>
-                  </SuggestionDetails>
-                </SuggestionCard>
-              ))}
-            </SuggestionContainer>
           </>
         )}
       </CartContainer>
+
+      <WeightModalCart
+        productId={currentProduct?.id?.toString() || ''}
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onSubmit={handleWeightSubmit}
+      />
     </>
   );
 };

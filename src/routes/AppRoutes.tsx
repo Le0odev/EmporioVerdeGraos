@@ -1,4 +1,6 @@
 import { Route, Routes, useLocation } from 'react-router-dom';
+import 'slick-carousel/slick/slick.css';
+import 'slick-carousel/slick/slick-theme.css';
 import styled from 'styled-components';
 import CadastrarProduto from '../pages/ProductCad/CadastrarProduto';
 import Login from '../pages/Login/Login';

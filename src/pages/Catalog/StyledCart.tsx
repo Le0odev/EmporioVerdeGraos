@@ -1,3 +1,4 @@
+import { IoAdd } from 'react-icons/io5';
 import styled from 'styled-components';
 
 
@@ -16,14 +17,13 @@ export const CartContainer = styled.div`
   border-radius: 16px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 
-
   & h1{
   font-size: 20px;
   
   }
 
   @media (max-width: 768px) {
-    width: 95%; // Para dispositivos móveis, ajusta a largura para ficar um pouco mais estreita
+    width: 92%; // Para dispositivos móveis, ajusta a largura para ficar um pouco mais estreita
     margin-bottom: 10px;
   }
 `;
@@ -181,90 +181,53 @@ export const RemoveButton = styled.button`
   }
 `;
 
+
+// Container dos produtos sugeridos
 export const SuggestedProductsContainer = styled.div`
-  margin-top: 20px;
+  margin-top: 5px;
+  padding: 0.5rem; // Reduzido para compactar
+  border-radius: 8px;
 `;
 
-export const SuggestedProduct = styled.div`
+// Título da seção de sugestões
+export const SuggestionTitle = styled.h2`
+  font-size: 1.2em; // Reduzido para um visual mais compacto
+  color: #333;
+  margin-bottom: 4px;
+  font-family: 'Orbitron', sans-serif;
+`;
+
+
+// Ícone de adição ao carrinho
+export const AddIcon = styled(IoAdd)`
+  font-size: 24px; // Reduzido para compactar
+  color: white;
+  background-color: #28a745; // Verde para o ícone
+  margin-left: 8px; // Espaço à esquerda do ícone
+  padding: 4px; // Compactado
+  border-radius: 50%; // Fundo redondo
   display: flex;
   align-items: center;
-  margin-bottom: 10px;
-`;
-
-export const SuggestedProductImage = styled.img`
-  width: 80px;
-  height: 80px;
-  object-fit: cover;
-  margin-right: 10px;
-`;
-
-export const SuggestedProductName = styled.div`
-  flex: 1;
-  font-size: 16px;
-`;
-
-export const SuggestedProductPrice = styled.div`
-  font-size: 16px;
-  margin-right: 10px;
-`;
-
-export const AddToCartButton = styled.button`
-  background-color: #4CAF50;
-  color: white;
-  border: none;
-  padding: 10px 20px;
-  text-align: center;
-  text-decoration: none;
-  display: inline-block;
-  font-size: 16px;
-  margin: 4px 2px;
+  justify-content: center;
   cursor: pointer;
-  border-radius: 5px;
+  transition: background-color 0.3s, transform 0.3s;
 
   &:hover {
-    background-color: #45a049;
+    background-color: #218838; // Tom mais escuro no hover
+    transform: scale(1.1); // Aumenta o ícone no hover
   }
 `;
 
-export const SuggestionContainer = styled.div`
-  margin-top: 20px;
-`;
 
-export const SuggestionTitle = styled.h2`
-  font-size: 1.5em;
-  margin-bottom: 10px;
-`;
 
-export const SuggestionCard = styled.div`
+// Exemplo de estilização para o WeightInput
+export const WeightInput = styled.input`
+  width: 100px;
+  padding: 8px;
+  margin-top: 5px;
   border: 1px solid #ccc;
-  padding: 10px;
-  margin: 10px;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-`;
-
-export const SuggestionImage = styled.img`
-  width: 80px;
-  height: 80px;
-  object-fit: cover;
   border-radius: 4px;
+  font-size: 14px;
 `;
 
-export const SuggestionDetails = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-`;
 
-export const SuggestionName = styled.p`
-  font-size: 1em;
-  font-weight: bold;
-`;
-
-export const SuggestionPrice = styled.p`
-  font-size: 0.9em;
-  color: #333;
-`;
