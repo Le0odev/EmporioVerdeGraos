@@ -12,7 +12,7 @@ import {
   AddressDetails,
   TotalPrice,
   CartItemSummary,
-  FreightDetails, // Importação adicionada
+  FreightDetails,
 } from './StyledCheckout';
 import { useNavigate } from 'react-router-dom';
 import HeaderCart from '../../components/Header/HeadrCart/HeaderCart';
@@ -64,7 +64,10 @@ const FinalizarCompra: React.FC = () => {
       try {
         const response = await axios.get(`https://viacep.com.br/ws/${newCep}/json/`);
         if (response.data && !response.data.erro) {
+          // Preenche o campo de endereço
           setAddress(`${response.data.logradouro}, ${response.data.bairro}, ${response.data.localidade} - ${response.data.uf}`);
+          
+          // Determina a região e calcula o frete
           const region = getRegionFromCep(newCep);
           setFreight(getFreightByRegion(region));
         } else {
@@ -186,14 +189,17 @@ const FinalizarCompra: React.FC = () => {
         </SummarySection>
 
         {formErrors.length > 0 && (
-          <div style={{ color: 'red' }}>
+          <div>
             {formErrors.map((error, index) => (
-              <p key={index}>{error}</p>
+              <p key={index} style={{ color: 'red' }}>{error}</p>
             ))}
           </div>
         )}
 
-        <CheckoutButton onClick={handleFinalizeOrder} disabled={loading}>Finalizar Compra</CheckoutButton>
+        {/* Botão para finalizar a compra */}
+        <CheckoutButton onClick={handleFinalizeOrder}>
+          Finalizar Pedido
+        </CheckoutButton>
       </CheckoutContainer>
     </>
   );

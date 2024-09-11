@@ -1,13 +1,15 @@
 // ProductCard.tsx
 import React from 'react';
+import { useCart } from './CartContext';
 import { Product } from './Product';
 
 interface ProductCardProps {
   produto: Product;
-  addToCart: (produto: Product) => void;
 }
 
-const ProductCard: React.FC<ProductCardProps> = ({ produto, addToCart }) => {
+const ProductCard: React.FC<ProductCardProps> = ({ produto }) => {
+  const { addToCart } = useCart(); // Obtém a função addToCart do contexto
+
   return (
     <div className="product-card">
       <img src={produto.imageUrl} alt={produto.productName} />

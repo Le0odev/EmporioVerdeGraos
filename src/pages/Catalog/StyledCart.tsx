@@ -180,3 +180,91 @@ export const RemoveButton = styled.button`
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
   }
 `;
+
+export const SuggestedProductsContainer = styled.div`
+  margin-top: 20px;
+`;
+
+export const SuggestedProduct = styled.div`
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+`;
+
+export const SuggestedProductImage = styled.img`
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+  margin-right: 10px;
+`;
+
+export const SuggestedProductName = styled.div`
+  flex: 1;
+  font-size: 16px;
+`;
+
+export const SuggestedProductPrice = styled.div`
+  font-size: 16px;
+  margin-right: 10px;
+`;
+
+export const AddToCartButton = styled.button`
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: pointer;
+  border-radius: 5px;
+
+  &:hover {
+    background-color: #45a049;
+  }
+`;
+
+export const SuggestionContainer = styled.div`
+  margin-top: 20px;
+`;
+
+export const SuggestionTitle = styled.h2`
+  font-size: 1.5em;
+  margin-bottom: 10px;
+`;
+
+export const SuggestionCard = styled.div`
+  border: 1px solid #ccc;
+  padding: 10px;
+  margin: 10px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+`;
+
+export const SuggestionImage = styled.img`
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+  border-radius: 4px;
+`;
+
+export const SuggestionDetails = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+`;
+
+export const SuggestionName = styled.p`
+  font-size: 1em;
+  font-weight: bold;
+`;
+
+export const SuggestionPrice = styled.p`
+  font-size: 0.9em;
+  color: #333;
+`;

@@ -8,6 +8,7 @@ interface CartItem extends Product {
   weight?: number; // Peso em gramas para produtos a granel
   productQuantity: number; // Quantidade específica do produto
   estoquePeso: number; // Peso em estoque
+  categoryId: number;
 }
 
 interface CartContextProps {
@@ -26,7 +27,7 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const addToCart = (product: Product, weight?: number) => {
     setCartItems(prevItems => {
       const itemIndex = prevItems.findIndex(item => item.id === product.id);
-
+  
       if (itemIndex >= 0) {
         // Item já existe no carrinho
         const updatedItems = [...prevItems];
@@ -45,19 +46,20 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         }
         return updatedItems;
       }
-
+  
       // Novo item no carrinho
       return [...prevItems, { 
         ...product, 
         weight, 
         quantity: product.bulk ? undefined : 1,
-        productId: product.id, // Certifique-se de que todas as propriedades sejam definidas
+        productId: product.id,
         productQuantity: product.productQuantity || 1,
         estoquePeso: product.estoquePeso || 0
       } as CartItem];
     });
   };
-
+  
+  
   const removeFromCart = (productId: number) => {
     setCartItems(prevItems => prevItems.filter(item => item.id !== productId));
   };
@@ -76,6 +78,8 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     </CartContext.Provider>
   );
 };
+
+
 
 export const useCart = () => {
   const context = useContext(CartContext);

@@ -60,7 +60,7 @@ export const CheckoutButton = styled.button`
 
 export const InputField = styled.input`
   width: 100%;
-  padding: 12px;
+  padding: 10px;
   margin: 8px 0;
   border: 1px solid #ccc;
   border-radius: 6px;
