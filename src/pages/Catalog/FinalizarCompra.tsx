@@ -14,6 +14,7 @@ import {
   TotalPrice,
   CartItemSummary,
   FreightDetails,
+  SuccessModal,
 } from './StyledCheckout';
 import { useNavigate } from 'react-router-dom';
 import { CartItem as CartItemType } from './Product';
@@ -50,12 +51,14 @@ const FinalizarCompra: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [formErrors, setFormErrors] = useState<string[]>([]);
   const [freight, setFreight] = useState<number>(0);
+  const [orderSuccess, setOrderSuccess] = useState(false); // Estado para o modal de sucesso
   const navigate = useNavigate();
 
   const calculateSubtotal = () => {
     return cartItems.reduce((total, item) => {
       if (item.bulk) {
-        const weight = item.weight || 0;
+        const storedWeight = localStorage.getItem(`weight_${item.id}`);
+        const weight = storedWeight ? parseFloat(storedWeight) : item.weight || 0;
         return total + ((item.productPrice / 1000) * weight);
       } else {
         return total + (item.productPrice * (item.quantity || 0));
@@ -64,6 +67,23 @@ const FinalizarCompra: React.FC = () => {
   };
 
   const subtotal = calculateSubtotal();
+
+  useEffect(() => {
+    cartItems.forEach(item => {
+      const storedWeight = localStorage.getItem(`weight_${item.id}`);
+      if (storedWeight) {
+        item.weight = parseFloat(storedWeight);
+      }
+    });
+  }, [cartItems]);
+
+  useEffect(() => {
+    cartItems.forEach(item => {
+      if (item.weight !== undefined) {
+        localStorage.setItem(`weight_${item.id}`, item.weight.toString());
+      }
+    });
+  }, [cartItems]);
 
   const handleCepChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const newCep = e.target.value.replace(/\D/g, '');
@@ -117,7 +137,24 @@ const FinalizarCompra: React.FC = () => {
 
     const whatsappUrl = `https://api.whatsapp.com/send?phone=5551999999999&text=${encodeURIComponent(orderMessage)}`;
     window.open(whatsappUrl, '_blank');
+
+    // Limpar o carrinho e os campos
     clearCart();
+    setCep('');
+    setAddress('');
+    setNumber('');
+    setComplement('');
+    setPaymentMethod(null);
+    setChangeAmount(null);
+
+    // Exibir modal de sucesso
+    setOrderSuccess(true);
+
+    // Fechar modal de sucesso automaticamente após 3 segundos
+    setTimeout(() => {
+      setOrderSuccess(false);
+      navigate('/');
+    }, 3000);
   };
 
   const handleBackToCart = () => {
@@ -179,31 +216,46 @@ const FinalizarCompra: React.FC = () => {
         </PaymentSection>
 
         <SummarySection>
-          <h2>Resumo do Pedido</h2>
-          {cartItems.map(item => (
-            <CartItemSummary key={item.id}>
-              <p>{item.productName}</p>
-              <p>Subtotal: R${item.bulk
-                ? ((item.productPrice / 1000) * (item.weight || 0)).toFixed(2)
-                : (item.productPrice * (item.quantity || 0)).toFixed(2)}
-              </p>
-            </CartItemSummary>
-          ))}
-          <FreightDetails>Frete: R${freight.toFixed(2)}</FreightDetails>
-          <TotalPrice>Total: R${(subtotal + freight).toFixed(2)}</TotalPrice>
-        </SummarySection>
-
-        {formErrors.length > 0 && (
-          <div>
-            {formErrors.map((error, index) => (
-              <p key={index} style={{ color: 'red' }}>{error}</p>
-            ))}
-          </div>
-        )}
+    <h2>Resumo do Pedido</h2>
+    {cartItems.map(item => (
+      <CartItemSummary key={item.id}>
+        <div className="item-details">
+          <p className="item-name">{item.productName}</p>
+          <p className="item-price"> Preço: {item.productPrice.toFixed(2)}
+           </p>
+          <p className="item-info">
+            {item.bulk ? `Peso: ${(item.weight || 0)} g` : `Unidade: ${(item.quantity || 0)}`}
+          </p>
+          <p className="item-subtotal">
+            R${item.bulk
+              ? ((item.productPrice / 1000) * (item.weight || 0)).toFixed(2)
+              : (item.productPrice * (item.quantity || 0)).toFixed(2)}
+          </p>
+        </div>
+      </CartItemSummary>
+    ))}
+    <FreightDetails>Frete: R${freight.toFixed(2)}</FreightDetails>
+    <TotalPrice>Total: R${(subtotal + freight).toFixed(2)}</TotalPrice>
+  </SummarySection>
 
         <CheckoutButton onClick={handleFinalizeOrder}>
-          {loading ? 'Finalizando...' : 'Finalizar Compra'}
+          Finalizar Pedido
         </CheckoutButton>
+
+        {formErrors.length > 0 && (
+          <ul>
+            {formErrors.map((error, index) => (
+              <li key={index}>{error}</li>
+            ))}
+          </ul>
+        )}
+
+        {/* Modal de Sucesso */}
+        {orderSuccess && (
+          <SuccessModal>
+            <h2>Pedido Enviado com Sucesso!</h2>
+          </SuccessModal>
+        )}
       </CheckoutContainer>
     </>
   );

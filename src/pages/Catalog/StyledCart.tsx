@@ -106,19 +106,24 @@ export const CartSummaryTotal = styled.div`
 
 // Botão de checkout
 export const CheckoutButton = styled.button`
-  margin-top: 1rem;
-  padding: 0.5rem 1.2rem;
-  background: linear-gradient(135deg, #28a745, #218838);
-  border: none;
+  background-color: #28a745;
+  margin-top: 15px;
   color: #fff;
-  border-radius: 10px;
+  padding: 12px 24px;
+  border: none;
+  border-radius: 6px;
   cursor: pointer;
-  font-size: 1rem;
-  transition: background-color 0.2s ease, box-shadow 0.2s ease;
+  font-size: 16px;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
 
   &:hover {
     background-color: #218838;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  }
+
+  &:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
   }
 `;
 
@@ -185,8 +190,9 @@ export const RemoveButton = styled.button`
 // Container dos produtos sugeridos
 export const SuggestedProductsContainer = styled.div`
   margin-top: 5px;
-  padding: 0.5rem; // Reduzido para compactar
+  padding: 0.4rem; // Reduzido para compactar
   border-radius: 8px;
+  
 `;
 
 // Título da seção de sugestões

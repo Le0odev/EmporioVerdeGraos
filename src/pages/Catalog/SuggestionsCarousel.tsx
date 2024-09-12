@@ -10,7 +10,6 @@ import {
   SuggestionName,
   SuggestionPrice,
   AddIcon,
-  SliderContainer
 } from './StyledCarroussel'; // Ajuste o caminho conforme necessário
 
 interface CarouselProps {
@@ -24,7 +23,8 @@ const SuggestionsCarousel: React.FC<CarouselProps> = ({ suggestions, onAddToCart
     slidesToScroll: 1, // Move 1 slide por vez
     infinite: true, // Torna o slider infinito
     centerMode: false, // Desativa o modo centralizado para garantir alinhamento
-    centerPadding: '8px', // Adiciona espaçamento ao redor dos slides
+    centerPadding: '8px',
+    arrows: false, // Adiciona espaçamento ao redor dos slides
     responsive: [
       {
         breakpoint: 1024,

@@ -6,8 +6,7 @@ export const SuggestionCard = styled.div`
   flex-direction: row;
   align-items: center;
   width: 100%; // Ajuste o tamanho conforme necessário
-  padding: 8px;
-  margin:  ;
+  padding: 4px;
   border: 1px solid #ddd;
   border-radius: 8px;
   background-color: #fff;
@@ -71,9 +70,3 @@ export const AddIcon = styled(IoAdd)`
   }
 `;
 
-export const SliderContainer = styled.div`
-  display: flex;
-  overflow: hidden;
-  padding: 0 8px;
-  width: 100%;
-`;
