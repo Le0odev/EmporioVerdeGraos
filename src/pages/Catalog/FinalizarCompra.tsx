@@ -187,11 +187,20 @@ const FinalizarCompra: React.FC = () => {
 
   const handleFinalizeOrder = () => {
     const errors: string[] = [];
+    
+    // Validação do tipo de entrega
     if (deliveryType === 'Entrega') {
       if (!cep) errors.push('CEP é obrigatório');
       if (!number) errors.push('Número é obrigatório');
     }
+    
+    // Validação do método de pagamento
     if (!paymentMethod) errors.push('Método de pagamento é obrigatório');
+    
+    // Validação específica para pagamento em dinheiro
+    if (paymentMethod === 'Dinheiro' && (changeAmount === null || changeAmount < subtotal + freight)) {
+      errors.push('O valor inserido para troco deve ser maior ou igual ao total.');
+    }
     
     if (errors.length > 0) {
       setFormErrors(errors);
@@ -214,9 +223,8 @@ const FinalizarCompra: React.FC = () => {
       ? `\nO cliente irá pagar: R$${changeAmount?.toFixed(2)}\nTroco: R$${(changeAmount ? changeAmount - total : 0).toFixed(2)}`
       : `\nMétodo de Pagamento: ${paymentMethod}`;
   
-
     const clientDetails = `\n\nNome do Cliente: ${clientInfo.name}\nTelefone: ${clientInfo.phone}`;
-    
+  
     // Adiciona o link do mapa, se as coordenadas estiverem disponíveis
     const mapLink = coordinates ? `\n\nLocalização no Mapa:\nhttps://www.google.com/maps?q=${coordinates.lat},${coordinates.lng}` : '';
   
@@ -229,10 +237,10 @@ const FinalizarCompra: React.FC = () => {
   
     // Cria a URL do WhatsApp
     const whatsappUrl = `https://api.whatsapp.com/send?phone=${phoneNumber}&text=${encodedMessage}`;
-    
+  
     // Abre a URL do WhatsApp
     window.open(whatsappUrl, '_blank');
-    
+  
     // Limpa o carrinho e navega para a página de sucesso
     clearCart();
     setOrderSuccess(true);
