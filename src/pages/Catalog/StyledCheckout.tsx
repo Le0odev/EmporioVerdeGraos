@@ -26,10 +26,13 @@ export const CheckoutContainer = styled.div`
 
 // Seções para endereço e pagamento
 export const AddressSection = styled.section`
-  margin-bottom: 20px;
   border-bottom: 1px solid #ddd;
   padding-bottom: 20px;
   padding-top: 10px;
+
+  & h2{
+    margin-bottom: 12px;
+  }
 `;
 
 export const PaymentSection = styled.section`
@@ -266,5 +269,29 @@ export const SuccessModal = styled.div`
     to {
       opacity: 1;
     }
+  }
+`;
+
+export const MapContainer = styled.div`
+  position: relative;
+  margin-top: 20px;
+  margin-bottom: 20px;
+`;
+
+
+export const PickupInfo = styled.div`
+  background-color: #f8f9fa;
+  padding: 15px;
+  border-radius: 8px;
+  border: 1px solid #dee2e6;
+  margin-bottom: 20px;
+
+  h2 {
+    margin-bottom: 10px;
+  }
+
+  p {
+    margin: 0;
+    font-size: 16px;
   }
 `;

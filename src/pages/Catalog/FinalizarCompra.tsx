@@ -1,7 +1,7 @@
+
 import React, { useState, useEffect } from 'react';
 import { useCart } from './CartContext';
 import HeaderCart from '../../components/Header/HeadrCart/HeaderCart';
-import axios from 'axios';
 import {
   CheckoutContainer,
   AddressSection,
@@ -10,15 +10,24 @@ import {
   CheckoutButton,
   InputField,
   PaymentOptionButton,
-  AddressDetails,
   TotalPrice,
   CartItemSummary,
   FreightDetails,
   SuccessModal,
-} from './StyledCheckout';
+  MapContainer,
+  PickupInfo,
+} from './StyledCheckout'; // Adicione o estilo para o mapa
 import { useNavigate } from 'react-router-dom';
-import { CartItem as CartItemType } from './Product';
-import { useAuth } from '../Login/authContext';
+import MapLoader from '../../components/MapApi/MapLoader'; // Importe o componente que carrega o script
+import MyMapComponent from '../../components/MapApi/MyMapComponent'; // Importe o componente do mapa
+import ClientModal from './ClientModal'; // Importe o componente do modal
+import StoreMap from './StoreMap';
+
+
+interface ClientInfo {
+  name: string;
+  phone: string;
+}
 
 type Region = 'Abreu e Lima' | 'Igarassu' | 'Paulista' | 'Outros';
 
@@ -41,18 +50,50 @@ const getRegionFromCep = (cep: string): Region => {
 
 const FinalizarCompra: React.FC = () => {
   const { cartItems, clearCart } = useCart();
-  const { token } = useAuth();
+  const [deliveryType, setDeliveryType] = useState<'Entrega' | 'Retirada'>('Entrega'); // Estado para tipo de entrega
   const [cep, setCep] = useState('');
   const [address, setAddress] = useState('');
   const [number, setNumber] = useState('');
   const [complement, setComplement] = useState('');
+  const [rua, setRua] = useState('');
+  const [bairro, setBairro] = useState('');
+  const [cidade, setCidade] = useState('');
   const [paymentMethod, setPaymentMethod] = useState<string | null>(null);
   const [changeAmount, setChangeAmount] = useState<number | null>(null);
-  const [loading, setLoading] = useState<boolean>(false);
   const [formErrors, setFormErrors] = useState<string[]>([]);
   const [freight, setFreight] = useState<number>(0);
   const [orderSuccess, setOrderSuccess] = useState(false); // Estado para o modal de sucesso
+  const [coordinates, setCoordinates] = useState<{ lat: number; lng: number } | null>(null); // Para o mapa
+  const [showMap, setShowMap] = useState(false); // Estado para mostrar o mapa de confirmação
+  const [clientInfo, setClientInfo] = useState<ClientInfo>({ name: '', phone: '' });
+  const [showModal, setShowModal] = useState<boolean>(true); // Para exibir o modal
+
+  
+ // Coordenadas para a loja
+ const storeCoordinates = {
+  lat: -7.9055806,
+  lng: -34.9002584,
+  };
+
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const savedName = localStorage.getItem('clientName');
+    const savedPhone = localStorage.getItem('clientPhone');
+    
+    if (savedName && savedPhone) {
+      setClientInfo({ name: savedName, phone: savedPhone });
+    } else {
+      setShowModal(true);
+    }
+  }, []);
+
+  const handleSaveClientInfo = (name: string, phone: string) => {
+    setClientInfo({ name, phone });
+    localStorage.setItem('clientName', name);
+    localStorage.setItem('clientPhone', phone);
+    setShowModal(false);
+  };
 
   const calculateSubtotal = () => {
     return cartItems.reduce((total, item) => {
@@ -86,25 +127,57 @@ const FinalizarCompra: React.FC = () => {
   }, [cartItems]);
 
   const handleCepChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newCep = e.target.value.replace(/\D/g, '');
+    const newCep = e.target.value;
     setCep(newCep);
 
     if (newCep.length === 8) {
       try {
-        const response = await axios.get(`https://viacep.com.br/ws/${newCep}/json/`);
-        if (response.data && !response.data.erro) {
-          setAddress(`${response.data.logradouro}, ${response.data.bairro}, ${response.data.localidade} - ${response.data.uf}`);
+        const response = await fetch(`https://viacep.com.br/ws/${newCep}/json/`);
+        const data = await response.json();
+
+        if (!data.erro) {
+          setRua(data.logradouro || '');
+          setBairro(data.bairro || '');
+          setCidade(data.localidade || '');
+          setAddress(`${data.logradouro}, ${data.bairro}, ${data.localidade}`);
+
+          // Detectar região e calcular frete
           const region = getRegionFromCep(newCep);
-          setFreight(getFreightByRegion(region));
+          const calculatedFreight = getFreightByRegion(region);
+          setFreight(calculatedFreight);
+
+          // Buscar coordenadas
+          const mapResponse = await fetch(
+            `https://maps.googleapis.com/maps/api/geocode/json?address=${newCep}&key=AIzaSyDsOFyfLUkr6YfHgSC96aneAaGxhjQ6_Zk`
+          );
+          const mapData = await mapResponse.json();
+          if (mapData.results.length > 0) {
+            const location = mapData.results[0].geometry.location;
+            setCoordinates({ lat: location.lat, lng: location.lng });
+            setShowMap(true); // Exibir o mapa após obter coordenadas
+          }
         } else {
-          setAddress('CEP inválido');
-          setFreight(getFreightByRegion('Outros'));
+          alert("CEP não encontrado");
+          setRua('');
+          setBairro('');
+          setCidade('');
+          setFreight(0);
+          setShowMap(false); // Esconder o mapa se o CEP não for encontrado
         }
       } catch (error) {
-        console.error('Erro ao buscar CEP:', error);
-        setAddress('Erro ao buscar CEP');
-        setFreight(getFreightByRegion('Outros'));
+        console.error("Erro ao buscar CEP:", error);
+        setRua('');
+        setBairro('');
+        setCidade('');
+        setFreight(0);
+        setShowMap(false); // Esconder o mapa em caso de erro
       }
+    } else {
+      setRua('');
+      setBairro('');
+      setCidade('');
+      setFreight(0);
+      setShowMap(false); // Esconder o mapa se o CEP estiver incompleto
     }
   };
 
@@ -114,48 +187,59 @@ const FinalizarCompra: React.FC = () => {
 
   const handleFinalizeOrder = () => {
     const errors: string[] = [];
-    if (!cep) errors.push('CEP é obrigatório');
-    if (!number) errors.push('Número é obrigatório');
+    if (deliveryType === 'Entrega') {
+      if (!cep) errors.push('CEP é obrigatório');
+      if (!number) errors.push('Número é obrigatório');
+    }
     if (!paymentMethod) errors.push('Método de pagamento é obrigatório');
-
+    
     if (errors.length > 0) {
       setFormErrors(errors);
       return;
     }
-
+  
+    // Calcula o valor total
+    const total = subtotal + freight;
+  
+    // Cria a mensagem do pedido
     const orderMessage = `Pedido:\n${cartItems.map(item => {
       const subtotalItem = item.bulk
         ? ((item.productPrice / 1000) * (item.weight || 0)).toFixed(2)
         : (item.productPrice * (item.quantity || 0)).toFixed(2);
       return `${item.productName} - Quantidade: ${item.bulk ? (item.weight || 0) + ' kg' : item.quantity} - Subtotal: R$${subtotalItem}`;
-    }).join('\n')}
-    \nEndereço: ${address}, ${number}, ${complement}
-    \nMétodo de Pagamento: ${paymentMethod}${paymentMethod === 'Dinheiro' && changeAmount ? `\nTroco para: R$${changeAmount}` : ''}
-    \nFrete: R$${freight.toFixed(2)}
-    \nTotal: R$${(subtotal + freight).toFixed(2)}
-    `;
+    }).join('\n\n')}\n\nEndereço: ${cidade}, ${bairro}, ${rua}, ${number}, ${complement} \n\nResumo da Compra:\nSubtotal: R$${subtotal.toFixed(2)}\nFrete: R$${freight.toFixed(2)}\n\nTotal: R$${total.toFixed(2)}\n`;
+  
+    // Adiciona o método de pagamento e troco, se aplicável
+    const paymentDetails = paymentMethod === 'Dinheiro'
+      ? `\nO cliente irá pagar: R$${changeAmount?.toFixed(2)}\nTroco: R$${(changeAmount ? changeAmount - total : 0).toFixed(2)}`
+      : `\nMétodo de Pagamento: ${paymentMethod}`;
+  
 
-    const whatsappUrl = `https://api.whatsapp.com/send?phone=5551999999999&text=${encodeURIComponent(orderMessage)}`;
+    const clientDetails = `\n\nNome do Cliente: ${clientInfo.name}\nTelefone: ${clientInfo.phone}`;
+    
+    // Adiciona o link do mapa, se as coordenadas estiverem disponíveis
+    const mapLink = coordinates ? `\n\nLocalização no Mapa:\nhttps://www.google.com/maps?q=${coordinates.lat},${coordinates.lng}` : '';
+  
+    // Mensagem completa
+    const fullMessage = `${orderMessage}${paymentDetails}${mapLink}${clientDetails}`;
+  
+    // Codifica a mensagem para a URL
+    const encodedMessage = encodeURIComponent(fullMessage);
+    const phoneNumber = '5551999999999'; // Substitua pelo número de telefone desejado
+  
+    // Cria a URL do WhatsApp
+    const whatsappUrl = `https://api.whatsapp.com/send?phone=${phoneNumber}&text=${encodedMessage}`;
+    
+    // Abre a URL do WhatsApp
     window.open(whatsappUrl, '_blank');
-
-    // Limpar o carrinho e os campos
+    
+    // Limpa o carrinho e navega para a página de sucesso
     clearCart();
-    setCep('');
-    setAddress('');
-    setNumber('');
-    setComplement('');
-    setPaymentMethod(null);
-    setChangeAmount(null);
-
-    // Exibir modal de sucesso
     setOrderSuccess(true);
-
-    // Fechar modal de sucesso automaticamente após 3 segundos
-    setTimeout(() => {
-      setOrderSuccess(false);
-      navigate('/');
-    }, 3000);
+    navigate('/success');
   };
+  
+  
 
   const handleBackToCart = () => {
     navigate('/cart');
@@ -163,58 +247,87 @@ const FinalizarCompra: React.FC = () => {
 
   return (
     <>
+     {showModal && <ClientModal onSave={handleSaveClientInfo} />}
       <HeaderCart
         showBackButton
         handleBack={handleBackToCart}
         handleGoToCart={handleBackToCart}
       />
       <CheckoutContainer>
-        <h1>Finalizar Compra</h1>
-
-        <AddressSection>
-          <h2>Endereço de Entrega</h2>
-          <InputField
-            type="text"
-            placeholder="Digite seu CEP (Apenas números)"
-            value={cep}
-            onChange={handleCepChange}
-          />
-          {address && <AddressDetails>{address}</AddressDetails>}
-          <InputField
-            type="text"
-            placeholder="Número"
-            value={number}
-            onChange={(e) => setNumber(e.target.value)}
-          />
-          <InputField
-            type="text"
-            placeholder="Complemento"
-            value={complement}
-            onChange={(e) => setComplement(e.target.value)}
-          />
+      <AddressSection>
+          <h2>Tipo de Entrega</h2>
+          <PaymentOptionButton onClick={() => setDeliveryType('Entrega')} selected={deliveryType === 'Entrega'}>
+            Entrega
+          </PaymentOptionButton>
+          <PaymentOptionButton onClick={() => setDeliveryType('Retirada')} selected={deliveryType === 'Retirada'}>
+            Retirada
+          </PaymentOptionButton>
         </AddressSection>
-
-        <PaymentSection>
-          <h2>Forma de Pagamento</h2>
-          <PaymentOptionButton onClick={() => handlePaymentSelect('Maquineta')} selected={paymentMethod === 'Maquineta'}>
-            Maquineta
-          </PaymentOptionButton>
-          <PaymentOptionButton onClick={() => handlePaymentSelect('Dinheiro')} selected={paymentMethod === 'Dinheiro'}>
-            Dinheiro
-          </PaymentOptionButton>
-          <PaymentOptionButton onClick={() => handlePaymentSelect('Pix')} selected={paymentMethod === 'Pix'}>
-            Pix
-          </PaymentOptionButton>
-          {paymentMethod === 'Dinheiro' && (
+        {deliveryType === 'Entrega' && (
+          <AddressSection>
             <InputField
               type="number"
-              placeholder="Troco para quanto?"
-              value={changeAmount || ''}
-              onChange={(e) => setChangeAmount(Number(e.target.value))}
+              placeholder="CEP"
+              value={cep}
+              onChange={handleCepChange}
             />
+            <InputField
+              type="text"
+              placeholder="Número"
+              value={number}
+              onChange={e => setNumber(e.target.value)}
+            />
+            <InputField
+              type="text"
+              placeholder="Complemento"
+              value={complement}
+              onChange={e => setComplement(e.target.value)}
+            />
+            <InputField
+              type="text"
+              placeholder="Rua"
+              value={rua}
+              onChange={e => setRua(e.target.value)}
+              readOnly
+            />
+            <InputField
+              type="text"
+              placeholder="Bairro"
+              value={bairro}
+              onChange={e => setBairro(e.target.value)}
+              readOnly
+            />
+            <InputField
+              type="text"
+              placeholder="Cidade"
+              value={cidade}
+              onChange={e => setCidade(e.target.value)}
+              readOnly
+            />
+            {showMap && coordinates && (
+            <MapContainer>
+              <MapLoader>
+                <MyMapComponent coordinates={coordinates} />
+              </MapLoader>
+            </MapContainer>
           )}
-        </PaymentSection>
-
+          </AddressSection>
+          
+        )}
+        {deliveryType === 'Retirada' && (
+          <PickupInfo>
+            <h2>Retirada na Loja</h2>
+            <p>Endereço da loja: Avenida Jerônimo Gueiros, 299, Centro, Abreu e Lima</p>
+            {storeCoordinates && (
+            <MapContainer>
+              <MapLoader>
+                <MyMapComponent coordinates={storeCoordinates} />
+              </MapLoader>
+            </MapContainer>
+              )}
+            </PickupInfo>
+          
+        )}
         <SummarySection>
     <h2>Resumo do Pedido</h2>
     {cartItems.map(item => (
@@ -233,32 +346,83 @@ const FinalizarCompra: React.FC = () => {
           </p>
         </div>
       </CartItemSummary>
-    ))}
-    <FreightDetails>Frete: R${freight.toFixed(2)}</FreightDetails>
-    <TotalPrice>Total: R${(subtotal + freight).toFixed(2)}</TotalPrice>
-  </SummarySection>
-
+          ))}
+          <FreightDetails>Frete: R${freight.toFixed(2)}</FreightDetails>
+          <TotalPrice>Total: R${(subtotal + freight).toFixed(2)}</TotalPrice>
+        </SummarySection>
+        <PaymentSection>
+          <h2>Forma de Pagamento</h2>
+          <PaymentOptionButton onClick={() => handlePaymentSelect('Maquineta')} selected={paymentMethod === 'Maquineta'}>
+            Maquineta
+          </PaymentOptionButton>
+          <PaymentOptionButton onClick={() => handlePaymentSelect('Dinheiro')} selected={paymentMethod === 'Dinheiro'}>
+            Dinheiro
+          </PaymentOptionButton>
+          <PaymentOptionButton onClick={() => handlePaymentSelect('Pix')} selected={paymentMethod === 'Pix'}>
+            Pix
+          </PaymentOptionButton>
+          {paymentMethod === 'Dinheiro' && (
+            <InputField
+              type="number"
+              placeholder="Troco para quanto?"
+              value={changeAmount || ''}
+              onChange={(e) => setChangeAmount(Number(e.target.value))}
+              required
+            />
+          )}
+        </PaymentSection>
         <CheckoutButton onClick={handleFinalizeOrder}>
-          Finalizar Pedido
-        </CheckoutButton>
-
-        {formErrors.length > 0 && (
-          <ul>
+                Finalizar Pedido
+              </CheckoutButton>
+      </CheckoutContainer>
+      {formErrors.length > 0 && (
+        <div style={{
+          padding: '15px',
+          backgroundColor: '#f8d7da', // Cor de fundo vermelho claro para erros
+          color: '#721c24', // Cor do texto vermelho escuro
+          borderRadius: '5px',
+          border: '1px solid #f5c6cb', // Borda vermelha clara
+          marginBottom: '20px',
+          maxWidth: '400px',
+          margin: '0 auto'
+        }} role="alert">
+          <p style={{
+            margin: '0 0 10px 0',
+            fontWeight: 'bold'
+          }}>Por favor, corrija os seguintes erros:</p>
+          <ul style={{
+            padding: '0',
+            listStyleType: 'none',
+            margin: '0'
+          }}>
             {formErrors.map((error, index) => (
-              <li key={index}>{error}</li>
+              <li key={index} style={{
+                marginBottom: '5px',
+                padding: '5px 0'
+              }}>{error}</li>
             ))}
           </ul>
-        )}
+        </div>
+      )}
 
-        {/* Modal de Sucesso */}
-        {orderSuccess && (
-          <SuccessModal>
-            <h2>Pedido Enviado com Sucesso!</h2>
-          </SuccessModal>
-        )}
-      </CheckoutContainer>
+      {orderSuccess && (
+        <SuccessModal>
+          <h2>Pedido realizado com sucesso!</h2>
+          <p>Obrigado por sua compra. Seu pedido foi processado com sucesso.</p>
+          <button onClick={() => navigate('/sucess')}>Ir para página de sucesso</button>
+        </SuccessModal>
+      )}
     </>
   );
 };
 
 export default FinalizarCompra;
+
+
+
+
+
+
+
+          
+       
