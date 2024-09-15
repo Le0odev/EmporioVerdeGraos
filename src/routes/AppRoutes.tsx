@@ -16,41 +16,43 @@ import ListaProdutosGerenciamento from '../components/Notifies/GerenciarProdutos
 import EnviarPedido from '../components/Notifies/EnviarPedido/EnviarPedido';
 import { Footer } from '../components/Footer/Footer';
 import  Sidebar from '../components/Header/Sidebar';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import FinalizarCompra from '../pages/Catalog/FinalizarCompra';
+import PIX from 'react-qrcode-pix';
+
 
 const AppContainer = styled.div`
   display: flex;
   flex-direction: column;
   min-height: 100vh; // Garante que a altura da página ocupe a tela inteira
-
-
-`;  
+`;
 
 const MainContent = styled.div<{ showSidebar: boolean }>`
   flex: 1;
   padding: 1.5rem;
   background-color: #ccc;
   margin-left: ${(props) => (props.showSidebar ? '250px' : '0')};
-  transition: margin-left 00.3s;
+  transition: margin-left 0.3s;
 
   @media (max-width: 768px) {
     padding: 0;
     margin-left: 0;
-
   }
 `;
 
 export const AppRoutes = () => {
   const location = useLocation();
-  
+ 
 
+  const now = new Date().getTime().toString();
 
   // Defina as rotas onde a sidebar não deve aparecer
   const noSidebarRoutes = ['/catalogo', '/cart', '/finalizar-compra'];
 
   // Exibir a sidebar apenas se a rota atual não estiver na lista de rotas sem sidebar
   const showSidebar = !noSidebarRoutes.includes(location.pathname);
+
+
 
   return (
     <AppContainer>
@@ -65,10 +67,9 @@ export const AppRoutes = () => {
           <Route path="/relatorio" element={<RelatorioVendas />} />
           <Route path="/catalogo" element={<Catalog />} />
           <Route path="/cart" element={<Cart />} />
-          <Route path="/finalizar-compra" element={<FinalizarCompra/>} />
-          <Route path="/lista-pedidos" element={<ListaProdutosGerenciamento />} /> {/* Adicionar nova rota */}
+          <Route path="/finalizar-compra" element={<FinalizarCompra />} />
+          <Route path="/lista-pedidos" element={<ListaProdutosGerenciamento />} />
           <Route path="/lista-pedidos/enviar-pedido" element={<EnviarPedido />} />
-          
         </Routes>
         <ListaDeProdutos />
         <ToastContainer />

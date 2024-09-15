@@ -1,6 +1,28 @@
 import styled from 'styled-components';
 
 // Container do resumo do pedido
+export const PixContainer = styled.div`
+  padding: 20px;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  max-width: 800px;
+  margin: 0 auto;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+
+  @media (max-width: 768px) {
+    margin: 15px;
+    padding: 1rem;
+
+    & p {
+      font-size: 1.5rem;
+    }
+
+    
+  }
+`;
+
+
+// Container do resumo do pedido
 export const CheckoutContainer = styled.div`
   padding: 20px;
   background-color: #f9f9f9;
