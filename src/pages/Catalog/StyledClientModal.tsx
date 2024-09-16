@@ -21,6 +21,8 @@ export const ModalContent = styled.div`
   width: 300px;
   display: flex;
   flex-direction: column;
+  margin-bottom: 150px;
+
 
   &  h2{
     margin-bottom: 12px;

@@ -54,11 +54,7 @@ const Cart: React.FC = () => {
 
   const fetchSuggestions = async () => {
     try {
-      const response = await axios.get('https://systemallback-end-production.up.railway.app/products/all', {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const response = await axios.get('https://systemallback-end-production.up.railway.app/public/products/all');
       const allProducts: Product[] = response.data;
       const suggestedProducts = allProducts.filter((product) => 
         !cartItems.some((item) => item.id === product.id)

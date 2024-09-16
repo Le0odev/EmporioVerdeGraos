@@ -185,6 +185,23 @@ export const CartItemSummary = styled.div`
   }
 `;
 
+export const SuccessButton = styled.button`
+  background-color: #007bff;
+  color: #fff;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: bold;
+  margin-top: 10px;
+
+  &:hover {
+    background-color: #007bff;
+  }
+
+`;
+
 // Botão de checkout
 export const CheckoutButton = styled.button`
   background-color: #28a745;
@@ -236,7 +253,7 @@ export const PaymentOptionButton = styled.button<{ selected: boolean }>`
   font-weight: 600;
 
   &:hover {
-    background-color: ${({ selected }) => (selected ? '#0056b3' : '#e2e6ea')};
+    background-color: ${({ selected }) => (selected ? '#0056b3' : '')};
   }
 `;
 
@@ -263,25 +280,39 @@ export const QuantityInput = styled.input`
   }
 `;
 
+// Overlay para o modal
+export const Overlay = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5); /* Fundo semitransparente */
+  z-index: 999; /* Deve estar abaixo do modal */
+`;
+
+/// Modal de sucesso
 // Modal de sucesso
 export const SuccessModal = styled.div`
   position: fixed;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  background-color: #4caf50; /* Cor verde para sucesso */
+  background-color: #28a745; /* Verde mais escuro para maior contraste */
   color: white;
   padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  border-radius: 12px;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
   text-align: center;
-  z-index: 1000;
+  z-index: 1000; /* Acima do overlay */
   opacity: 0;
-  animation: fadeIn 0.5s forwards; /* Animação de fade-in */
+  animation: fadeIn 0.5s forwards;
+  width: 300px;
 
   h2 {
     margin: 0;
-    font-size: 24px;
+    font-size: 20px;
+    font-weight: 600;
   }
 
   @keyframes fadeIn {
@@ -295,25 +326,25 @@ export const SuccessModal = styled.div`
 `;
 
 export const MapContainer = styled.div`
-  position: relative;
-  margin-top: 20px;
-  margin-bottom: 20px;
+position: relative;
+margin-top: 20px;
+margin-bottom: 20px;
 `;
 
 
 export const PickupInfo = styled.div`
-  background-color: #f8f9fa;
-  padding: 15px;
-  border-radius: 8px;
-  border: 1px solid #dee2e6;
-  margin-bottom: 20px;
+background-color: #f8f9fa;
+padding: 15px;
+border-radius: 8px;
+border: 1px solid #dee2e6;
+margin-bottom: 20px;
 
-  h2 {
-    margin-bottom: 10px;
-  }
+h2 {
+  margin-bottom: 10px;
+}
 
-  p {
-    margin: 0;
-    font-size: 16px;
-  }
+p {
+  margin: 0;
+  font-size: 16px;
+}
 `;

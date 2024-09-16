@@ -17,12 +17,16 @@
     MapContainer,
     PickupInfo,
     PixContainer,
+    SuccessButton,
+    Overlay,
   } from './StyledCheckout'; // Adicione o estilo para o mapa
   import { useNavigate } from 'react-router-dom';
   import MapLoader from '../../components/MapApi/MapLoader'; // Importe o componente que carrega o script
   import MyMapComponent from '../../components/MapApi/MyMapComponent'; // Importe o componente do mapa
   import ClientModal from './ClientModal'; // Importe o componente do modal
 import PIX from 'react-qrcode-pix';
+import PixModal from './PixModal';
+import { toast } from 'react-toastify';
 
 
   interface ClientInfo {
@@ -68,18 +72,11 @@ import PIX from 'react-qrcode-pix';
     const [showMap, setShowMap] = useState(false); // Estado para mostrar o mapa de confirmação
     const [clientInfo, setClientInfo] = useState<ClientInfo>({ name: '', phone: '' });
     const [showModal, setShowModal] = useState<boolean>(true); // Para exibir o modal
-    const [fullPIX, setFullPIX] = useState("");
-    const hasLoaded = useRef(false); // Track if onLoad has been executed
+    const [showPixModal, setShowPixModal] = useState<boolean>(false); // Estado para o modal do Pix
 
 
-      // Use useCallback to avoid unnecessary re-renders
-    const handleLoad = useCallback((newPIX: React.SetStateAction<string>) => {
-        if (!hasLoaded.current) {
-            setFullPIX(newPIX);
-            hasLoaded.current = true; // Prevent further updates
-        }
-    }, []);
 
+ 
 
     
   // Coordenadas para a loja
@@ -198,68 +195,62 @@ import PIX from 'react-qrcode-pix';
     const handlePaymentSelect = (method: string) => {
       setPaymentMethod(method);
     };
-
+  
     const handleFinalizeOrder = () => {
       const errors: string[] = [];
       
-      // Validação do tipo de entrega
       if (deliveryType === 'Entrega') {
         if (!cep) errors.push('CEP é obrigatório');
         if (!number) errors.push('Número é obrigatório');
       }
       
-      // Validação do método de pagamento
       if (!paymentMethod) errors.push('Método de pagamento é obrigatório');
       
-      // Validação específica para pagamento em dinheiro
       if (paymentMethod === 'Dinheiro' && (changeAmount === null || changeAmount < subtotal + freight)) {
         errors.push('O valor inserido para troco deve ser maior ou igual ao total.');
       }
       
       if (errors.length > 0) {
-        setFormErrors(errors);
+        // Exibe os erros usando toastify
+        errors.forEach(error => toast.error(error));
         return;
       }
-    
-      // Calcula o valor total
+  
       const total = subtotal + freight;
-    
-      // Cria a mensagem do pedido
       const orderMessage = `Pedido:\n${cartItems.map(item => {
         const subtotalItem = item.bulk
           ? ((item.productPrice / 1000) * (item.weight || 0)).toFixed(2)
           : (item.productPrice * (item.quantity || 0)).toFixed(2);
         return `${item.productName} - Quantidade: ${item.bulk ? (item.weight || 0) + ' kg' : item.quantity} - Subtotal: R$${subtotalItem}`;
       }).join('\n\n')}\n\nEndereço: ${cidade}, ${bairro}, ${rua}, ${number}, ${complement} \n\nResumo da Compra:\nSubtotal: R$${subtotal.toFixed(2)}\nFrete: R$${freight.toFixed(2)}\n\nTotal: R$${total.toFixed(2)}\n`;
-    
-      // Adiciona o método de pagamento e troco, se aplicável
+  
       const paymentDetails = paymentMethod === 'Dinheiro'
         ? `\nO cliente irá pagar: R$${changeAmount?.toFixed(2)}\nTroco: R$${(changeAmount ? changeAmount - total : 0).toFixed(2)}`
         : `\nMétodo de Pagamento: ${paymentMethod}`;
-    
+  
       const clientDetails = `\n\nNome do Cliente: ${clientInfo.name}\nTelefone: ${clientInfo.phone}`;
-    
-      // Adiciona o link do mapa, se as coordenadas estiverem disponíveis
       const mapLink = coordinates ? `\n\nLocalização no Mapa:\nhttps://www.google.com/maps?q=${coordinates.lat},${coordinates.lng}` : '';
-    
-      // Mensagem completa
       const fullMessage = `${orderMessage}${paymentDetails}${mapLink}${clientDetails}`;
-    
-      // Codifica a mensagem para a URL
       const encodedMessage = encodeURIComponent(fullMessage);
-      const phoneNumber = '5551999999999'; // Substitua pelo número de telefone desejado
-    
-      // Cria a URL do WhatsApp
+      const phoneNumber = '5551999999999';
       const whatsappUrl = `https://api.whatsapp.com/send?phone=${phoneNumber}&text=${encodedMessage}`;
-    
+      
       // Abre a URL do WhatsApp
       window.open(whatsappUrl, '_blank');
-    
-      // Limpa o carrinho e navega para a página de sucesso
-      clearCart();
+      
+       // Exibe o modal de Pix se o método de pagamento for Pix
+       if (paymentMethod === 'Pix') {
+        setShowPixModal(true);
+      }
       setOrderSuccess(true);
+      
+     
     };
     
+    const handleSuccessRedirect = () => {
+      clearCart(); // Limpa o carrinho
+      navigate('/sucess');
+    };
     
 
     const handleBackToCart = () => {
@@ -392,71 +383,30 @@ import PIX from 'react-qrcode-pix';
                 required
               />
             )}
-            {paymentMethod === 'Pix' && (
-            <PixContainer>
-            <PIX 
-                pixkey="leonardovinicius09@hotmail.com"
-                merchant="Guilherme Neves"
-                city="Paraíba do Sul"
-                cep="25.850-000"
-                code={"RQP" + now}
-                amount={subtotal + freight}
-                onLoad={handleLoad}
-                resize={284}
-                variant="fluid"
-                padding={30}
-                color="#357"
-                bgColor="#def"
-                bgRounded
-                divider
-            />
-                <p>
-                <code>{fullPIX}</code>
-            </p>
-            </PixContainer>
-          )}
           </PaymentSection>
           <CheckoutButton onClick={handleFinalizeOrder}>
                   Finalizar Pedido
                 </CheckoutButton>
         </CheckoutContainer>
-        {formErrors.length > 0 && (
-          <div style={{
-            padding: '15px',
-            backgroundColor: '#f8d7da', // Cor de fundo vermelho claro para erros
-            color: '#721c24', // Cor do texto vermelho escuro
-            borderRadius: '5px',
-            border: '1px solid #f5c6cb', // Borda vermelha clara
-            marginBottom: '20px',
-            maxWidth: '400px',
-            margin: '0 auto'
-          }} role="alert">
-            <p style={{
-              margin: '0 0 10px 0',
-              fontWeight: 'bold'
-            }}>Por favor, corrija os seguintes erros:</p>
-            <ul style={{
-              padding: '0',
-              listStyleType: 'none',
-              margin: '0'
-            }}>
-              {formErrors.map((error, index) => (
-                <li key={index} style={{
-                  marginBottom: '5px',
-                  padding: '5px 0'
-                }}>{error}</li>
-              ))}
-            </ul>
-          </div>
-        )}
-
-        {orderSuccess && (
-          <SuccessModal>
-            <h2>Pedido realizado com sucesso!</h2>
-            <p>Obrigado por sua compra. Seu pedido foi processado com sucesso.</p>
-            <button onClick={() => navigate('/sucess')}>Ir para página de sucesso</button>
-          </SuccessModal>
-        )}
+        {orderSuccess && !showPixModal && (
+          <>
+          <Overlay />
+        <SuccessModal>
+          <h2>Pedido realizado com sucesso!</h2>
+          <p>Obrigado por sua compra. Seu pedido foi processado com sucesso.</p>
+          <SuccessButton onClick={handleSuccessRedirect}>Ir para página de sucesso</SuccessButton >
+        </SuccessModal>
+        </>
+      )}     
+       <PixModal
+          show={showPixModal}
+          isOpen={showPixModal} // Ajuste conforme necessário
+          onRequestClose={() => setShowPixModal(false)} // Ajuste conforme necessário
+          subtotal={subtotal} // Ajuste conforme necessário
+          freight={freight} // Ajuste conforme necessário
+          fullPIX={''} now={0} 
+          />
+        
       </>
     );
   };

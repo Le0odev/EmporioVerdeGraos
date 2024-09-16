@@ -19,6 +19,7 @@ import  Sidebar from '../components/Header/Sidebar';
 import { useState, useEffect } from 'react';
 import FinalizarCompra from '../pages/Catalog/FinalizarCompra';
 import PIX from 'react-qrcode-pix';
+import SuccessPage from '../pages/Catalog/Sucess';
 
 
 const AppContainer = styled.div`
@@ -47,7 +48,7 @@ export const AppRoutes = () => {
   const now = new Date().getTime().toString();
 
   // Defina as rotas onde a sidebar não deve aparecer
-  const noSidebarRoutes = ['/catalogo', '/cart', '/finalizar-compra'];
+  const noSidebarRoutes = ['/catalogo', '/cart', '/finalizar-compra', '/sucess'];
 
   // Exibir a sidebar apenas se a rota atual não estiver na lista de rotas sem sidebar
   const showSidebar = !noSidebarRoutes.includes(location.pathname);
@@ -68,6 +69,7 @@ export const AppRoutes = () => {
           <Route path="/catalogo" element={<Catalog />} />
           <Route path="/cart" element={<Cart />} />
           <Route path="/finalizar-compra" element={<FinalizarCompra />} />
+          <Route path="/sucess" element={<SuccessPage />} />
           <Route path="/lista-pedidos" element={<ListaProdutosGerenciamento />} />
           <Route path="/lista-pedidos/enviar-pedido" element={<EnviarPedido />} />
         </Routes>
