@@ -20,6 +20,7 @@ import { useState, useEffect } from 'react';
 import FinalizarCompra from '../pages/Catalog/FinalizarCompra';
 import PIX from 'react-qrcode-pix';
 import SuccessPage from '../pages/Catalog/Sucess';
+import Dashboard from '../pages/Homes/AdminHome';
 
 declare const H: any;
 
@@ -63,6 +64,8 @@ export const AppRoutes = () => {
 
         <Routes>
           <Route path='/login' element={<Login />} />
+          <Route path='/admin-home' element={<Dashboard />} />
+
           <Route path="/cadastrar-produto" element={<CadastrarProduto />} />
           <Route path="/cadastrar-categoria" element={<CadastrarCategoria />} />
           <Route path="/criar-venda" element={<CriarVenda />} />
