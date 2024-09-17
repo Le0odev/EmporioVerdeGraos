@@ -33,7 +33,7 @@ const ClientModal: React.FC<ClientModalProps> = ({ onSave }) => {
 
           <Label>Celular:</Label>
           <Input
-            type="text"
+            type="number"
             value={clientPhone}
             onChange={(e) => setClientPhone(e.target.value)}
             placeholder="Celular (WPP)"

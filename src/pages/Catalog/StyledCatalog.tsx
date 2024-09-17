@@ -37,8 +37,9 @@ export const Header = styled.header`
 `;
 
 export const CatalogContainer = styled.div`
-  margin: 10px;
-  margin-top: rem;
+  margin: 10px auto;
+  width: 80%;
+  height: 80%;
   background-color: ${colors.background};
   padding: 2rem;
   min-height: calc(100vh - 4rem);
@@ -50,8 +51,19 @@ export const CatalogContainer = styled.div`
   box-sizing: border-box;
 
   @media (max-width: 768px) {
+    width: 94%;
+    height: 80%;
+    margin: 10px auto;
     padding: 1rem;
     gap: 1rem;
+    background-color: ${colors.background};
+    min-height: calc(100vh - 4rem);
+    display: flex;
+    flex-direction: column;
+    border-radius: 16px;
+    box-shadow: 0 4px 8px ${colors.shadow}; 
+    box-sizing: border-box;
+    
   }
 `;
 
@@ -203,20 +215,32 @@ export const ProductCard = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 1.25rem; // Aumentei um pouco o padding
+  padding: 0.8rem; // Aumentei um pouco o padding
   text-align: center;
   position: relative;
 
 
   &:hover {
     box-shadow: 0 6px 12px ${colors.shadow};
-    transform: translateY(-6px);
+    transform: translateY(-3px);
     cursor: pointer;
   }
 
   @media (max-width: 768px) {
-    box-shadow: 0 2px 4px ${colors.shadow};
-    padding: 1rem; 
+  background-color: ${colors.secondary};
+  border: 1px solid ${colors.border};
+  border-radius: 8px;
+  box-shadow: 0 4px 8px ${colors.shadow};
+  overflow: hidden;
+  transition: box-shadow 0.3s ease, transform 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1.25rem; // Aumentei um pouco o padding
+  text-align: center;
+  position: relative;
+  box-shadow: 0 2px 4px ${colors.shadow};
+  padding: 1rem; 
   }
 `;
 
@@ -247,7 +271,7 @@ export const AddToCartButton = styled.button`
 `;
 
 export const ProductImage = styled.img`
-  width: 100%;
+  width: 80px;
   object-fit: cover;
   background-color: ${colors.background}
   border-radius: 6px;
@@ -255,6 +279,10 @@ export const ProductImage = styled.img`
 
   @media (max-width: 768px) {
     object-fit: cover;
+    border-radius: 6px;
+     width: 100%;
+    object-fit: cover;
+    background-color: ${colors.background}
     border-radius: 6px;
   }
 `;

@@ -5,13 +5,12 @@ import styled from 'styled-components';
 
 // Container do carrinho
 export const CartContainer = styled.div`
-  width: 90%; // Diminui a largura do container
+  width: 100%; // Diminui a largura do container
   max-width: 600px; // Define um tamanho máximo para não expandir muito em telas maiores
   margin: 0 auto; // Centraliza o container
   background-color: #fff;
-  width: 90%; // Diminui a largura do container
   max-width: 600px; // Define um tamanho máximo para não expandir muito em telas maiores
-  margin: 0 auto; // Centraliza o container
+  margin-top:
   background-color: #fff;
   padding: 1rem;
   border-radius: 16px;

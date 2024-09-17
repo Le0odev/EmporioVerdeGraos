@@ -21,6 +21,7 @@ import FinalizarCompra from '../pages/Catalog/FinalizarCompra';
 import PIX from 'react-qrcode-pix';
 import SuccessPage from '../pages/Catalog/Sucess';
 
+declare const H: any;
 
 const AppContainer = styled.div`
   display: flex;

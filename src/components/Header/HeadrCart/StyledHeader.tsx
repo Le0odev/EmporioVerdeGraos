@@ -31,7 +31,8 @@ export const Header = styled.header`
   box-sizing: border-box;
 
   @media (min-width: 769px) {
-    display: none; /* Esconde o footer em telas maiores */
+    margin-top: -24px;
+    margin-bottom: 15px;
   }
 
   @media (max-width: 768px) {
@@ -69,8 +70,8 @@ export const IconButton = styled.button`
 
   span {
     position: absolute;
-    top: 13px; // Ajuste conforme necessário
-    right: 11px; // Ajuste conforme necessário
+    top: 25px; // Ajuste conforme necessário
+    right: 3.2rem;; // Ajuste conforme necessário
     background: red;
     color: white;
     border-radius: 50%;
@@ -88,6 +89,25 @@ export const IconButton = styled.button`
 
   @media (max-width: 768px) {
     font-size: 1.55rem;
+
+  span {
+    position: absolute;
+    top: 13px; // Ajuste conforme necessário
+    right: 11px; // Ajuste conforme necessário
+    background: red;
+    color: white;
+    border-radius: 50%;
+    padding: 1.5px 6px;
+    font-size: 12px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  }
+
+
   }
 `;
 

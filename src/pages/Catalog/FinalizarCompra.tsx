@@ -73,9 +73,15 @@ import { toast } from 'react-toastify';
     const [clientInfo, setClientInfo] = useState<ClientInfo>({ name: '', phone: '' });
     const [showModal, setShowModal] = useState<boolean>(true); // Para exibir o modal
     const [showPixModal, setShowPixModal] = useState<boolean>(false); // Estado para o modal do Pix
+    const [cepError, setCepError] = useState(false);
+    const [numberError, setNumberError] = useState(false);
+    const [paymentMethodError, setPaymentMethodError] = useState(false);
+    const [changeAmountError, setChangeAmountError] = useState(false);
 
-
-
+    const cepRef = useRef<HTMLInputElement>(null);
+    const numberRef = useRef<HTMLInputElement>(null);
+    const paymentMethodRef = useRef<HTMLSelectElement>(null);
+    const changeAmountRef = useRef<HTMLInputElement>(null);
  
 
     
@@ -140,32 +146,37 @@ import { toast } from 'react-toastify';
     const handleCepChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
       const newCep = e.target.value;
       setCep(newCep);
-
+    
       if (newCep.length === 8) {
         try {
           const response = await fetch(`https://viacep.com.br/ws/${newCep}/json/`);
           const data = await response.json();
-
+    
           if (!data.erro) {
             setRua(data.logradouro || '');
             setBairro(data.bairro || '');
             setCidade(data.localidade || '');
             setAddress(`${data.logradouro}, ${data.bairro}, ${data.localidade}`);
-
+    
             // Detectar região e calcular frete
             const region = getRegionFromCep(newCep);
             const calculatedFreight = getFreightByRegion(region);
             setFreight(calculatedFreight);
-
-            // Buscar coordenadas
-            const mapResponse = await fetch(
-              `https://maps.googleapis.com/maps/api/geocode/json?address=${newCep}&key=AIzaSyDsOFyfLUkr6YfHgSC96aneAaGxhjQ6_Zk`
-            );
-            const mapData = await mapResponse.json();
-            if (mapData.results.length > 0) {
-              const location = mapData.results[0].geometry.location;
+    
+            // Buscar coordenadas usando HERE API
+            const geoResponse = await fetch(`https://geocode.search.hereapi.com/v1/geocode?q=${newCep}&apiKey=wlYVB-MrHJ_615NeIzWUZ9XsXzZcbe5yAlmk1EjcH2w`);
+            const geoData = await geoResponse.json();
+            if (geoData.items.length > 0) {
+              const location = geoData.items[0].position;
               setCoordinates({ lat: location.lat, lng: location.lng });
               setShowMap(true); // Exibir o mapa após obter coordenadas
+            } else {
+              alert("CEP não encontrado");
+              setRua('');
+              setBairro('');
+              setCidade('');
+              setFreight(0);
+              setShowMap(false); // Esconder o mapa se o CEP não for encontrado
             }
           } else {
             alert("CEP não encontrado");
@@ -198,23 +209,53 @@ import { toast } from 'react-toastify';
   
     const handleFinalizeOrder = () => {
       const errors: string[] = [];
+      let hasError = false;
+
     
-      if (deliveryType === 'Entrega') {
-        if (!cep) errors.push('CEP é obrigatório');
-        if (!number) errors.push('Número é obrigatório');
-      }
-    
-      if (!paymentMethod) errors.push('Método de pagamento é obrigatório');
-    
-      if (paymentMethod === 'Dinheiro' && (changeAmount === null || changeAmount < subtotal + freight)) {
-        errors.push('O valor inserido para troco deve ser maior ou igual ao total.');
-      }
-    
-      if (errors.length > 0) {
-        // Exibe os erros usando toastify
-        errors.forEach(error => toast.error(error));
-        return;
-      }
+      // Resetando os erros
+        setCepError(false);
+        setNumberError(false);
+        setPaymentMethodError(false);
+        setChangeAmountError(false);
+
+        if (deliveryType === 'Entrega') {
+          if (!cep) {
+            errors.push('CEP é obrigatório');
+            setCepError(true); // Marcar o erro no CEP
+            hasError = true;
+            cepRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' }); // Scroll suave até o CEP
+
+          }
+          if (!number) {
+            errors.push('Número é obrigatório');
+            setNumberError(true); // Marcar o erro no número
+            hasError = true;
+            numberRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' }); // Scroll suave até o Número
+
+          }
+        }
+
+        if (!paymentMethod) {
+          errors.push('Método de pagamento é obrigatório');
+          setPaymentMethodError(true); // Marcar erro no método de pagamento
+          hasError = true;
+          paymentMethodRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' }); // Scroll suave até o Método de Pagamento
+
+        }
+
+        if (paymentMethod === 'Dinheiro' && (changeAmount === null || changeAmount < subtotal + freight)) {
+          errors.push('O valor inserido para troco deve ser maior ou igual ao total.');
+          setChangeAmountError(true); // Marcar erro no valor do troco
+          hasError = true;
+          changeAmountRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' }); // Scroll suave até o Valor de Troco
+
+        }
+
+        if (hasError) {
+          // Exibe os erros usando toastify
+          errors.forEach(error => toast.error(error));
+          return;
+        }
     
       const total = subtotal + freight;
       const orderMessage = `Pedido:\n${cartItems.map(item => {
@@ -287,13 +328,18 @@ import { toast } from 'react-toastify';
               <InputField
                 type="number"
                 placeholder="CEP"
+                ref={cepRef} // Associando o ref
+                style={{ borderColor: cepError ? 'red' : '' }} // Alterar a cor da borda se houver erro
                 value={cep}
                 onChange={handleCepChange}
               />
               <InputField
-                type="text"
+                type="number"
                 placeholder="Número"
+                ref={cepRef} // Associando o ref
                 value={number}
+                style={{ borderColor: numberError ? 'red' : '' }} // Alterar a cor da borda se houver erro
+
                 onChange={e => setNumber(e.target.value)}
               />
               <InputField
@@ -372,7 +418,7 @@ import { toast } from 'react-toastify';
           <PaymentSection>
             <h2>Forma de Pagamento</h2>
             <PaymentOptionButton onClick={() => handlePaymentSelect('Maquineta')} selected={paymentMethod === 'Maquineta'}>
-              Maquineta
+              Cartão
             </PaymentOptionButton>
             <PaymentOptionButton onClick={() => handlePaymentSelect('Dinheiro')} selected={paymentMethod === 'Dinheiro'}>
               Dinheiro
@@ -385,7 +431,9 @@ import { toast } from 'react-toastify';
               <InputField
                 type="number"
                 placeholder="Troco para quanto?"
+                ref={changeAmountRef} // Associando o ref
                 value={changeAmount || ''}
+                style={{ borderColor: changeAmountError ? 'red' : '' }} // Alterar a cor da borda se houver erro
                 onChange={(e) => setChangeAmount(Number(e.target.value))}
                 required
               />

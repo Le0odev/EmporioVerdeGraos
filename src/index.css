@@ -15,3 +15,20 @@ body{
     margin-left: 0;
     }
   }
+
+  a.custom-link {
+    color: #28a745; /* Verde */
+    text-decoration: none;
+    font-weight: bold;
+  }
+  
+  a.custom-link:hover {
+    color: #218838; /* Verde escuro para hover */
+    text-decoration: underline;
+  }
+
+  /* Oculta a atribuição do OpenStreetMap */
+.leaflet-control-attribution {
+    display: none !important;
+  }
+  
