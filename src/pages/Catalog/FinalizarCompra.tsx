@@ -198,24 +198,24 @@ import { toast } from 'react-toastify';
   
     const handleFinalizeOrder = () => {
       const errors: string[] = [];
-      
+    
       if (deliveryType === 'Entrega') {
         if (!cep) errors.push('CEP é obrigatório');
         if (!number) errors.push('Número é obrigatório');
       }
-      
+    
       if (!paymentMethod) errors.push('Método de pagamento é obrigatório');
-      
+    
       if (paymentMethod === 'Dinheiro' && (changeAmount === null || changeAmount < subtotal + freight)) {
         errors.push('O valor inserido para troco deve ser maior ou igual ao total.');
       }
-      
+    
       if (errors.length > 0) {
         // Exibe os erros usando toastify
         errors.forEach(error => toast.error(error));
         return;
       }
-  
+    
       const total = subtotal + freight;
       const orderMessage = `Pedido:\n${cartItems.map(item => {
         const subtotalItem = item.bulk
@@ -223,33 +223,40 @@ import { toast } from 'react-toastify';
           : (item.productPrice * (item.quantity || 0)).toFixed(2);
         return `${item.productName} - Quantidade: ${item.bulk ? (item.weight || 0) + ' kg' : item.quantity} - Subtotal: R$${subtotalItem}`;
       }).join('\n\n')}\n\nEndereço: ${cidade}, ${bairro}, ${rua}, ${number}, ${complement} \n\nResumo da Compra:\nSubtotal: R$${subtotal.toFixed(2)}\nFrete: R$${freight.toFixed(2)}\n\nTotal: R$${total.toFixed(2)}\n`;
-  
+    
       const paymentDetails = paymentMethod === 'Dinheiro'
         ? `\nO cliente irá pagar: R$${changeAmount?.toFixed(2)}\nTroco: R$${(changeAmount ? changeAmount - total : 0).toFixed(2)}`
         : `\nMétodo de Pagamento: ${paymentMethod}`;
-  
+    
       const clientDetails = `\n\nNome do Cliente: ${clientInfo.name}\nTelefone: ${clientInfo.phone}`;
       const mapLink = coordinates ? `\n\nLocalização no Mapa:\nhttps://www.google.com/maps?q=${coordinates.lat},${coordinates.lng}` : '';
       const fullMessage = `${orderMessage}${paymentDetails}${mapLink}${clientDetails}`;
       const encodedMessage = encodeURIComponent(fullMessage);
       const phoneNumber = '5551999999999';
       const whatsappUrl = `https://api.whatsapp.com/send?phone=${phoneNumber}&text=${encodedMessage}`;
-      
+    
       // Abre a URL do WhatsApp
       window.open(whatsappUrl, '_blank');
-      
-       // Exibe o modal de Pix se o método de pagamento for Pix
-       if (paymentMethod === 'Pix') {
+    
+      // Exibe o modal de Pix se o método de pagamento for Pix
+      if (paymentMethod === 'Pix') {
         setShowPixModal(true);
       }
-      setOrderSuccess(true);
       
-     
+      // Define que o pedido foi finalizado com sucesso
+      setOrderSuccess(true);
+    
     };
     
     const handleSuccessRedirect = () => {
       clearCart(); // Limpa o carrinho
-      navigate('/sucess');
+      navigate('/sucess', {
+        state: {
+          subtotal,
+          freight,
+          now: Date.now(), // ou qualquer outra informação relevante
+        },
+      });
     };
     
 

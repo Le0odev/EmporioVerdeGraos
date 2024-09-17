@@ -1,6 +1,6 @@
 // src/pages/Success.tsx
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import styled from 'styled-components';
 import HeaderCart from '../../components/Header/HeadrCart/HeaderCart';
 import PixModal from './PixModal'; // Ajuste o caminho conforme necessário
@@ -14,6 +14,7 @@ const SuccessContainer = styled.div`
   background-color: #f4f4f4;
   text-align: center;
   padding: 20px;
+  box-sizing: border-box;
 `;
 
 const SuccessMessage = styled.h1`
@@ -89,7 +90,28 @@ const GeneratePixButton = styled.button`
 
 const SuccessPage: React.FC = () => {
   const [isPixModalVisible, setPixModalVisible] = useState(false);
+  const location = useLocation();
   const navigate = useNavigate();
+
+  // Verifique se location.state não é nulo
+  const state = location.state as {
+    subtotal?: number;
+    freight?: number;
+    now?: number;
+  };
+
+  // Defina valores padrão se os dados não estiverem disponíveis
+  const subtotal = state.subtotal ?? 0;
+  const freight = state.freight ?? 0;
+  const now = state.now ?? Date.now();
+
+  // Dados do PIX - substitua conforme necessário
+  const pixData = {
+    subtotal,
+    freight,
+    fullPIX: "1", // 
+    now
+  };
 
   const handleBackToCatalog = () => {
     navigate('/catalogo');
@@ -102,11 +124,6 @@ const SuccessPage: React.FC = () => {
   const handleClosePixModal = () => {
     setPixModalVisible(false); // Fechar o modal do PIX
   };
-
-  const subtotal = 100; // Exemplo, ajuste conforme necessário
-  const freight = 10; // Exemplo, ajuste conforme necessário
-  const fullPIX = "123456789"; // Exemplo, ajuste conforme necessário
-  const now = Date.now(); // Exemplo de timestamp, ajuste conforme necessário
 
   return (
     <>
@@ -140,10 +157,10 @@ const SuccessPage: React.FC = () => {
         show={isPixModalVisible}
         isOpen={isPixModalVisible}
         onRequestClose={handleClosePixModal}
-        subtotal={subtotal}
-        freight={freight}
-        fullPIX={fullPIX}
-        now={now}
+        subtotal={pixData.subtotal}
+        freight={pixData.freight}
+        fullPIX={pixData.fullPIX}
+        now={pixData.now}
       />
     </>
   );
