@@ -80,7 +80,7 @@ export const Input = styled.input`
 // Botão de envio do formulário
 export const Button = styled.button`
   padding: 10px 15px;
-  background-color: #28a745;
+  background-color: #007bff;
   color: white;
   border: none;
   border-radius: 4px;
@@ -89,7 +89,7 @@ export const Button = styled.button`
   margin-top: 10px;
 
   &:hover {
-    background-color: #218838;
+    background-color: #0056b3;
   }
 
   @media (max-width: 768px) {
