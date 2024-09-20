@@ -16,17 +16,15 @@
     SuccessModal,
     MapContainer,
     PickupInfo,
-    PixContainer,
     SuccessButton,
     Overlay,
   } from './StyledCheckout'; // Adicione o estilo para o mapa
   import { useNavigate } from 'react-router-dom';
   import MapLoader from '../../components/MapApi/MapLoader'; // Importe o componente que carrega o script
   import MyMapComponent from '../../components/MapApi/MyMapComponent'; // Importe o componente do mapa
-  import ClientModal from './ClientModal'; // Importe o componente do modal
-import PIX from 'react-qrcode-pix';
-import PixModal from './PixModal';
-import { toast } from 'react-toastify';
+  import ClientModal from './ModalsCatalog/ClientModal'; // Importe o componente do modal
+  import PixModal from './ModalsCatalog/PixModal';
+  import { toast } from 'react-toastify';
 
 
   interface ClientInfo {

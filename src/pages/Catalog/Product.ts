@@ -22,6 +22,7 @@ export interface Product {
   productQuantity?: number;
   estoquePeso: number;
   categoryId: number;
+  productDescription: string;
 }
 
 export interface Category {

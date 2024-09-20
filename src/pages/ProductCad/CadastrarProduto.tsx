@@ -288,6 +288,15 @@ const CadastrarProduto: React.FC = () => {
                 placeholder="Digite o nome do produto"
                 required
               />
+              <Label htmlFor="nome">Descrição do Produto</Label>
+              <Input
+                type="text"
+                id="descricao"
+                value={descricao}
+                onChange={(e) => setDescricao(e.target.value)}
+                placeholder="Digite a descrição do produto"
+                required
+              />
               <Label htmlFor="codigoBarras">Código de Barras</Label>
               <Input
                 type="text"

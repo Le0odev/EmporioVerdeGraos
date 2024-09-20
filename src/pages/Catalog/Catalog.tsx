@@ -2,8 +2,8 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useCart } from './CartContext';
-import WeightModal from './WeightModal';
-import QuestionModal from './QuestionModal';
+import WeightModal from './ModalsCatalog/WeightModal';
+import QuestionModal from './ModalsCatalog/QuestionModal';
 import {
   CatalogContainer,
   SearchBar,
@@ -22,6 +22,7 @@ import { Category, Product } from './Product';
 import { FiSearch } from 'react-icons/fi';
 import { useNavigate } from 'react-router-dom';
 import HeaderCart from '../../components/Header/HeadrCart/HeaderCart';
+import ProductDescriptionModal from './ModalsCatalog/ProducDescriptionModal';
 
 const Catalog: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState<string>('');
@@ -33,10 +34,17 @@ const Catalog: React.FC = () => {
   const [modalOpen, setModalOpen] = useState<boolean>(false);
   const [currentProduct, setCurrentProduct] = useState<Product | null>(null);
   const [questionModalOpen, setQuestionModalOpen] = useState<boolean>(false);
-
+  const [expandedProduct, setExpandedProduct] = useState<Product | null>(null);
+  const [descriptionModalOpen, setDescriptionModalOpen] = useState<boolean>(false);
   const { addToCart, getCartItemCount } = useCart();
   const navigate = useNavigate();
   const itemCount = getCartItemCount();
+
+
+  const handleToggleDescription = (product: Product) => {
+    // Se o produto já estiver expandido, colapsa; caso contrário, expande
+    setExpandedProduct(expandedProduct?.id === product.id ? null : product);
+  };
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -104,6 +112,15 @@ const Catalog: React.FC = () => {
     setQuestionModalOpen(false);
   };
 
+  const handleOpenDescriptionModal = (product: Product) => {
+    setCurrentProduct(product);
+    setDescriptionModalOpen(true);
+  };
+
+  const handleCloseDescriptionModal = () => {
+    setDescriptionModalOpen(false);
+  };
+
   return (
     <>
       <HeaderCart handleGoToCart={handleGoToCart} />
@@ -137,19 +154,25 @@ const Catalog: React.FC = () => {
           <p>{error}</p>
         ) : (
           <ProductList>
-            {products.map((product) => (
-              <ProductCard key={product.id}>
-                <ProductImage src={product.imageUrl} alt={product.productName} />
-                <ProductName>{product.productName}</ProductName>
-                <ProductPrice>R${product.productPrice.toFixed(2)}</ProductPrice>
-                <AddToCartButton onClick={() => handleAddToCart(product)}>
-                  Comprar
-                </AddToCartButton>
-              </ProductCard>
-            ))}
-          </ProductList>
+          {products.map((product) => (
+            <ProductCard key={product.id} onClick={() => handleOpenDescriptionModal(product)}>
+              <ProductImage src={product.imageUrl} alt={product.productName} />
+              <ProductName>{product.productName}</ProductName>
+              <ProductPrice>R${product.productPrice.toFixed(2)}</ProductPrice>
+              <AddToCartButton onClick={(e) => { e.stopPropagation(); handleAddToCart(product); }}>
+                Comprar
+              </AddToCartButton>
+            </ProductCard>
+          ))}
+        </ProductList>
         )}
       </CatalogContainer>
+      <ProductDescriptionModal
+        product={currentProduct}
+        isOpen={descriptionModalOpen}
+        onClose={handleCloseDescriptionModal}
+        onBuy={handleAddToCart}
+      />
       <WeightModal
         isOpen={modalOpen}
         onClose={() => setModalOpen(false)}

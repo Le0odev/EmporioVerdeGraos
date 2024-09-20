@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Button, Form, Input, Label, ModalContainer, ModalContent } from './StyledClientModal';
+import { Button, Form, Input, Label, ModalContainer, ModalContent } from '../StyledModals/StyledClientModal';
 
 // Definimos a interface para as propriedades do modal
 interface ClientModalProps {

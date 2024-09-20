@@ -25,7 +25,7 @@ import {
 import { useNavigate } from 'react-router-dom';
 import { CartItem as CartItemType, Product } from './Product';
 import { useAuth } from '../Login/authContext';
-import WeightModalCart from './WeightModalCart';
+import WeightModalCart from './ModalsCatalog/WeightModalCart';
 import SuggestionsCarousel from './SuggestionsCarousel'; // Importando o carrossel
 
 const SUGGESTION_LIMIT = 3;

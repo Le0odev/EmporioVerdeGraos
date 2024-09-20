@@ -89,7 +89,7 @@ export const Button = styled.button`
   margin-top: 10px;
 
   &:hover {
-    background-color: #0056b3;
+    background-color: #0056b3 ;
   }
 
   @media (max-width: 768px) {

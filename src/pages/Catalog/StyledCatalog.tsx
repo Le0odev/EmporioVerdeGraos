@@ -272,6 +272,7 @@ export const AddToCartButton = styled.button`
 
 export const ProductImage = styled.img`
   width: 80px;
+  height: 80px;
   object-fit: cover;
   background-color: ${colors.background}
   border-radius: 6px;

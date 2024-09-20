@@ -1,10 +1,14 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import axios from 'axios';
 import styled from 'styled-components';
 import { useAuth } from '../Login/authContext';
 import { format } from 'date-fns';
 import Overview from './OverView';
 import { useNavigate } from 'react-router-dom';
+import html2pdf from 'html2pdf.js';
+import { MdAddShoppingCart, MdOutlineCategory, MdOutlineSpaceDashboard, MdProductionQuantityLimits, MdViewList } from 'react-icons/md';
+import { BsDownload } from "react-icons/bs";
+
 
 
 const DashboardWrapper = styled.div`
@@ -12,6 +16,12 @@ const DashboardWrapper = styled.div`
   flex-direction: column;
   width: 100%;
   padding: 20px;
+  margin-top: -15px;
+
+   @media (max-width: 768px) {
+    padding: 10px;
+    margin-top: 0.5px;
+  }
 `;
 
 const TopBar = styled.div`
@@ -19,6 +29,14 @@ const TopBar = styled.div`
   justify-content: space-between;
   align-items: center;
   padding: 20px 0;
+
+  @media (max-width: 768px) {
+    margin-top: 50px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px
+  }
+
 `;
 
 const Title = styled.h1`
@@ -27,38 +45,18 @@ const Title = styled.h1`
   color: #333;
 `;
 
-const Button = styled.button`
-  padding: 10px 20px;
-  background-color: #000;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-
-  &:hover {
-    background-color: #333;
-  }
-`;
-
-const SaleButton = styled.button`
-  padding: 10px 20px;
-  background-color #f9f9f9;
-  color: #000;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-
-  &:hover {
-    background-color: #00000;
-  }
-`;
-
 
 const InfoCardsContainer = styled.div`
   display: flex;
   justify-content: space-between;
   gap: 20px;
   margin-top: 20px;
+
+   @media (max-width: 768px) {
+    flex-direction: column;
+    gap: 10px;
+  }
+
 `;
 
 const InfoCard = styled.div`
@@ -67,6 +65,10 @@ const InfoCard = styled.div`
   border-radius: 8px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   flex: 1;
+
+  @media (max-width: 768px) {
+    padding: 15px;
+  }
 
   h3 {
     font-size: 18px;
@@ -97,6 +99,12 @@ const RecentSales = styled.div`
     margin-bottom: 20px;
     color: #555;
   }
+
+  @media (max-width: 768px) {
+    margin-top: 20px;
+    padding: 15px;
+  }
+
 `;
 
 const SalesList = styled.ul`
@@ -109,6 +117,10 @@ const SalesListItem = styled.li`
   justify-content: space-between;
   padding: 10px 0;
   border-bottom: 1px solid #eee;
+
+  @media (max-width: 768px) {
+    align-items: flex-start;
+  }
 
   &:last-child {
     border-bottom: none;
@@ -131,7 +143,9 @@ const Pagination = styled.div`
   justify-content: center;
   margin-top: 20px;
 
-
+  @media (max-width: 768px) {
+    align-items: center;
+  }
 
   span {
       margin-bottom: 10px;
@@ -306,6 +320,40 @@ export const IconContainer = styled.div`
 `;
 
 
+const Button = styled.button`
+  display: flex; /* Alinha ícone e texto na mesma linha */
+  align-items: center; /* Centraliza verticalmente */
+  padding: 10px 20px;
+  background-color: #000;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  
+  &:hover {
+    background-color: #333;
+  }
+
+  svg {
+    margin-right: 8px; /* Espaçamento entre ícone e texto */
+    font-size: 20px; /* Tamanho do ícone */
+  }
+`;
+
+const SaleButton = styled(Button)`
+  background-color: #f9f9f9;
+  color: #000;
+
+  &:hover {
+    background-color: #ddd; /* Cor de fundo no hover */
+  }
+
+  svg {
+    color: #000; /* Cor do ícone */
+  }
+`;
+
+
 
 // Interfaces para tipagem
 interface Sale {
@@ -330,7 +378,7 @@ const getCurrentDate = () => {
 
 const formatDate = (dateString: string | number | Date) => {
   const date = new Date(dateString);
-  return format(date, 'dd/MM/yyyy HH:mm:ss');
+  return format(date, 'dd/MM/yyyy HH:mm');
 };
 
 const Dashboard = () => {
@@ -342,6 +390,10 @@ const Dashboard = () => {
   const [selectedSale, setSelectedSale] = useState<Sale | null>(null);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [dailySalesCount, setDailySalesCount] = useState<number>(0);
+  const [isGPTModalOpen, setIsGPTModalOpen] = useState<boolean>(false);
+  const pdfContentRef = useRef<HTMLDivElement>(null);
+
+
   const { token } = useAuth();
 
   const fetchSalesByDay = async () => {
@@ -420,31 +472,55 @@ const Dashboard = () => {
   };
 
   useEffect(() => {
-    fetchSalesByDay();
     fetchTotalSalesByMonth();
-  }, [currentPage]);
+    fetchSalesByDay();
+  }, [token, currentPage]);
 
   const navigate = useNavigate();
+
 
 const handleCreateSale = () => {
   navigate('/criar-venda');
 };
 
 
+const handleDownload = () => {
+  const element = pdfContentRef.current;
+
+  if (element) {
+      const opt = {
+          margin: 1,
+          filename: 'pagina_completa.pdf',
+          image: { type: 'jpeg', quality: 0.98 },
+          html2canvas: { scale: 2 },
+          jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
+      };
+
+      // Gera o PDF
+      html2pdf().from(element).set(opt).save();
+  } else {
+      console.error('Elemento não encontrado');
+  }
+};
+
+
+
   return (
-    <DashboardWrapper>
+    <DashboardWrapper ref={pdfContentRef}>
       <TopBar>
         <Title>Dashboard</Title>
+
         <IconContainer>
-        <SaleButton onClick={handleCreateSale}>Criar Venda</SaleButton> 
-        <Button >Download</Button>
+        <SaleButton onClick={handleCreateSale}><MdAddShoppingCart /> Criar Venda</SaleButton> 
+        <Button onClick={handleDownload}><BsDownload /> Download</Button>
+        
         </IconContainer>
 
       </TopBar>
 
       <InfoCardsContainer>
         <InfoCard>
-          <h3>Vendas Diárias</h3>
+          <h3>Venda Diária</h3>
           <p>R$ {(dailySales.toFixed(2)).toLocaleString()}</p>
           <small>Atualizado hoje</small>
         </InfoCard>

@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import { AiOutlineProduct } from 'react-icons/ai';
 import { CiLogin } from 'react-icons/ci';
-import { MdAddShoppingCart, MdOutlineCategory, MdProductionQuantityLimits, MdViewList } from 'react-icons/md';
+import { MdAddShoppingCart, MdOutlineCategory, MdOutlineSpaceDashboard, MdProductionQuantityLimits, MdViewList } from 'react-icons/md';
 import { TbReportMoney } from 'react-icons/tb';
 import { Link, useLocation } from 'react-router-dom';
 import styled from 'styled-components';
 import MobileHeader from './HeaderApp/MobileHeader';
+import { RxDashboard } from "react-icons/rx";
+
 
 // Container do Sidebar
 const SidebarContainer = styled.nav<{ isOpen: boolean }>`
@@ -117,6 +119,9 @@ const Sidebar: React.FC = () => {
 
         <NavLink to="/login" isActive={location.pathname === '/login'}>
           <CiLogin /> Login
+        </NavLink>
+        <NavLink to="/admin-home" isActive={location.pathname === '/admin-home'}>
+          <MdOutlineSpaceDashboard/> Dashboard
         </NavLink>
         <NavLink to="/cadastrar-produto" isActive={location.pathname === '/cadastrar-produto'}>
           <AiOutlineProduct /> Cadastrar Produto

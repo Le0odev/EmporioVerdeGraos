@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import styled from 'styled-components';
 import HeaderCart from '../../components/Header/HeadrCart/HeaderCart';
-import PixModal from './PixModal'; // Ajuste o caminho conforme necessário
+import PixModal from './ModalsCatalog/PixModal'; // Ajuste o caminho conforme necessário
 import { toast, ToastContainer } from 'react-toastify';
 
 // Estilos para o componente de avaliação

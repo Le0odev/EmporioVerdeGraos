@@ -147,7 +147,7 @@ export const ContainerWrapper = styled.div`
 
   @media (max-width: 768px) {
     
-    margin-top: 4rem;
+    margin-top: 3.5rem;
     padding: 20px;
   }
 `;
@@ -174,13 +174,12 @@ export const ToggleButtonContainer = styled.div`
   margin-bottom: 12px;
   gap: 10px;
 
-  @media (max-width: 768px)     
-    font-size: 14px;
-  }
+ 
 `;
 
 // Botão de filtro alternado
 export const ToggleButton = styled.button<{ active: boolean }>`
+  display: block;
   padding: 10px 18px;
   background-color: ${({ active }) => (active ? '#007bff' : '#ffffff')};
   color: ${({ active }) => (active ? '#fff' : '#007bff')};
@@ -192,9 +191,15 @@ export const ToggleButton = styled.button<{ active: boolean }>`
   transition: background-color 0.3s ease, transform 0.2s ease;
   gap: 10px;
 
+  @media (max-width: 768px) {
+  display: flex;
+  padding: 6px 8px;
+  }
+
   &:not(:last-child) {
 
   }
+
 
   &:hover {
     background-color: ${({ active }) => (active ? '#0056b3' : '#e2e6ea')};
@@ -206,7 +211,7 @@ export const ToggleButton = styled.button<{ active: boolean }>`
     transform: translateY(0);
   }
 
-  
+   
 `;
 
 
@@ -260,9 +265,7 @@ export const Input = styled.input`
     outline: none;
   }
 
-  @media (max-width: 768px) {
-
-  }
+  
 `;
 
 
