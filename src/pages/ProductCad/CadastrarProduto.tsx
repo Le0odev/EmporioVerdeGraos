@@ -61,6 +61,7 @@ interface Produto {
   estoquePeso?: number;
   stockAlertLimit: number;
 
+
 }
 
 interface ErrorResponse {
@@ -87,6 +88,8 @@ const CadastrarProduto: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [produtoAExcluir, setProdutoAExcluir] = useState<Produto | null>(null);
+  const [sabores, setSabores] = useState<string[]>(['Sem Sabor']);
+  const [novoSabor, setNovoSabor] = useState('');
 
   const { token } = useAuth();
 

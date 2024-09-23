@@ -17,6 +17,7 @@ export const Button = styled.button`
   font-size: 16px;
   cursor: pointer;
   transition: background-color 0.3s ease, transform 0.2s ease;
+  margin-bottom: 8px;
 
   &:hover {
     background-color: #0056b3;
@@ -34,6 +35,38 @@ export const Button = styled.button`
 
   }
 `;
+
+
+export const AddButton = styled.button `
+  padding: 8px;
+  background-color: #333;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+
+  margin-top: 5px;
+
+  &:hover {
+    background-color: #0056b3;
+    transform: translateY(-1px);
+  }
+
+  &:active {
+    background-color: #004494;
+    transform: translateY(0);
+  }
+
+  @media (max-width: 768px)     
+    font-size: 15px;
+    padding: 10px;
+    margin-left: -100px;
+
+  }
+`;
+
 
 export const CheckboxStyled = styled.div<CheckboxStyledProps>`
   display: flex;
@@ -98,6 +131,8 @@ export const ModalButton = styled.button`
   }
 
 `;
+
+
 
 // Altere a FlexContainer se necessário para manter outros elementos
 export const FlexContainer = styled.div`
@@ -180,7 +215,7 @@ export const ToggleButtonContainer = styled.div`
 // Botão de filtro alternado
 export const ToggleButton = styled.button<{ active: boolean }>`
   display: block;
-  padding: 10px 18px;
+  padding: 8px 16px;
   background-color: ${({ active }) => (active ? '#007bff' : '#ffffff')};
   color: ${({ active }) => (active ? '#fff' : '#007bff')};
   border: solid 1px #ddd;
@@ -193,7 +228,8 @@ export const ToggleButton = styled.button<{ active: boolean }>`
 
   @media (max-width: 768px) {
   display: flex;
-  padding: 6px 8px;
+  padding: 7px 8px;
+  font-size: 14px;
   }
 
   &:not(:last-child) {
@@ -467,3 +503,5 @@ export const ModalHeader = styled.div`
   font-size: 1.25rem;
   font-weight: bold;
 `;
+
+

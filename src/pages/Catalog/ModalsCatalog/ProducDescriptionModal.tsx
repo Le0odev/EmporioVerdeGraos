@@ -1,36 +1,59 @@
-// ProductDescriptionModal.tsx
-import React from 'react';
-import { ModalContainer, ModalContent, CloseButton, BuyButton } from '../StyledModals/StyledModal'
+import React, { useState } from 'react';
+import { ModalContainer, ModalContent, CloseButton, BuyButton } from '../StyledModals/StyledModal';
 import { Product } from '../Product';
+import { FaTimes } from 'react-icons/fa'; // Importando um ícone de fechamento
 
 interface ProductDescriptionModalProps {
   product: Product | null;
   isOpen: boolean;
   onClose: () => void;
-  onBuy: (product: Product) => void;  // Atualizando para aceitar um produto
+  onBuy: (product: Product, flavor?: string) => void; // Atualizando para aceitar um sabor
 }
 
-const ProductDescriptionModal: React.FC<ProductDescriptionModalProps> = ({ product, isOpen, onClose, onBuy}) => {
+const ProductDescriptionModal: React.FC<ProductDescriptionModalProps> = ({ product, isOpen, onClose, onBuy }) => {
+  const [selectedFlavor, setSelectedFlavor] = useState<string | null>(null); // Estado para o sabor selecionado
+
+  // Sabores disponíveis para o produto
+  const availableFlavors = ['Chocolate', 'Baunilha', 'Morango'];
+
   if (!product || !isOpen) {
     return null;
   }
 
-
   const handleBuyClick = () => {
-    onBuy(product); // Chama a função de compra com o produto atual
-    onClose(); // Fecha o modal após a compra
+    onBuy(product, selectedFlavor); // Passa o sabor selecionado
+    onClose();
   };
 
-
   return (
-    <ModalContainer>
-      <ModalContent>
-        <CloseButton onClick={onClose}>X</CloseButton>
+    <ModalContainer onClick={onClose}>
+      <ModalContent onClick={(e) => e.stopPropagation()}>
+        <CloseButton onClick={onClose}>
+          <FaTimes /> {/* Ícone de fechar */}
+        </CloseButton>
         <h2>{product.productName}</h2>
         <p>{product.productDescription}</p>
         {product.bulk && <p>Peso: {product.bulk}</p>}
+        
+        {/* Seletor de sabor */}
+        <div>
+          <h4>Escolha um sabor:</h4>
+          {availableFlavors.map(flavor => (
+            <label key={flavor}>
+              <input
+                type="radio"
+                name="flavor"
+                value={flavor}
+                checked={selectedFlavor === flavor}
+                onChange={() => setSelectedFlavor(flavor)} // Atualiza o sabor selecionado
+              />
+              {flavor}
+            </label>
+          ))}
+        </div>
+
         <BuyButton onClick={handleBuyClick}>Comprar</BuyButton>
-        </ModalContent>
+      </ModalContent>
     </ModalContainer>
   );
 };

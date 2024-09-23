@@ -20,6 +20,7 @@
     "chart.js": "^4.4.4",
     "date-fns": "^3.6.0",
     "dayjs": "^1.11.13",
+    "debounce": "^2.1.1",
     "html2pdf.js": "^0.10.2",
     "jspdf": "^2.5.1",
     "leaflet": "^1.9.4",
@@ -40,7 +41,8 @@
     "react-tooltip": "^5.28.0",
     "reactstrap": "^9.2.2",
     "slick-carousel": "^1.8.1",
-    "styled-components": "^6.1.13"
+    "styled-components": "^6.1.13",
+    "use-debounce": "^10.0.3"
   },
   "devDependencies": {
     "@types/google.maps": "^3.58.0",
