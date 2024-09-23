@@ -23,6 +23,7 @@ export interface Product {
   estoquePeso: number;
   categoryId: number;
   productDescription: string;
+  flavors: string[];
 }
 
 export interface Category {

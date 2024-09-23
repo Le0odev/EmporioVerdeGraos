@@ -35,6 +35,9 @@ import {
   CheckboxWrapper,
   CheckboxStyled,
   CheckboxIcon,
+  FlavorList,
+  FlavorItem,
+  RemoveFlavorButton,
   
 } from './StyledProdutos';
 import { useAuth } from '../Login/authContext';
@@ -60,7 +63,7 @@ interface Produto {
   productQuantity?: number;
   estoquePeso?: number;
   stockAlertLimit: number;
-
+  flavors: string[];
 
 }
 
@@ -88,8 +91,12 @@ const CadastrarProduto: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [produtoAExcluir, setProdutoAExcluir] = useState<Produto | null>(null);
-  const [sabores, setSabores] = useState<string[]>(['Sem Sabor']);
-  const [novoSabor, setNovoSabor] = useState('');
+  const [flavors, setFlavors] = useState<string[]>([]);
+  const [saborInput, setSaborInput] = useState('');
+  const [isVisible, setIsVisible] = useState(false); // Controle de visibilidade
+
+
+
 
   const { token } = useAuth();
 
@@ -144,7 +151,8 @@ const CadastrarProduto: React.FC = () => {
       imageUrl: imageUrl,
       productQuantity: isBulk ? undefined : parseFloat(estoque),
       estoquePeso: isBulk ? parseFloat(estoquePeso) : undefined,
-      stockAlertLimit: parseFloat(stockAlertLimit)
+      stockAlertLimit: parseFloat(stockAlertLimit),
+      flavors: flavors
     };
   
     try {
@@ -203,6 +211,9 @@ const CadastrarProduto: React.FC = () => {
     setEstoque('');
     setEstoquePeso('');
     setStockAlertLimit('');
+    setFlavors([]);
+    setSaborInput(''); // Reset flavor input
+
   };
 
   const handleEdit = (produto: Produto) => {
@@ -217,10 +228,15 @@ const CadastrarProduto: React.FC = () => {
     setEstoque(produto.productQuantity ? produto.productQuantity.toString() : '');
     setEstoquePeso(produto.estoquePeso ? produto.estoquePeso.toString() : '');
     setStockAlertLimit(produto.stockAlertLimit.toString()); 
+    setFlavors(produto.flavors || []);
+
+    
 
     setIsCadastroVisible(true);
     
   };
+
+ 
 
   const handleDelete = (produto: Produto) => {
     setProdutoAExcluir(produto);
@@ -258,6 +274,18 @@ const CadastrarProduto: React.FC = () => {
 
   const toggleCheckbox = () => {
     setIsBulk(prev => !prev);
+  };
+
+  // Flavor Management
+  const handleAddFlavor = () => {
+    if (saborInput.trim()) {
+      setFlavors([...flavors, saborInput.trim()]);
+      setSaborInput('');
+    }
+  };
+
+  const handleRemoveFlavor = (flavor: string) => {
+    setFlavors(flavors.filter(f => f !== flavor));
   };
 
   return (
@@ -363,9 +391,30 @@ const CadastrarProduto: React.FC = () => {
                     required
                   />
                 </div>
-            </FlexContainer>
-            <Label htmlFor="categoria">Categoria</Label>
-              <Select
+                  </FlexContainer>
+                
+                  <Label>Sabores:</Label>
+                  <FlexContainer>
+                 <Input 
+                  type="text" 
+                  value={saborInput} 
+                  onChange={(e) => setSaborInput(e.target.value)} 
+                  placeholder="Adicionar sabor"
+                />
+                <Button type="button" onClick={handleAddFlavor}>
+                  Adicionar
+                </Button>
+              </FlexContainer>
+              <FlavorList>
+                {flavors.map((flavor, index) => (
+                  <FlavorItem key={index}>
+                    {flavor}
+                    <RemoveFlavorButton onClick={() => handleRemoveFlavor(flavor)}>Remover</RemoveFlavorButton>
+                  </FlavorItem>
+                ))}
+              </FlavorList>
+               <Label htmlFor="categoria">Categoria</Label>
+               <Select
                 id="categoria"
                 value={categoriaSelecionada}
                 onChange={(e) => setCategoriaSelecionada(e.target.value)}
@@ -403,6 +452,7 @@ const CadastrarProduto: React.FC = () => {
                   <CardItem>
                     <ProductName>{produto.productName}</ProductName>
                     <ProductPrice>{formatPrice(produto.productPrice)}</ProductPrice>
+                    <div>Sabores: {produto.flavors.join(', ')}</div> {/* Exibe os sabores */}
                   </CardItem>
                   <CardButton>
                   <EditIcon  onClick={() => handleEdit(produto)} />

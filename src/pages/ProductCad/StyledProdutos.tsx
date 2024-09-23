@@ -505,3 +505,44 @@ export const ModalHeader = styled.div`
 `;
 
 
+export const FlavorList = styled.ul`
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+  max-width: 400px; /* Ajuste a largura máxima conforme necessário */
+  background-color: #f9f9f9; /* Cor de fundo */
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+`;
+
+// Item de sabor
+export const FlavorItem = styled.li`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 15px;
+  border-bottom: 1px solid #ddd; /* Linha divisória */
+  
+  &:last-child {
+    border-bottom: none; /* Remove a linha da última item */
+  }
+
+  &:hover {
+    background-color: #f1f1f1; /* Efeito hover */
+  }
+`;
+
+// Botão para remover sabor
+export const RemoveFlavorButton = styled.button`
+  padding: 5px 10px;
+  border: none;
+  border-radius: 4px;
+  background-color: #dc3545; /* Cor de fundo do botão de remover */
+  color: white;
+  cursor: pointer;
+  font-size: 14px;
+
+  &:hover {
+    background-color: #c82333; /* Efeito hover do botão de remover */
+  }
+`;
