@@ -396,6 +396,7 @@ export const ProductGrid = styled.div`
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); 
   margin-top: 10px;
+  gap: 10px;
 
   @media (max-width: 768px) {
     grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
@@ -411,8 +412,8 @@ export const Image = styled.img`
   border-radius: 8px;
 
   @media (max-width: 768px) {
-    width: 100%; 
-    height: 100%; /* Tamanho fixo para evitar distorção */
+    width: 120px; 
+    height: 120px; /* Tamanho fixo para evitar distorção */
     object-fit: cover;
 
   }
@@ -465,7 +466,7 @@ export const DeleteIcon = styled(FaTrashAlt)`
   cursor: pointer;
   font-size: 19px;
   transition: color 0.3s ease;
-  margin-right: -12px;
+  margin-right: -1px;
 
   &:hover {
     color: #c82333;
@@ -513,6 +514,7 @@ export const FlavorList = styled.ul`
   background-color: #f9f9f9; /* Cor de fundo */
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin-bottom: 12px;
 `;
 
 // Item de sabor
@@ -544,5 +546,72 @@ export const RemoveFlavorButton = styled.button`
 
   &:hover {
     background-color: #c82333; /* Efeito hover do botão de remover */
+  }
+`;
+
+export const FlavorModal = styled.div`
+
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5); /* Fundo semitransparente */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000; /* Garante que o modal fique acima dos outros elementos */
+
+`
+
+export const FlavorModalContent = styled.div`
+
+  background-color: white; /* Fundo branco para o conteúdo */
+  padding: 20px;
+  border-radius: 8px; /* Bordas arredondadas */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Sombra */
+  width: 400px; /* Largura fixa */
+  max-width: 90%; /* Responsividade */
+
+`
+export const CloseButton = styled.button`
+
+   background-color: #f44336; /* Vermelho */
+  color: white; /* Texto branco */
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+
+  &:hover {
+    background-color: #d32f2f; /* Cor mais escura no hover */
+  }
+`
+
+export const Title = styled.h2`
+  font-size: 24px;
+  color: #4a4a4a; /* Cor do texto */
+  margin-bottom: 20px; /* Espaço abaixo do título */
+  text-align: center; /* Centraliza o título */
+`;
+
+export const OpenFlavorButton = styled.button`
+ background-color: #f0f0f0; /* Fundo cinza claro */
+  color: #333; /* Cor do texto escura para contraste */
+  border: 1px solid #ccc; /* Borda cinza clara */
+  padding: 8px 10px; /* Espaçamento interno */
+  border-radius: 8px; /* Bordas arredondadas */
+  font-size: 12px; /* Tamanho da fonte */
+  cursor: pointer; /* Cursor pointer ao passar o mouse */
+  transition: background-color 0.3s, border-color 0.3s; /* Transições suaves para hover */
+
+  &:hover {
+    background-color: #e0e0e0; /* Fundo levemente mais escuro ao passar o mouse */
+    border-color: #bbb; /* Borda levemente mais escura ao passar o mouse */
+  }
+
+  &:focus {
+    outline: none; /* Remove o contorno padrão do botão */
   }
 `;

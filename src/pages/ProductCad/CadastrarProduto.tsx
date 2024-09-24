@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios, { AxiosError } from 'axios';
-import { toast } from 'react-toastify';
+import {  toast } from 'react-toastify';
 
 
 import {
@@ -38,13 +38,17 @@ import {
   FlavorList,
   FlavorItem,
   RemoveFlavorButton,
+  FlavorModal,
+  FlavorModalContent,
+  CloseButton,
+  Title,
+  OpenFlavorButton,
   
 } from './StyledProdutos';
 import { useAuth } from '../Login/authContext';
-import { FaCheck, FaCheckSquare, FaRegSquare } from 'react-icons/fa';
 import { FiSearch } from 'react-icons/fi';
 import { SearchBar, SearchContainer, SearchIcon } from '../../components/StyledSearch';
-import { Footer } from '../../components/Footer/Footer';
+import { FaCheckSquare, FaRegSquare } from 'react-icons/fa';
 
 interface Categoria {
   id: string;
@@ -64,6 +68,7 @@ interface Produto {
   estoquePeso?: number;
   stockAlertLimit: number;
   flavors: string[];
+  modalContent?: 'flavors' | 'description'; // Adicione esta linha
 
 }
 
@@ -93,12 +98,29 @@ const CadastrarProduto: React.FC = () => {
   const [produtoAExcluir, setProdutoAExcluir] = useState<Produto | null>(null);
   const [flavors, setFlavors] = useState<string[]>([]);
   const [saborInput, setSaborInput] = useState('');
-  const [isVisible, setIsVisible] = useState(false); // Controle de visibilidade
-
-
-
+  const [modalContent, setModalContent] = useState<'flavors' | 'description'>('description');
 
   const { token } = useAuth();
+
+  const [isModalFlavorOpen, setIsModalFlavorOpen] = useState(false);
+  const [produtoSelecionado, setProdutoSelecionado] = useState<Produto | null>(null);
+
+  // Função para abrir o modal com base na condição
+  const toggleModal = (produto: Produto) => {
+    // Verifica se o produto tem sabores e se o array de sabores não está vazio
+    if (produto.flavors && produto.flavors.length > 0) {
+      // Se o produto tiver sabores, exibe a lista de sabores
+      setModalContent('flavors');
+    } else {
+      // Caso não tenha sabores, exibe a descrição do produto
+      setModalContent('description');
+    }
+    
+    // Atualiza o produto selecionado
+    setProdutoSelecionado(produto);
+    setIsModalFlavorOpen(true); // Garante que o modal será aberto
+};
+
 
   useEffect(() => {
     const fetchCategorias = async () => {
@@ -445,23 +467,51 @@ const CadastrarProduto: React.FC = () => {
             onChange={(e) => setSearchTerm(e.target.value)}
           />
            </SearchContainer>
-            <ProductGrid>
-              {produtos.map((produto) => (
-                <Card key={produto.id}>
-                  <Image src={produto.imageUrl} alt={produto.productName} />
-                  <CardItem>
-                    <ProductName>{produto.productName}</ProductName>
-                    <ProductPrice>{formatPrice(produto.productPrice)}</ProductPrice>
-                    <div>Sabores: {produto.flavors.join(', ')}</div> {/* Exibe os sabores */}
-                  </CardItem>
-                  <CardButton>
-                  <EditIcon  onClick={() => handleEdit(produto)} />
-                  <DeleteIcon onClick={() => handleDelete(produto)} />
-                  </CardButton>
-                </Card>
-              ))}
-            </ProductGrid>
+           <ProductGrid>
+           {produtos.map((produto) => (
+            <Card  key={produto.id}>
+              <Image
+              onClick={(event) => {
+                event.preventDefault(); // Evita o comportamento padrão, se necessário
+                toggleModal(produto); // Verifica e abre o modal conforme a lógica
+              }}
+                src={produto.imageUrl}
+                alt={produto.productName}
+              />
+              <CardItem>
+                <ProductName>{produto.productName}</ProductName>
+                <ProductPrice>{formatPrice(produto.productPrice)}</ProductPrice>
+                <CardButton>
+                  <EditIcon onClick={() => handleEdit(produto)}>Editar</EditIcon>
+                  <DeleteIcon onClick={() => handleDelete(produto)}>Deletar</DeleteIcon>
+                </CardButton>
+              </CardItem>
+            </Card>
+          ))}
+          </ProductGrid>
           </Section>
+        )}
+       {isModalFlavorOpen && produtoSelecionado && (
+          <Modal>
+            <ModalContent>
+              {modalContent === 'flavors' ? (
+                <>
+                <Title>Sabores Disponíveis para {produtoSelecionado.productName}</Title>
+                <FlavorList>
+                    {produtoSelecionado.flavors.map((sabor, index) => (
+                      <FlavorItem key={index}>{sabor}</FlavorItem>
+                    ))}
+                  </FlavorList>
+                  </>
+              ) : (
+                <>
+                  <h2>Descrição do Produto</h2>
+                  <p>{produtoSelecionado.productDescription}</p>
+                </>
+              )}
+              <CloseButton onClick={() => setIsModalFlavorOpen(false)}>Fechar</CloseButton >
+            </ModalContent>
+          </Modal>
         )}
         {isModalOpen && (
           <Modal>

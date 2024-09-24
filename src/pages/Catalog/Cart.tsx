@@ -92,12 +92,12 @@ const Cart: React.FC = () => {
     }
   };
 
-  const handleAddToCart = (product: Product) => {
+  const handleAddToCart = (product: Product, flavor?: string) => {
     if (product.bulk) {
       setCurrentProduct(product);
       setIsModalOpen(true);
     } else {
-      addToCart(product);
+      addToCart({ ...product, selectedFlavor: flavor }); // Incluindo o sabor selecionado
     }
   };
 
@@ -132,9 +132,10 @@ const Cart: React.FC = () => {
               <CartItemImage src={item.imageUrl} alt={item.productName} />
               <CartItemDetails>
                 <CartItemName>{item.productName}</CartItemName>
-                {item.bulk ? (
+                {item.bulk ? ( 
                   <>
                     <CartItemPrice>Preço (KG): R${item.productPrice.toFixed(2)}</CartItemPrice>
+                    <CartItemPrice>Sabor: {item.productName}</CartItemPrice>
                     <CartItemWeight>
                       Peso: {item.weight ? `${item.weight.toFixed(0)} g` : `${weightInput[item.id] ? weightInput[item.id].toFixed(0) + ' g' : 'Não definido'}`}
                     </CartItemWeight>
@@ -145,6 +146,7 @@ const Cart: React.FC = () => {
                 ) : (
                   <>
                     <CartItemPrice>Preço (UN): R${item.productPrice.toFixed(2)}</CartItemPrice>
+                    <CartItemPrice>Sabor: {item.selectedFlavor}</CartItemPrice>
                     <CartItemQuantity>Quantidade: {item.quantity}</CartItemQuantity>
                     <CartItemSubtotal>
                       Subtotal: R${(item.productPrice * (item.quantity || 0)).toFixed(2)}

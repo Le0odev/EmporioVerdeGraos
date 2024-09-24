@@ -45,6 +45,11 @@ const ModalContent = styled.div`
   text-align: center;
   animation: ${fadeIn} 0.3s ease-in-out;
 
+   & h2 {
+  margin-bottom: 10px;
+  }
+
+
   @media (max-width: 768px) {
   margin: 20px;
   }

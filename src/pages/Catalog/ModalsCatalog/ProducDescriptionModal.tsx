@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ModalContainer, ModalContent, CloseButton, BuyButton } from '../StyledModals/StyledModal';
+import { ModalContainer, ModalContent, CloseButton, BuyButton, ProductTitle, ProductDescription, ProductWeight, FlavorSelectorWrapper, FlavorTitle, FlavorLabel, FlavorInput } from '../StyledModals/StyledModal';
 import { Product } from '../Product';
 import { FaTimes } from 'react-icons/fa'; // Importando o ícone de fechamento
 
@@ -32,32 +32,15 @@ const ProductDescriptionModal: React.FC<ProductDescriptionModalProps> = ({ produ
           <FaTimes /> {/* Ícone de fechar */}
         </CloseButton>
         
-        <h2>{product.productName}</h2>
-        <p>{product.productDescription}</p>
-        {product.bulk && <p>Peso: {product.bulk}</p>}
-        
-        {/* Renderiza o seletor de sabor apenas se houver sabores disponíveis */}
-        {availableFlavors.length > 0 && (
-          <div>
-            <h4>Escolha um sabor:</h4>
-            {availableFlavors.map(flavor => (
-              <label key={flavor}>
-                <input
-                  type="radio"
-                  name="flavor"
-                  value={flavor}
-                  checked={selectedFlavor === flavor}
-                  onChange={() => setSelectedFlavor(flavor)} // Atualiza o sabor selecionado
-                />
-                {flavor}
-              </label>
-            ))}
-          </div>
-        )}
+        <ProductTitle>{product.productName}</ProductTitle>
+        <ProductDescription>Unidade: {product.productDescription}</ProductDescription>
 
-        <BuyButton onClick={handleBuyClick}>
-          Comprar
-        </BuyButton>
+        {product.bulk && <ProductWeight>Peso: {product.bulk}</ProductWeight>}
+        
+     
+      <BuyButton onClick={handleBuyClick} >
+        Comprar
+      </BuyButton>
       </ModalContent>
     </ModalContainer>
   );

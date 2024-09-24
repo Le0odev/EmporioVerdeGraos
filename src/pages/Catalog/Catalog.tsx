@@ -1,9 +1,9 @@
-// Catalog.tsx
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useCart } from './CartContext';
 import WeightModal from './ModalsCatalog/WeightModal';
 import QuestionModal from './ModalsCatalog/QuestionModal';
+import FlavorModal from './ModalsCatalog/FlavorModal'; 
 import {
   CatalogContainer,
   SearchBar,
@@ -36,16 +36,17 @@ const Catalog: React.FC = () => {
   const [questionModalOpen, setQuestionModalOpen] = useState<boolean>(false);
   const [expandedProduct, setExpandedProduct] = useState<Product | null>(null);
   const [descriptionModalOpen, setDescriptionModalOpen] = useState<boolean>(false);
+  const [flavorModalOpen, setFlavorModalOpen] = useState<boolean>(false);
+  const [selectedFlavor, setSelectedFlavor] = useState<string | null>(null);
   const { addToCart, getCartItemCount } = useCart();
   const navigate = useNavigate();
   const itemCount = getCartItemCount();
 
-
   const handleToggleDescription = (product: Product) => {
-    // Se o produto já estiver expandido, colapsa; caso contrário, expande
     setExpandedProduct(expandedProduct?.id === product.id ? null : product);
   };
 
+  // Fetching categories
   useEffect(() => {
     const fetchCategories = async () => {
       setLoading(true);
@@ -63,6 +64,7 @@ const Catalog: React.FC = () => {
     fetchCategories();
   }, []);
 
+  // Fetching products based on search and category
   useEffect(() => {
     const fetchProducts = async () => {
       setLoading(true);
@@ -85,24 +87,39 @@ const Catalog: React.FC = () => {
     fetchProducts();
   }, [searchTerm, selectedCategory]);
 
+  // Handling adding to cart
   const handleAddToCart = (product: Product) => {
+    setCurrentProduct(product); // Set current product before opening modal
     if (product.bulk) {
-      setCurrentProduct(product);
       setModalOpen(true);
+    } else if (product.flavors && product.flavors.length > 0) {
+      setFlavorModalOpen(true); // Open flavor selection modal
     } else {
-      addToCart(product);
+      addToCart(product); // Directly add to cart
       setQuestionModalOpen(true);
+       
     }
   };
 
+  // Handling weight modal submission
   const handleModalSubmit = (weight: number) => {
     if (currentProduct) {
-      addToCart(currentProduct, weight);
+      addToCart(currentProduct, weight); // Add to cart with weight
       setCurrentProduct(null);
       setModalOpen(false);
       setQuestionModalOpen(true);
     }
   };
+
+  
+const handleFlavorSelect = (flavor: string) => {
+  setSelectedFlavor(flavor); // Armazena o sabor selecionado
+  if (currentProduct) {
+       // @ts-ignore
+    addToCart(currentProduct, 1, flavor); // Passa 1 como peso padrão para sabor
+    setQuestionModalOpen(true);
+  }
+};
 
   const handleGoToCart = () => {
     navigate('/cart');
@@ -154,19 +171,20 @@ const Catalog: React.FC = () => {
           <p>{error}</p>
         ) : (
           <ProductList>
-          {products.map((product) => (
-            <ProductCard key={product.id} onClick={() => handleOpenDescriptionModal(product)}>
-              <ProductImage src={product.imageUrl} alt={product.productName} />
-              <ProductName>{product.productName}</ProductName>
-              <ProductPrice>R${product.productPrice.toFixed(2)}</ProductPrice>
-              <AddToCartButton onClick={(e) => { e.stopPropagation(); handleAddToCart(product); }}>
-                Comprar
-              </AddToCartButton>
-            </ProductCard>
-          ))}
-        </ProductList>
+            {products.map((product) => (
+              <ProductCard key={product.id} onClick={() => handleOpenDescriptionModal(product)}>
+                <ProductImage src={product.imageUrl} alt={product.productName} />
+                <ProductName>{product.productName}</ProductName>
+                <ProductPrice>R${product.productPrice.toFixed(2)}</ProductPrice>
+                <AddToCartButton onClick={(e) => { e.stopPropagation(); handleAddToCart(product); }}>
+                  Comprar
+                </AddToCartButton>
+              </ProductCard>
+            ))}
+          </ProductList>
         )}
       </CatalogContainer>
+
       <ProductDescriptionModal
         product={currentProduct}
         isOpen={descriptionModalOpen}
@@ -183,6 +201,12 @@ const Catalog: React.FC = () => {
         onClose={() => setQuestionModalOpen(false)}
         onContinueShopping={handleContinueShopping}
         onGoToCart={handleGoToCart}
+      />
+      <FlavorModal
+        isOpen={flavorModalOpen}
+        onClose={() => setFlavorModalOpen(false)}
+        flavors={currentProduct?.flavors || []} // Pass flavors from current product
+        onSelectFlavor={handleFlavorSelect} // Handle flavor selection
       />
     </>
   );

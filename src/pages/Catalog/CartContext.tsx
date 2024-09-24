@@ -9,6 +9,8 @@ interface CartItem extends Product {
   productQuantity: number; // Quantidade específica do produto
   estoquePeso: number; // Peso em estoque
   categoryId: number;
+  selectedFlavor?: string; // Adiciona a propriedade selectedFlavor
+  flavors: string[];
 }
 
 interface CartContextProps {
@@ -38,42 +40,49 @@ const saveCartToLocalStorage = (items: CartItem[]) => {
 export const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [cartItems, setCartItems] = useState<CartItem[]>(loadCartFromLocalStorage());
 
-  const addToCart = (product: Product, weight?: number) => {
+  const addToCart = (product: Product, weight?: number, flavor?: string) => {
     setCartItems(prevItems => {
-      const itemIndex = prevItems.findIndex(item => item.id === product.id);
-  
-      if (itemIndex >= 0) {
-        const updatedItems = [...prevItems];
-        if (product.bulk) {
-          updatedItems[itemIndex] = { 
-            ...updatedItems[itemIndex], 
-            weight: weight ?? updatedItems[itemIndex].weight 
-          } as CartItem;
-        } else {
-          updatedItems[itemIndex] = { 
-            ...updatedItems[itemIndex], 
-            quantity: (updatedItems[itemIndex].quantity || 0) + 1 
-          } as CartItem;
+        const itemIndex = prevItems.findIndex(item => item.id === product.id);
+        
+        if (itemIndex >= 0) {
+            const updatedItems = [...prevItems];
+            if (product.bulk) {
+                // Se for produto a granel, atualiza o peso
+                updatedItems[itemIndex] = { 
+                    ...updatedItems[itemIndex], 
+                    weight: weight ?? updatedItems[itemIndex].weight 
+                } as CartItem;
+            } else {
+                // Produto unitário, incrementa a quantidade e atualiza o sabor
+                updatedItems[itemIndex] = { 
+                    ...updatedItems[itemIndex], 
+                    quantity: (updatedItems[itemIndex].quantity || 0) + 1,
+                    selectedFlavor: flavor && flavor !== 'Sem sabor' ? flavor : updatedItems[itemIndex].selectedFlavor
+                } as CartItem;
+            }
+            saveCartToLocalStorage(updatedItems);
+            return updatedItems;
         }
+        
+        // Caso o produto ainda não esteja no carrinho, adiciona um novo item
+        const newItem: CartItem = {
+            ...product,
+            weight,
+            quantity: product.bulk ? undefined : 1,
+            selectedFlavor: flavor && flavor !== 'Sem sabor' ? flavor : 'Sem sabor', // Define o sabor selecionado ou padrão
+            productId: product.id,
+            productQuantity: product.productQuantity || 1,
+            estoquePeso: product.estoquePeso || 0,
+            categoryId: product.categoryId,
+        };
+  
+        const updatedItems = [...prevItems, newItem];
         saveCartToLocalStorage(updatedItems);
         return updatedItems;
-      }
-  
-      const newItem: CartItem = {
-        ...product,
-        weight,
-        quantity: product.bulk ? undefined : 1,
-        productId: product.id,
-        productQuantity: product.productQuantity || 1,
-        estoquePeso: product.estoquePeso || 0,
-        categoryId: product.categoryId
-      };
-  
-      const updatedItems = [...prevItems, newItem];
-      saveCartToLocalStorage(updatedItems);
-      return updatedItems;
     });
-  };
+};
+
+  
   
   // Remove um item do carrinho
   const removeFromCart = (productId: number) => {

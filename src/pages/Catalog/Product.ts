@@ -8,6 +8,8 @@ export interface CartItem {
   weight?: number;
   bulk: boolean;
   imageUrl: string;
+  flavors: string[];
+  selectedFlavor?: string
 }
 
 export interface Product {
@@ -24,6 +26,8 @@ export interface Product {
   categoryId: number;
   productDescription: string;
   flavors: string[];
+  selectedFlavor?: string;
+
 }
 
 export interface Category {

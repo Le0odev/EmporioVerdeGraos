@@ -99,3 +99,45 @@ export const BuyButton = styled.button`
     outline: none;
   }
 `;
+
+
+// Estilos para os componentes
+export const ProductTitle = styled.h2`
+  font-size: 24px;
+  margin-bottom: 8px;
+  color: #333;
+`;
+
+export const ProductDescription = styled.p`
+  font-size: 16px;
+  color: #666;
+  margin-bottom: 12px;
+`;
+
+export const ProductWeight = styled.p`
+  font-size: 16px;
+  color: #888;
+  margin-bottom: 12px;
+`;
+
+export const FlavorSelectorWrapper = styled.div`
+  margin-top: 16px;
+  margin-bottom: 18px;
+`;
+
+export const FlavorTitle = styled.h4`
+  font-size: 18px;
+  margin-bottom: 8px;
+  color: #444;
+`;
+
+export const FlavorLabel = styled.label`
+  font-size: 16px;
+  margin-right: 16px;
+  display: inline-flex;
+  align-items: center;
+`;
+
+export const FlavorInput = styled.input`
+  margin-right: 8px;
+`;

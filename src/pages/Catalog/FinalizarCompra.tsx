@@ -258,10 +258,14 @@
       const total = subtotal + freight;
       const orderMessage = `Pedido:\n${cartItems.map(item => {
         const subtotalItem = item.bulk
-          ? ((item.productPrice / 1000) * (item.weight || 0)).toFixed(2)
-          : (item.productPrice * (item.quantity || 0)).toFixed(2);
-        return `${item.productName} - Quantidade: ${item.bulk ? (item.weight || 0) + ' kg' : item.quantity} - Subtotal: R$${subtotalItem}`;
-      }).join('\n\n')}\n\nEndereço: ${cidade}, ${bairro}, ${rua}, ${number}, ${complement} \n\nResumo da Compra:\nSubtotal: R$${subtotal.toFixed(2)}\nFrete: R$${freight.toFixed(2)}\n\nTotal: R$${total.toFixed(2)}\n`;
+            ? ((item.productPrice / 1000) * (item.weight || 0)).toFixed(2)
+            : (item.productPrice * (item.quantity || 0)).toFixed(2);
+        return `
+    ${item.productName}
+    Sabor: ${item.selectedFlavor}
+    Quantidade: ${item.bulk ? (item.weight || 0) + ' kg' : item.quantity}
+    Subtotal: R$${subtotalItem}`;
+    }).join('\n')}\n\nEndereço: ${cidade}, ${bairro}, ${rua}, ${number}, ${complement} \n\nResumo da Compra:\nSubtotal: R$${subtotal.toFixed(2)}\nFrete: R$${freight.toFixed(2)}\n\nTotal: R$${total.toFixed(2)}\n`;;
     
       const paymentDetails = paymentMethod === 'Dinheiro'
         ? `\nO cliente irá pagar: R$${changeAmount?.toFixed(2)}\nTroco: R$${(changeAmount ? changeAmount - total : 0).toFixed(2)}`
