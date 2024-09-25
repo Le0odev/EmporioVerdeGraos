@@ -62,16 +62,29 @@ const RadioGroup = styled.div`
 `;
 
 const RadioLabel = styled.label`
-  margin: 10px 0;
+  display: flex;
+  align-items: center;
+  margin: 8px 0;
   cursor: pointer;
   font-size: 18px;
-  color: #555;
+  color: #222;
+  background-color: #f4f4f4; /* Fundo cinza claro */
+  padding: 10px 15px; /* Espaço interno para tornar o item mais confortável */
+  border-radius: 8px; /* Bordas arredondadas */
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+
+  
+  &:hover {
+    background-color: #e9e9e9; /* Cor um pouco mais escura no hover */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15); /* Aumenta a sombra ao passar o mouse */
+  }
 
   input {
-    margin-right: 10px;
+    margin-right: 12px;
     cursor: pointer;
   }
 `;
+
 
 // Props do modal de sabores
 interface FlavorModalProps {

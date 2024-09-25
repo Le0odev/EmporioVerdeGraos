@@ -84,10 +84,11 @@ const NavLink = styled(Link)<{ isActive: boolean }>`
   &:hover {
     color: #333;
     background-color: #ccc;
+    border-radius: 8px;
   }
 
   svg {
-    margin-right: 0.7rem;
+    margin-right: 1rem;
     font-size: 1.5rem;
   }
 `;

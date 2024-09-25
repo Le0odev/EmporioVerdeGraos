@@ -141,3 +141,4 @@ export const FlavorLabel = styled.label`
 export const FlavorInput = styled.input`
   margin-right: 8px;
 `;
+

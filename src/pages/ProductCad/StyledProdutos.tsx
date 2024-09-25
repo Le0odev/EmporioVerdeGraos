@@ -1,5 +1,5 @@
 
-import styled from 'styled-components';
+import styled, { isStyledComponent } from 'styled-components';
 import { FaRegEdit, FaTrashAlt } from 'react-icons/fa';
 
 interface CheckboxStyledProps {
@@ -597,7 +597,7 @@ export const Title = styled.h2`
 `;
 
 export const OpenFlavorButton = styled.button`
- background-color: #f0f0f0; /* Fundo cinza claro */
+  background-color: #f0f0f0; /* Fundo cinza claro */
   color: #333; /* Cor do texto escura para contraste */
   border: 1px solid #ccc; /* Borda cinza clara */
   padding: 8px 10px; /* Espaçamento interno */
@@ -605,6 +605,7 @@ export const OpenFlavorButton = styled.button`
   font-size: 12px; /* Tamanho da fonte */
   cursor: pointer; /* Cursor pointer ao passar o mouse */
   transition: background-color 0.3s, border-color 0.3s; /* Transições suaves para hover */
+  margin-right: 100px;
 
   &:hover {
     background-color: #e0e0e0; /* Fundo levemente mais escuro ao passar o mouse */
@@ -613,5 +614,46 @@ export const OpenFlavorButton = styled.button`
 
   &:focus {
     outline: none; /* Remove o contorno padrão do botão */
+  }
+`;
+
+export const AddFlavor = styled.button`
+  margin: -1px 0px 12px 3px;
+
+  background-color: #333;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+
+  &:hover {
+    background-color: #0056b3;
+    transform: translateY(-1px);
+  }
+
+  &:active {
+    background-color: #004494;
+    transform: translateY(0);
+  }
+
+  @media (max-width: 768px)     
+    font-size: 15px;
+    padding: 10px;
+
+  }
+`;
+
+export const ProductDescription = styled.h2`
+  font-size: 20px;
+  font-weight: bold;
+  color: #333; /* Cor escura para o texto */
+  margin-bottom: 15px; /* Espaço inferior para separação */
+  text-align: center; /* Centralizado */
+  
+  /* Caso queira responsividade, pode adicionar um ajuste para telas menores */
+  @media (max-width: 768px) {
+    font-size: 20px; /* Tamanho menor para telas pequenas */
   }
 `;

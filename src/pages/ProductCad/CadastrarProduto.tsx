@@ -43,6 +43,9 @@ import {
   CloseButton,
   Title,
   OpenFlavorButton,
+  AddButton,
+  AddFlavor,
+  ProductDescription,
   
 } from './StyledProdutos';
 import { useAuth } from '../Login/authContext';
@@ -298,11 +301,11 @@ const CadastrarProduto: React.FC = () => {
     setIsBulk(prev => !prev);
   };
 
-  // Flavor Management
-  const handleAddFlavor = () => {
+  const handleAddFlavor = (e: { preventDefault: () => void; }) => {
+    e.preventDefault();  // Impede o envio do formulário
     if (saborInput.trim()) {
       setFlavors([...flavors, saborInput.trim()]);
-      setSaborInput('');
+      setSaborInput('');  // Limpa o campo de entrada após adicionar o sabor
     }
   };
 
@@ -423,9 +426,9 @@ const CadastrarProduto: React.FC = () => {
                   onChange={(e) => setSaborInput(e.target.value)} 
                   placeholder="Adicionar sabor"
                 />
-                <Button type="button" onClick={handleAddFlavor}>
+                <AddFlavor  onClick={handleAddFlavor}>
                   Adicionar
-                </Button>
+                </AddFlavor>
               </FlexContainer>
               <FlavorList>
                 {flavors.map((flavor, index) => (
@@ -505,8 +508,8 @@ const CadastrarProduto: React.FC = () => {
                   </>
               ) : (
                 <>
-                  <h2>Descrição do Produto</h2>
-                  <p>{produtoSelecionado.productDescription}</p>
+                  <Title>Descrição do Produto</Title>
+                  <ProductDescription>Peso: {produtoSelecionado.productDescription}</ProductDescription>
                 </>
               )}
               <CloseButton onClick={() => setIsModalFlavorOpen(false)}>Fechar</CloseButton >
