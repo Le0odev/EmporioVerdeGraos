@@ -5,11 +5,11 @@ export const LoginContainer = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh; // Garante que o login ocupe a tela toda
+  height: 50vh; // Garante que o login ocupe a tela toda
   padding: 20px;
 
   @media (max-width: 768px) {
-    margin-top: 50%;
+    margin-top: 25%;;
     display: block;
     padding: 0; // Remover padding adicional em mobile
     justify-content: center; 
