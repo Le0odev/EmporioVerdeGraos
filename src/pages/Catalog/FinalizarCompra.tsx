@@ -275,7 +275,7 @@
       const mapLink = coordinates ? `\n\nLocalização no Mapa:\nhttps://www.google.com/maps?q=${coordinates.lat},${coordinates.lng}` : '';
       const fullMessage = `${orderMessage}${paymentDetails}${mapLink}${clientDetails}`;
       const encodedMessage = encodeURIComponent(fullMessage);
-      const phoneNumber = '5551999999999';
+      const phoneNumber = '5581991676177';
       const whatsappUrl = `https://api.whatsapp.com/send?phone=${phoneNumber}&text=${encodedMessage}`;
     
       // Abre a URL do WhatsApp
