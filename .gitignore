@@ -25,3 +25,4 @@ dist-ssr
 src/components/Notifies/ListaProdutosGerenciamento.tsx
 src/components/Notifies/ListaProdutosGerenciamento.tsx
 src/components/Notifies/StyledList.tsx
+.vercel
