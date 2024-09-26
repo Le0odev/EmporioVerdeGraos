@@ -281,7 +281,7 @@ const Relatorio: React.FC = () => {
         <SalesList>
           {paginatedSales.map((sale) => (
             <SalesItem key={sale.id} onClick={() => handleSaleClick(sale)}>
-              <div>Data: {formatDate(sale.saleDate)}</div>
+              <div>Data: {sale.saleDate}</div>
               <h4>Total: R${sale.saleTotals.toFixed(2)}</h4>
             </SalesItem>
           ))}
