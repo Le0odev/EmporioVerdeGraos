@@ -52,7 +52,7 @@ interface SalesByDay {
 
 const formatDate = (dateString: string | number | Date) => {
   const date = new Date(dateString);
-  return format(date, 'dd/MM/yyyy HH:mm:ss');
+  return date.toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo' }); // Ajuste o fuso horário conforme necessário
 };
 
 const Relatorio: React.FC = () => {
