@@ -52,8 +52,9 @@ interface SalesByDay {
 
 const formatDate = (dateString: string | number | Date) => {
   const date = new Date(dateString);
-  return format(date, 'dd/MM/yyyy HH:mm:ss');
+  return date.toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo' });
 };
+
 
 const Relatorio: React.FC = () => {
   const [sales, setSales] = useState<Sale[]>([]);
@@ -281,7 +282,7 @@ const Relatorio: React.FC = () => {
         <SalesList>
           {paginatedSales.map((sale) => (
             <SalesItem key={sale.id} onClick={() => handleSaleClick(sale)}>
-              <div>Data: {sale.saleDate}</div>
+              <div>Data: {formatDate(sale.saleDate)}</div>
               <h4>Total: R${sale.saleTotals.toFixed(2)}</h4>
             </SalesItem>
           ))}
