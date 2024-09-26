@@ -33,7 +33,7 @@ import {
   InputGroup
 } from './StyledReport';
 import { useAuth } from '../Login/authContext';
-import { format } from 'date-fns';
+import { format, parseISO } from 'date-fns';
 
 
 interface Sale {
@@ -50,9 +50,9 @@ interface SalesByDay {
   total: number;
 }
 
-const formatDate = (dateString: string | number | Date) => {
-  const date = new Date(dateString);
-  return date.toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo' }); // Ajuste o fuso horário conforme necessário
+const formatDate = (dateString: string) => {
+  const date = parseISO(dateString);  // Interpreta o formato ISO corretamente
+  return format(date, 'dd/MM/yyyy HH:mm:ss'); // Formata para o formato desejado
 };
 
 const Relatorio: React.FC = () => {
