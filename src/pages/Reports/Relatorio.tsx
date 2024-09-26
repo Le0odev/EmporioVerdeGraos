@@ -33,7 +33,7 @@ import {
   InputGroup
 } from './StyledReport';
 import { useAuth } from '../Login/authContext';
-import { format, parseISO } from 'date-fns';
+import { format } from 'date-fns';
 
 
 interface Sale {
@@ -50,9 +50,9 @@ interface SalesByDay {
   total: number;
 }
 
-const formatDate = (dateString: string) => {
-  const date = parseISO(dateString);  // Interpreta o formato ISO corretamente
-  return format(date, 'dd/MM/yyyy HH:mm:ss'); // Formata para o formato desejado
+const formatDate = (dateString: string | number | Date) => {
+  const date = new Date(dateString).toLocaleString('pt-BR');
+  return format(date, 'dd/MM/yyyy HH:mm:ss');
 };
 
 const Relatorio: React.FC = () => {
