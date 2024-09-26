@@ -51,7 +51,7 @@ interface SalesByDay {
 }
 
 const formatDate = (dateString: string | number | Date) => {
-  const date = new Date(dateString).toLocaleString('pt-BR');
+  const date = new Date(dateString);
   return format(date, 'dd/MM/yyyy HH:mm:ss');
 };
 
