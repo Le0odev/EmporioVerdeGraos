@@ -7,6 +7,8 @@ export const LoginContainer = styled.div`
   align-items: center;
   height: 50vh; // Garante que o login ocupe a tela toda
   padding: 20px;
+  margin-top: 10%;;
+
 
   @media (max-width: 768px) {
     margin-top: 25%;;
