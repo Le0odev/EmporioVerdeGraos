@@ -222,7 +222,7 @@ export const ToggleButton = styled.button<{ active: boolean }>`
   border-radius: 6px;
   cursor: pointer;
   font-size: 15px;
-  font-weight: 500;
+  font-weight: 00;
   transition: background-color 0.3s ease, transform 0.2s ease;
   gap: 10px;
 
