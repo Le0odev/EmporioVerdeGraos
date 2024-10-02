@@ -296,7 +296,6 @@ export const ProductName = styled.h3`
   margin: 0.5rem 0;
   color: ${colors.text};
   font-weight: 600;
-  border-top: 1px solid ${colors.border};
 
   @media (max-width: 768px) {
     font-size: 0.7rem;
