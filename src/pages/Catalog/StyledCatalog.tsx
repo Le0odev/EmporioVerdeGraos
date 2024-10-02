@@ -253,6 +253,7 @@ export const AddToCartButton = styled.button`
   font-size: 0.875rem;
   font-weight: bold;
   transition: background-color 0.3s ease, transform 0.3s ease;
+  cursor: pointer;
 
   &:hover {
     background-color: ${darken(0.1, colors.accent)};
