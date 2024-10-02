@@ -258,6 +258,8 @@ export const AddToCartButton = styled.button`
   &:hover {
     background-color: ${darken(0.1, colors.accent)};
     transform: translateY(-3px) scale(1.05); // Corrigi a transformação para melhor efeito
+    cursor: pointer;
+
   }
 
   &:focus {
