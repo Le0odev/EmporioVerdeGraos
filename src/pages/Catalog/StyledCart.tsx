@@ -191,6 +191,8 @@ export const SuggestedProductsContainer = styled.div`
   margin-top: 5px;
   padding: 0.4rem; // Reduzido para compactar
   border-radius: 8px;
+.slick-list {margin: 0 -7px;}
+  .slick-slide>div {padding: 0 7px;}
   
 `;
 
