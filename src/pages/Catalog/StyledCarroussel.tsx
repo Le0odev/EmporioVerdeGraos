@@ -13,6 +13,8 @@ export const SuggestionCard = styled.div`
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   box-sizing: border-box;
   text-align: center;
+.slick-list {margin: 0 -7px;}
+  .slick-slide>div {padding: 0 7px;}
 
   &:hover {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
