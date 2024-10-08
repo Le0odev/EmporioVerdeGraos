@@ -55,6 +55,8 @@ import { SearchBar, SearchContainer, SearchIcon } from '../../components/StyledS
 import { FaCamera, FaCheckSquare, FaRegSquare } from 'react-icons/fa';
 import { Html5Qrcode } from "html5-qrcode";
 import BarcodeScanner from './Barcodescanner';
+import Quagga from 'quagga';
+
 
 interface Categoria {
   id: string;
@@ -114,10 +116,60 @@ const CadastrarProduto: React.FC = () => {
 
   const [mostrarScanner, setMostrarScanner] = useState(false);
 
-  const handleDetected = (codigo: string) => {
-    setCodigoBarras(codigo); // Define o código escaneado no estado
-    setMostrarScanner(false); // Fecha o scanner
+  const handleBarcodeDetected = (code: string) => {
+    setCodigoBarras(code); // Define o código de barras no estado
+    console.log("Código de barras detectado:", code); // Log para depuração
   };
+
+  const startScanner = () => {
+    const container = document.getElementById('quagga-container');
+    if (!container) {
+      console.error('Elemento alvo para Quagga não encontrado');
+      return;
+    }
+
+    // Inicializa o Quagga
+    Quagga.init(
+      {
+        inputStream: {
+          name: 'Live',
+          type: 'LiveStream',
+          target: container, // Passa o elemento DOM diretamente
+        },
+        decoder: {
+          readers: ['ean_reader', 'ean_13_reader', 'upc_reader'], // Ajuste conforme necessário
+        },
+      },
+      (err) => {
+        if (err) {
+          console.error('Erro ao inicializar o Quagga:', err);
+          return;
+        }
+        console.log('Quagga iniciado com sucesso!');
+        Quagga.start();
+      }
+    );
+
+    // Callback para quando um código é detectado
+    Quagga.onDetected((data) => {
+      if (data && data.codeResult && data.codeResult.code) {
+        setCodigoBarras(data.codeResult.code); // Atualiza o estado com o código lido
+      }
+      Quagga.stop(); // Para o scanner após a leitura
+      setMostrarScanner(false); // Fecha o scanner após detectar
+    });
+  };
+
+  useEffect(() => {
+    if (mostrarScanner) {
+      startScanner(); // Inicia o scanner se mostrarScanner for verdadeiro
+    }
+
+    // Cleanup para parar o Quagga quando o componente for desmontado
+    return () => {
+      Quagga.stop();
+    };
+  }, [mostrarScanner]);
 
 
   // Função para abrir o modal com base na condição
@@ -365,49 +417,30 @@ const CadastrarProduto: React.FC = () => {
                 placeholder="Digite a descrição do produto"
                 required
               />
-                <Label htmlFor="codigoBarras">Código de Barras</Label>
-               <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
-                  <Input
-                    type="text"
-                    id="codigoBarras"
-                    value={codigoBarras}
-                    onChange={(e) => setCodigoBarras(e.target.value)}
-                    placeholder="Digite o código de barras"
-                    style={{ paddingRight: '150px' }} // Adiciona espaço à direita para o ícone
-                  />
-                  <FaCamera
-                    size={24}
-                    style={{
-                      position: 'absolute',
-                      right: '10px', // Espaçamento do lado direito
-                      cursor: 'pointer',
-                      color: '#888', // Cor do ícone
-                    }}
-                    onClick={() => setMostrarScanner(true)} // Mostra o modal do scanner ao clicar no ícone
-                  />
-                   <Modal
-                        isOpen={mostrarScanner} 
-                        onRequestClose={() => setMostrarScanner(false)} 
-                        contentLabel="Scanner de Código de Barras"
-                        style={{
-                          overlay: {
-                            backgroundColor: 'rgba(0, 0, 0, 0.7)',
-                          },
-                          content: {
-                            top: '50%',
-                            left: '50%',
-                            right: 'auto',
-                            bottom: 'auto',
-                            marginRight: '-50%',
-                            transform: 'translate(-50%, -50%)',
-                          },
-                        }}
-                      >
-                        <h3>Escaneie o código de barras:</h3>
-                        <BarcodeScanner onDetected={handleDetected} />
-                        <button onClick={() => setMostrarScanner(false)}>Fechar</button>
-                      </Modal>
-                </div>
+               <div>
+              <Label htmlFor="codigoBarras">Código de Barras</Label>
+              <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
+                <Input
+                  type="text"
+                  id="codigoBarras"
+                  value={codigoBarras}
+                  onChange={(e) => setCodigoBarras(e.target.value)}
+                  placeholder="Digite o código de barras"
+                  style={{ paddingRight: '50px' }} // Ajuste o padding conforme necessário
+                />
+                <FaCamera
+                  size={24}
+                  style={{
+                    position: 'absolute',
+                    right: '10px',
+                    cursor: 'pointer',
+                    color: '#888',
+                  }}
+                  onClick={() => setMostrarScanner(true)} // Mostra o scanner ao clicar no ícone
+                />
+              </div>
+              {mostrarScanner && <div id="quagga-container" style={{ width: '100%', height: 'auto' }}></div>}
+            </div>
               
                <FlexContainer>
                 <div>
