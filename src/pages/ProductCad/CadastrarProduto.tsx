@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios, { AxiosError } from 'axios';
 import {  toast } from 'react-toastify';
+import Modal from 'react-modal';
 
 
 import {
@@ -25,7 +26,7 @@ import {
   Image,
   CardButton,
   ProductGrid,
-  Modal,
+  Modal2,
   ModalContent,
   ModalHeader,
   ModalFooter,
@@ -51,7 +52,9 @@ import {
 import { useAuth } from '../Login/authContext';
 import { FiSearch } from 'react-icons/fi';
 import { SearchBar, SearchContainer, SearchIcon } from '../../components/StyledSearch';
-import { FaCheckSquare, FaRegSquare } from 'react-icons/fa';
+import { FaCamera, FaCheckSquare, FaRegSquare } from 'react-icons/fa';
+import { Html5Qrcode } from "html5-qrcode";
+import BarcodeScanner from './Barcodescanner';
 
 interface Categoria {
   id: string;
@@ -102,11 +105,20 @@ const CadastrarProduto: React.FC = () => {
   const [flavors, setFlavors] = useState<string[]>([]);
   const [saborInput, setSaborInput] = useState('');
   const [modalContent, setModalContent] = useState<'flavors' | 'description'>('description');
+  const [scannerVisible, setScannerVisible] = useState(false); // Estado para controlar a visibilidade do scanner
 
   const { token } = useAuth();
-
   const [isModalFlavorOpen, setIsModalFlavorOpen] = useState(false);
   const [produtoSelecionado, setProdutoSelecionado] = useState<Produto | null>(null);
+
+
+  const [mostrarScanner, setMostrarScanner] = useState(false);
+
+  const handleDetected = (codigo: string) => {
+    setCodigoBarras(codigo); // Define o código escaneado no estado
+    setMostrarScanner(false); // Fecha o scanner
+  };
+
 
   // Função para abrir o modal com base na condição
   const toggleModal = (produto: Produto) => {
@@ -353,14 +365,50 @@ const CadastrarProduto: React.FC = () => {
                 placeholder="Digite a descrição do produto"
                 required
               />
-              <Label htmlFor="codigoBarras">Código de Barras</Label>
-              <Input
-                type="text"
-                id="codigoBarras"
-                value={codigoBarras}
-                onChange={(e) => setCodigoBarras(e.target.value)}
-                placeholder="Digite o código de barras"
-              />
+                <Label htmlFor="codigoBarras">Código de Barras</Label>
+               <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
+                  <Input
+                    type="text"
+                    id="codigoBarras"
+                    value={codigoBarras}
+                    onChange={(e) => setCodigoBarras(e.target.value)}
+                    placeholder="Digite o código de barras"
+                    style={{ paddingRight: '150px' }} // Adiciona espaço à direita para o ícone
+                  />
+                  <FaCamera
+                    size={24}
+                    style={{
+                      position: 'absolute',
+                      right: '10px', // Espaçamento do lado direito
+                      cursor: 'pointer',
+                      color: '#888', // Cor do ícone
+                    }}
+                    onClick={() => setMostrarScanner(true)} // Mostra o modal do scanner ao clicar no ícone
+                  />
+                   <Modal
+                        isOpen={mostrarScanner} 
+                        onRequestClose={() => setMostrarScanner(false)} 
+                        contentLabel="Scanner de Código de Barras"
+                        style={{
+                          overlay: {
+                            backgroundColor: 'rgba(0, 0, 0, 0.7)',
+                          },
+                          content: {
+                            top: '50%',
+                            left: '50%',
+                            right: 'auto',
+                            bottom: 'auto',
+                            marginRight: '-50%',
+                            transform: 'translate(-50%, -50%)',
+                          },
+                        }}
+                      >
+                        <h3>Escaneie o código de barras:</h3>
+                        <BarcodeScanner onDetected={handleDetected} />
+                        <button onClick={() => setMostrarScanner(false)}>Fechar</button>
+                      </Modal>
+                </div>
+              
                <FlexContainer>
                 <div>
                   <Label htmlFor="preco">Preço</Label>
@@ -495,7 +543,7 @@ const CadastrarProduto: React.FC = () => {
           </Section>
         )}
        {isModalFlavorOpen && produtoSelecionado && (
-          <Modal>
+          <Modal2>
             <ModalContent>
               {modalContent === 'flavors' ? (
                 <>
@@ -514,10 +562,10 @@ const CadastrarProduto: React.FC = () => {
               )}
               <CloseButton onClick={() => setIsModalFlavorOpen(false)}>Fechar</CloseButton >
             </ModalContent>
-          </Modal>
+          </Modal2>
         )}
         {isModalOpen && (
-          <Modal>
+          <Modal2>
             <ModalContent>
               <ModalHeader>Confirmar Exclusão</ModalHeader>
               <p>Tem certeza de que deseja excluir este produto?</p>
@@ -527,7 +575,7 @@ const CadastrarProduto: React.FC = () => {
                 <CancelButton onClick={cancelDelete}>Cancelar</CancelButton>
               </ModalFooter>
             </ModalContent>
-          </Modal>
+          </Modal2>
         )}
       </ContainerWrapper>
     </ProductContainer>
