@@ -474,7 +474,7 @@ export const DeleteIcon = styled(FaTrashAlt)`
 `;
 
 // Estilização do modal em si
-export const Modal2 = styled.div`
+export const Modal = styled.div`
   position: fixed;
   top: 0;
   left: 0;

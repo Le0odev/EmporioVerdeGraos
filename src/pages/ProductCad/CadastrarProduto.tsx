@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios, { AxiosError } from 'axios';
 import {  toast } from 'react-toastify';
-import Modal from 'react-modal';
 
 
 import {
@@ -26,7 +25,7 @@ import {
   Image,
   CardButton,
   ProductGrid,
-  Modal2,
+  Modal,
   ModalContent,
   ModalHeader,
   ModalFooter,
@@ -52,11 +51,7 @@ import {
 import { useAuth } from '../Login/authContext';
 import { FiSearch } from 'react-icons/fi';
 import { SearchBar, SearchContainer, SearchIcon } from '../../components/StyledSearch';
-import { FaCamera, FaCheckSquare, FaRegSquare } from 'react-icons/fa';
-import { Html5Qrcode } from "html5-qrcode";
-import BarcodeScanner from './Barcodescanner';
-import Quagga from 'quagga';
-
+import { FaCheckSquare, FaRegSquare } from 'react-icons/fa';
 
 interface Categoria {
   id: string;
@@ -107,70 +102,11 @@ const CadastrarProduto: React.FC = () => {
   const [flavors, setFlavors] = useState<string[]>([]);
   const [saborInput, setSaborInput] = useState('');
   const [modalContent, setModalContent] = useState<'flavors' | 'description'>('description');
-  const [scannerVisible, setScannerVisible] = useState(false); // Estado para controlar a visibilidade do scanner
 
   const { token } = useAuth();
+
   const [isModalFlavorOpen, setIsModalFlavorOpen] = useState(false);
   const [produtoSelecionado, setProdutoSelecionado] = useState<Produto | null>(null);
-
-
-  const [mostrarScanner, setMostrarScanner] = useState(false);
-
-  const handleBarcodeDetected = (code: string) => {
-    setCodigoBarras(code); // Define o código de barras no estado
-    console.log("Código de barras detectado:", code); // Log para depuração
-  };
-
-  const startScanner = () => {
-    const container = document.getElementById('quagga-container');
-    if (!container) {
-      console.error('Elemento alvo para Quagga não encontrado');
-      return;
-    }
-
-    // Inicializa o Quagga
-    Quagga.init(
-      {
-        inputStream: {
-          name: 'Live',
-          type: 'LiveStream',
-          target: container, // Passa o elemento DOM diretamente
-        },
-        decoder: {
-          readers: ['ean_reader', 'ean_13_reader', 'upc_reader'], // Ajuste conforme necessário
-        },
-      },
-      (err) => {
-        if (err) {
-          console.error('Erro ao inicializar o Quagga:', err);
-          return;
-        }
-        console.log('Quagga iniciado com sucesso!');
-        Quagga.start();
-      }
-    );
-
-    // Callback para quando um código é detectado
-    Quagga.onDetected((data) => {
-      if (data && data.codeResult && data.codeResult.code) {
-        setCodigoBarras(data.codeResult.code); // Atualiza o estado com o código lido
-      }
-      Quagga.stop(); // Para o scanner após a leitura
-      setMostrarScanner(false); // Fecha o scanner após detectar
-    });
-  };
-
-  useEffect(() => {
-    if (mostrarScanner) {
-      startScanner(); // Inicia o scanner se mostrarScanner for verdadeiro
-    }
-
-    // Cleanup para parar o Quagga quando o componente for desmontado
-    return () => {
-      Quagga.stop();
-    };
-  }, [mostrarScanner]);
-
 
   // Função para abrir o modal com base na condição
   const toggleModal = (produto: Produto) => {
@@ -417,31 +353,14 @@ const CadastrarProduto: React.FC = () => {
                 placeholder="Digite a descrição do produto"
                 required
               />
-               <div>
               <Label htmlFor="codigoBarras">Código de Barras</Label>
-              <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
-                <Input
-                  type="text"
-                  id="codigoBarras"
-                  value={codigoBarras}
-                  onChange={(e) => setCodigoBarras(e.target.value)}
-                  placeholder="Digite o código de barras"
-                  style={{ paddingRight: '50px' }} // Ajuste o padding conforme necessário
-                />
-                <FaCamera
-                  size={24}
-                  style={{
-                    position: 'absolute',
-                    right: '10px',
-                    cursor: 'pointer',
-                    color: '#888',
-                  }}
-                  onClick={() => setMostrarScanner(true)} // Mostra o scanner ao clicar no ícone
-                />
-              </div>
-              {mostrarScanner && <div id="quagga-container" style={{ width: '100%', height: 'auto' }}></div>}
-            </div>
-              
+              <Input
+                type="text"
+                id="codigoBarras"
+                value={codigoBarras}
+                onChange={(e) => setCodigoBarras(e.target.value)}
+                placeholder="Digite o código de barras"
+              />
                <FlexContainer>
                 <div>
                   <Label htmlFor="preco">Preço</Label>
@@ -576,7 +495,7 @@ const CadastrarProduto: React.FC = () => {
           </Section>
         )}
        {isModalFlavorOpen && produtoSelecionado && (
-          <Modal2>
+          <Modal>
             <ModalContent>
               {modalContent === 'flavors' ? (
                 <>
@@ -595,10 +514,10 @@ const CadastrarProduto: React.FC = () => {
               )}
               <CloseButton onClick={() => setIsModalFlavorOpen(false)}>Fechar</CloseButton >
             </ModalContent>
-          </Modal2>
+          </Modal>
         )}
         {isModalOpen && (
-          <Modal2>
+          <Modal>
             <ModalContent>
               <ModalHeader>Confirmar Exclusão</ModalHeader>
               <p>Tem certeza de que deseja excluir este produto?</p>
@@ -608,7 +527,7 @@ const CadastrarProduto: React.FC = () => {
                 <CancelButton onClick={cancelDelete}>Cancelar</CancelButton>
               </ModalFooter>
             </ModalContent>
-          </Modal2>
+          </Modal>
         )}
       </ContainerWrapper>
     </ProductContainer>
