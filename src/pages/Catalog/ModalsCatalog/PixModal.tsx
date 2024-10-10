@@ -117,7 +117,6 @@ interface ModalPixProps {
   freight: number;
   fullPIX: string;
   now: number;
-  onPixCodeGenerated: (code: string) => void; // Função de callback para retornar o código PIX
 
 }
 

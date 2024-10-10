@@ -75,8 +75,6 @@
     const [numberError, setNumberError] = useState(false);
     const [paymentMethodError, setPaymentMethodError] = useState(false);
     const [changeAmountError, setChangeAmountError] = useState(false);
-    const [pixCode, setPixCode] = useState<string>(''); // Armazena o código PIX
-
 
     const cepRef = useRef<HTMLInputElement>(null);
     const numberRef = useRef<HTMLInputElement>(null);
@@ -206,10 +204,6 @@
     const handlePaymentSelect = (method: string) => {
       setPaymentMethod(method);
     };
-
-    const handlePixCodeGenerated = (code: string) => {
-      setPixCode(code); // Armazena o código PIX gerado
-    };
   
     const handleFinalizeOrder = () => {
       const errors: string[] = [];
@@ -273,11 +267,9 @@
     Subtotal: R$${subtotalItem}`;
     }).join('\n')}\n\nEndereço: ${cidade}, ${bairro}, ${rua}, ${number}, ${complement} \n\nResumo da Compra:\nSubtotal: R$${subtotal.toFixed(2)}\nFrete: R$${freight.toFixed(2)}\n\nTotal: R$${total.toFixed(2)}\n`;;
     
-    const paymentDetails = paymentMethod === 'Dinheiro'
-    ? `\nO cliente irá pagar: R$${changeAmount?.toFixed(2)}\nTroco: R$${(changeAmount ? changeAmount - total : 0).toFixed(2)}`
-    : paymentMethod === 'Pix'
-      ? `\nMétodo de Pagamento: ${paymentMethod}\nCódigo PIX: ${pixCode}` // Inclui o código PIX na mensagem
-      : `\nMétodo de Pagamento: ${paymentMethod}`;
+      const paymentDetails = paymentMethod === 'Dinheiro'
+        ? `\nO cliente irá pagar: R$${changeAmount?.toFixed(2)}\nTroco: R$${(changeAmount ? changeAmount - total : 0).toFixed(2)}`
+        : `\nMétodo de Pagamento: ${paymentMethod}`;
     
       const clientDetails = `\n\nNome do Cliente: ${clientInfo.name}\nTelefone: ${clientInfo.phone}`;
       const mapLink = coordinates ? `\n\nLocalização no Mapa:\nhttps://www.google.com/maps?q=${coordinates.lat},${coordinates.lng}` : '';
@@ -470,8 +462,6 @@
           subtotal={subtotal} // Ajuste conforme necessário
           freight={freight} // Ajuste conforme necessário
           fullPIX={''} now={0} 
-          onPixCodeGenerated={handlePixCodeGenerated} // Passa a função para gerar o código
-
           />
         
       </>
