@@ -203,9 +203,9 @@ const PixModal: React.FC<ModalPixProps> = ({ show, isOpen, onRequestClose, subto
       <ModalContent>
         <h2>Pagamento via Pix</h2>
         <PIX
-          pixkey="leonardovinicius09@hotmail.com"
+          pixkey="5581991676177"
           merchant="Verde Grãos"
-          city=""
+          city="Abreu e lima"
           cep="25.850-000"
           code={`RQP${now}`}
           amount={totalAmount}

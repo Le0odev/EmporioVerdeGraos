@@ -208,90 +208,83 @@
     const handleFinalizeOrder = () => {
       const errors: string[] = [];
       let hasError = false;
-
-    
+  
       // Resetando os erros
-        setCepError(false);
-        setNumberError(false);
-        setPaymentMethodError(false);
-        setChangeAmountError(false);
-
-        if (deliveryType === 'Entrega') {
+      setCepError(false);
+      setNumberError(false);
+      setPaymentMethodError(false);
+      setChangeAmountError(false);
+  
+      if (deliveryType === 'Entrega') {
           if (!cep) {
-            errors.push('CEP é obrigatório');
-            setCepError(true); // Marcar o erro no CEP
-            hasError = true;
-            cepRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' }); // Scroll suave até o CEP
-
+              errors.push('CEP é obrigatório');
+              setCepError(true);
+              hasError = true;
+              cepRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
           }
           if (!number) {
-            errors.push('Número é obrigatório');
-            setNumberError(true); // Marcar o erro no número
-            hasError = true;
-            numberRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' }); // Scroll suave até o Número
-
+              errors.push('Número é obrigatório');
+              setNumberError(true);
+              hasError = true;
+              numberRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
           }
-        }
-
-        if (!paymentMethod) {
+      }
+  
+      if (!paymentMethod) {
           errors.push('Método de pagamento é obrigatório');
-          setPaymentMethodError(true); // Marcar erro no método de pagamento
+          setPaymentMethodError(true);
           hasError = true;
-          paymentMethodRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' }); // Scroll suave até o Método de Pagamento
-
-        }
-
-        if (paymentMethod === 'Dinheiro' && (changeAmount === null || changeAmount < subtotal + freight)) {
+          paymentMethodRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+  
+      if (paymentMethod === 'Dinheiro' && (changeAmount === null || changeAmount < subtotal + freight)) {
           errors.push('O valor inserido para troco deve ser maior ou igual ao total.');
-          setChangeAmountError(true); // Marcar erro no valor do troco
+          setChangeAmountError(true);
           hasError = true;
-          changeAmountRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' }); // Scroll suave até o Valor de Troco
-
-        }
-
-        if (hasError) {
+          changeAmountRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+  
+      if (hasError) {
           // Exibe os erros usando toastify
           errors.forEach(error => toast.error(error));
           return;
-        }
-    
+      }
+  
       const total = subtotal + freight;
       const orderMessage = `Pedido:\n${cartItems.map(item => {
-        const subtotalItem = item.bulk
-            ? ((item.productPrice / 1000) * (item.weight || 0)).toFixed(2)
-            : (item.productPrice * (item.quantity || 0)).toFixed(2);
-        return `
-    ${item.productName}
-    Sabor: ${item.selectedFlavor}
-    Quantidade: ${item.bulk ? (item.weight || 0) + ' kg' : item.quantity}
-    Subtotal: R$${subtotalItem}`;
-    }).join('\n')}\n\nEndereço: ${cidade}, ${bairro}, ${rua}, ${number}, ${complement} \n\nResumo da Compra:\nSubtotal: R$${subtotal.toFixed(2)}\nFrete: R$${freight.toFixed(2)}\n\nTotal: R$${total.toFixed(2)}\n`;;
-    
+          const subtotalItem = item.bulk
+              ? ((item.productPrice / 1000) * (item.weight || 0)).toFixed(2)
+              : (item.productPrice * (item.quantity || 0)).toFixed(2);
+          return `
+      ${item.productName}
+      Sabor: ${item.selectedFlavor}
+      Quantidade: ${item.bulk ? (item.weight || 0) + ' kg' : item.quantity}
+      Subtotal: R$${subtotalItem}`;
+      }).join('\n')}\n\nEndereço: ${cidade}, ${bairro}, ${rua}, ${number}, ${complement} \n\nResumo da Compra:\nSubtotal: R$${subtotal.toFixed(2)}\nFrete: R$${freight.toFixed(2)}\n\nTotal: R$${total.toFixed(2)}\n`;
+  
       const paymentDetails = paymentMethod === 'Dinheiro'
-        ? `\nO cliente irá pagar: R$${changeAmount?.toFixed(2)}\nTroco: R$${(changeAmount ? changeAmount - total : 0).toFixed(2)}`
-        : `\nMétodo de Pagamento: ${paymentMethod}`;
-    
+          ? `\nO cliente irá pagar: R$${changeAmount?.toFixed(2)}\nTroco: R$${(changeAmount ? changeAmount - total : 0).toFixed(2)}`
+          : `\nMétodo de Pagamento: ${paymentMethod}`;
+  
       const clientDetails = `\n\nNome do Cliente: ${clientInfo.name}\nTelefone: ${clientInfo.phone}`;
       const mapLink = coordinates ? `\n\nLocalização no Mapa:\nhttps://www.google.com/maps?q=${coordinates.lat},${coordinates.lng}` : '';
       const fullMessage = `${orderMessage}${paymentDetails}${mapLink}${clientDetails}`;
       const encodedMessage = encodeURIComponent(fullMessage);
       const phoneNumber = '5581991676177';
       const whatsappUrl = `https://api.whatsapp.com/send?phone=${phoneNumber}&text=${encodedMessage}`;
-    
-      // Abre a URL do WhatsApp
-      window.open(whatsappUrl, '_blank');
-    
-      // Exibe o modal de Pix se o método de pagamento for Pix
+  
+      // Lógica para pagamento via Pix
       if (paymentMethod === 'Pix') {
-        setShowPixModal(true);
+          // Exibe o modal de Pix se o método de pagamento for Pix
+          setShowPixModal(true);
       } else {
-        setOrderSuccess(true);
-
+          // Abre a URL do WhatsApp se o método de pagamento não for Pix
+          window.open(whatsappUrl, '_blank');
       }
-      
+  
       // Define que o pedido foi finalizado com sucesso
-    
-    };
+      setOrderSuccess(true);
+  };
     
     const handleSuccessRedirect = () => {
       clearCart(); // Limpa o carrinho
