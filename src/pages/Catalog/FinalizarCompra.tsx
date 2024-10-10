@@ -80,6 +80,7 @@ const FinalizarCompra: React.FC = () => {
   const numberRef = useRef<HTMLInputElement>(null);
   const paymentMethodRef = useRef<HTMLSelectElement>(null);
   const changeAmountRef = useRef<HTMLInputElement>(null);
+  const [orderData, setOrderData] = useState<any>(null);
 
 
   
@@ -209,83 +210,78 @@ const storeCoordinates = {
     const errors: string[] = [];
     let hasError = false;
 
-  
     // Resetando os erros
-      setCepError(false);
-      setNumberError(false);
-      setPaymentMethodError(false);
-      setChangeAmountError(false);
+    setCepError(false);
+    setNumberError(false);
+    setPaymentMethodError(false);
+    setChangeAmountError(false);
 
-      if (deliveryType === 'Entrega') {
+    if (deliveryType === 'Entrega') {
         if (!cep) {
-          errors.push('CEP é obrigatório');
-          setCepError(true); // Marcar o erro no CEP
-          hasError = true;
-          cepRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' }); // Scroll suave até o CEP
-
+            errors.push('CEP é obrigatório');
+            setCepError(true); // Marcar o erro no CEP
+            hasError = true;
+            cepRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' }); // Scroll suave até o CEP
         }
         if (!number) {
-          errors.push('Número é obrigatório');
-          setNumberError(true); // Marcar o erro no número
-          hasError = true;
-          numberRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' }); // Scroll suave até o Número
-
+            errors.push('Número é obrigatório');
+            setNumberError(true); // Marcar o erro no número
+            hasError = true;
+            numberRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' }); // Scroll suave até o Número
         }
-      }
+    }
 
-      if (!paymentMethod) {
+    if (!paymentMethod) {
         errors.push('Método de pagamento é obrigatório');
         setPaymentMethodError(true); // Marcar erro no método de pagamento
         hasError = true;
         paymentMethodRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' }); // Scroll suave até o Método de Pagamento
+    }
 
-      }
-
-      if (paymentMethod === 'Dinheiro' && (changeAmount === null || changeAmount < subtotal + freight)) {
+    if (paymentMethod === 'Dinheiro' && (changeAmount === null || changeAmount < subtotal + freight)) {
         errors.push('O valor inserido para troco deve ser maior ou igual ao total.');
         setChangeAmountError(true); // Marcar erro no valor do troco
         hasError = true;
         changeAmountRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' }); // Scroll suave até o Valor de Troco
+    }
 
-      }
-
-      if (hasError) {
+    if (hasError) {
         // Exibe os erros usando toastify
         errors.forEach(error => toast.error(error));
         return;
-      }
-  
+    }
+
+    // Exibe o modal de Pix se o método de pagamento for Pix
+    if (paymentMethod === 'Pix') {
+        setShowPixModal(true);
+        return; // Retorna para evitar enviar a mensagem enquanto o modal está aberto
+    }
+
     const total = subtotal + freight;
     const orderMessage = `Pedido:\n${cartItems.map(item => {
-      const subtotalItem = item.bulk
-        ? ((item.productPrice / 1000) * (item.weight || 0)).toFixed(2)
-        : (item.productPrice * (item.quantity || 0)).toFixed(2);
-      return `${item.productName} - Quantidade: ${item.bulk ? (item.weight || 0) + ' kg' : item.quantity} - Subtotal: R$${subtotalItem}`;
+        const subtotalItem = item.bulk
+            ? ((item.productPrice / 1000) * (item.weight || 0)).toFixed(2)
+            : (item.productPrice * (item.quantity || 0)).toFixed(2);
+        return `${item.productName} - Quantidade: ${item.bulk ? (item.weight || 0) + ' kg' : item.quantity} - Subtotal: R$${subtotalItem}`;
     }).join('\n\n')}\n\nEndereço: ${cidade}, ${bairro}, ${rua}, ${number}, ${complement} \n\nResumo da Compra:\nSubtotal: R$${subtotal.toFixed(2)}\nFrete: R$${freight.toFixed(2)}\n\nTotal: R$${total.toFixed(2)}\n`;
-  
+
     const paymentDetails = paymentMethod === 'Dinheiro'
-      ? `\nO cliente irá pagar: R$${changeAmount?.toFixed(2)}\nTroco: R$${(changeAmount ? changeAmount - total : 0).toFixed(2)}`
-      : `\nMétodo de Pagamento: ${paymentMethod}`;
-  
+        ? `\nO cliente irá pagar: R$${changeAmount?.toFixed(2)}\nTroco: R$${(changeAmount ? changeAmount - total : 0).toFixed(2)}`
+        : `\nMétodo de Pagamento: ${paymentMethod}`;
+
     const clientDetails = `\n\nNome do Cliente: ${clientInfo.name}\nTelefone: ${clientInfo.phone}`;
     const mapLink = coordinates ? `\n\nLocalização no Mapa:\nhttps://www.google.com/maps?q=${coordinates.lat},${coordinates.lng}` : '';
     const fullMessage = `${orderMessage}${paymentDetails}${mapLink}${clientDetails}`;
     const encodedMessage = encodeURIComponent(fullMessage);
     const phoneNumber = '5551999999999';
     const whatsappUrl = `https://api.whatsapp.com/send?phone=${phoneNumber}&text=${encodedMessage}`;
-  
+
     // Abre a URL do WhatsApp
     window.open(whatsappUrl, '_blank');
   
-    // Exibe o modal de Pix se o método de pagamento for Pix
-    if (paymentMethod === 'Pix') {
-      setShowPixModal(true);
-    }
-    
     // Define que o pedido foi finalizado com sucesso
     setOrderSuccess(true);
-  
-  };
+};
   
   const handleSuccessRedirect = () => {
     clearCart(); // Limpa o carrinho
@@ -382,11 +378,13 @@ const storeCoordinates = {
             <h2>Retirada na Loja</h2>
             <p>Endereço da loja: Avenida Jerônimo Gueiros, 299, Centro, Abreu e Lima</p>
             {storeCoordinates && (
+
             <MapContainer>
               <MapLoader>
                 <MyMapComponent coordinates={storeCoordinates} />
               </MapLoader>
             </MapContainer>
+
               )}
             </PickupInfo>
           
@@ -458,6 +456,9 @@ const storeCoordinates = {
         subtotal={subtotal} // Ajuste conforme necessário
         freight={freight} // Ajuste conforme necessário
         fullPIX={''} now={0} 
+
+        handleFinalizeOrder={handleFinalizeOrder} // Passa a função aqui
+
         />
       
     </>

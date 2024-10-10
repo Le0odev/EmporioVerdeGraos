@@ -325,11 +325,17 @@ export const SuccessModal = styled.div`
   }
 `;
 
+
 export const MapContainer = styled.div`
-position: relative;
-margin-top: 20px;
-margin-bottom: 20px;
+  position: relative;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  z-index: 1000; // Deve ser menor que o do modal
+  width: 100%; // Certifique-se de que o mapa preencha o espaço disponível
+  border-radius: 10px; // Se desejar bordas arredondadas
+  overflow: hidden; // Para evitar que o conteúdo transborde
 `;
+
 
 
 export const PickupInfo = styled.div`

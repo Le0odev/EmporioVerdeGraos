@@ -3,12 +3,16 @@ import Modal from 'react-modal';
 import PIX from 'react-qrcode-pix';
 import { toast, ToastContainer } from 'react-toastify';
 import styled from 'styled-components';
+import { Button } from '../../../components/Notifies/EnviarPedido/StyledPedidos';
 
 Modal.setAppElement('#root'); // Define o elemento raiz para acessibilidade
 
 const StyledModal = styled(Modal)`
+
   overlay: {
     background: rgba(0, 0, 0, 0.7); // Escurece mais o fundo
+    zIndex: 1000;
+
   }
   content: {
     max-width: 80vw; // Largura máxima para telas pequenas
@@ -117,9 +121,10 @@ interface ModalPixProps {
   freight: number;
   fullPIX: string;
   now: number;
+  handleFinalizeOrder: () => void; // Nova prop para a função de finalizar o pedido
 }
 
-const PixModal: React.FC<ModalPixProps> = ({ show, isOpen, onRequestClose, subtotal, freight, fullPIX, now }) => {
+const PixModal: React.FC<ModalPixProps> = ({ show, isOpen, onRequestClose, subtotal, freight, fullPIX, now, handleFinalizeOrder }) => {
   const [pixValue, setPixValue] = useState<string>(fullPIX || '');
   const hasLoaded = useRef(false); // Track if onLoad has been executed
 
@@ -132,7 +137,6 @@ const PixModal: React.FC<ModalPixProps> = ({ show, isOpen, onRequestClose, subto
 
   const handleCopy = () => {
     if (navigator.clipboard && window.isSecureContext) {
-      // Verifica se a API de Clipboard está disponível e o contexto é seguro (https)
       navigator.clipboard.writeText(pixValue)
         .then(() => {
           toast.success('Código PIX copiado!', {
@@ -147,10 +151,8 @@ const PixModal: React.FC<ModalPixProps> = ({ show, isOpen, onRequestClose, subto
           });
         });
     } else {
-      // Alternativa para navegadores móveis que não suportam Clipboard API
       const textArea = document.createElement('textarea');
       textArea.value = pixValue;
-      // Garante que o elemento não seja visível
       textArea.style.position = 'fixed'; 
       textArea.style.left = '-999999px';
       document.body.appendChild(textArea);
@@ -177,53 +179,54 @@ const PixModal: React.FC<ModalPixProps> = ({ show, isOpen, onRequestClose, subto
       }
     }
   };
-  
 
+  const handleConfirmOrder = () => {
+    handleFinalizeOrder(); // Chama a função para finalizar o pedido
+    onRequestClose(); // Fecha o modal após confirmar
+  };
 
-
-
-  // Conditionally render based on `show` prop
   if (!show) {
-    return null; // Do not render anything if `show` is false
+    return null; // Não renderiza nada se `show` for false
   }
 
   const totalAmount = subtotal + freight;
 
   return (
     <>
-    <ToastContainer /> 
-    <StyledModal
-      isOpen={isOpen}
-      onRequestClose={onRequestClose}
-      contentLabel="Modal PIX"
-    >
-      <ModalContent>
-        <h2>Pagamento via Pix</h2>
-        <PIX
-          pixkey="leonardovinicius09@hotmail.com"
-          merchant="Guilherme Neves"
-          city="Paraíba do Sul"
-          cep="25.850-000"
-          code={`RQP${now}`}
-          amount={totalAmount}
-          onLoad={handleLoad}
-          resize={184}
-          variant="fluid"
-          padding={30}
-          color="#2a9d8f" // Cor do QR Code
-          bgColor="#ccc" // Cor de fundo do QR Code
-          bgRounded
-          divider
-        />
-        <PixCodeWrapper>
-          <PixCodeContainer>
-            <PixCode>{pixValue}</PixCode>
-            <CopyButton onClick={handleCopy}>Copiar</CopyButton>
-          </PixCodeContainer>
-        </PixCodeWrapper>
-        <CloseButton onClick={onRequestClose}>Fechar</CloseButton>
-      </ModalContent>
-    </StyledModal>
+      <ToastContainer /> 
+      <StyledModal
+        isOpen={isOpen}
+        onRequestClose={onRequestClose}
+        contentLabel="Modal PIX"
+      >
+        <ModalContent>
+          <h2>Pagamento via Pix</h2>
+          <PIX
+            pixkey="leonardovinicius09@hotmail.com"
+            merchant="Guilherme Neves"
+            city="Paraíba do Sul"
+            cep="25.850-000"
+            code={`RQP${now}`}
+            amount={totalAmount}
+            onLoad={handleLoad}
+            resize={184}
+            variant="fluid"
+            padding={30}
+            color="#2a9d8f" // Cor do QR Code
+            bgColor="#ccc" // Cor de fundo do QR Code
+            bgRounded
+            divider
+          />
+          <PixCodeWrapper>
+            <PixCodeContainer>
+              <PixCode>{pixValue}</PixCode>
+              <CopyButton onClick={handleCopy}>Copiar</CopyButton>
+            </PixCodeContainer>
+          </PixCodeWrapper>
+          <CloseButton onClick={onRequestClose}>Fechar</CloseButton>
+          <Button onClick={handleConfirmOrder}>Confirmar Pedido</Button> {/* Botão para confirmar o pedido */}
+        </ModalContent>
+      </StyledModal>
     </>
   );
 };

@@ -4,9 +4,11 @@ import 'leaflet/dist/leaflet.css'; // Importa os estilos do leaflet
 
 // Define o estilo do contêiner do mapa
 export const mapContainerStyle = {
-  height: '120px',
+  height: '150px', // Aumente a altura conforme necessário
   width: '100%',
   borderRadius: '10px',
+  zIndex: 1000, // Corrigido para ser um número
+  overflow: 'hidden', // Para evitar que o conteúdo transborde
 };
 
 // Define o ícone personalizado com a URL diretamente

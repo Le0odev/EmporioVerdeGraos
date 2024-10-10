@@ -31,4 +31,8 @@ body{
 .leaflet-control-attribution {
     display: none !important;
   }
-  
+
+
+  .ReactModal__Overlay {
+    z-index: 1000; /* ou qualquer valor que você precise */
+  }
