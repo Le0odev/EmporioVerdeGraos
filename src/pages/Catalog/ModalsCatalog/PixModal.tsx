@@ -117,6 +117,8 @@ interface ModalPixProps {
   freight: number;
   fullPIX: string;
   now: number;
+  onPixCodeGenerated: (code: string) => void; // Função de callback para retornar o código PIX
+
 }
 
 const PixModal: React.FC<ModalPixProps> = ({ show, isOpen, onRequestClose, subtotal, freight, fullPIX, now }) => {
@@ -201,8 +203,8 @@ const PixModal: React.FC<ModalPixProps> = ({ show, isOpen, onRequestClose, subto
         <h2>Pagamento via Pix</h2>
         <PIX
           pixkey="leonardovinicius09@hotmail.com"
-          merchant="Guilherme Neves"
-          city="Paraíba do Sul"
+          merchant="Verde Grãos"
+          city=""
           cep="25.850-000"
           code={`RQP${now}`}
           amount={totalAmount}
