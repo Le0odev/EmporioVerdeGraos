@@ -3,7 +3,6 @@ import Modal from 'react-modal';
 import PIX from 'react-qrcode-pix';
 import { toast, ToastContainer } from 'react-toastify';
 import styled from 'styled-components';
-import { Button } from '../../../components/Notifies/EnviarPedido/StyledPedidos';
 
 Modal.setAppElement('#root'); // Define o elemento raiz para acessibilidade
 
@@ -118,11 +117,9 @@ interface ModalPixProps {
   freight: number;
   fullPIX: string;
   now: number;
-  onFinalizeOrder: () => void; // Nova prop
-
 }
 
-const PixModal: React.FC<ModalPixProps> = ({ show, isOpen, onRequestClose, subtotal, freight, fullPIX, now,  onFinalizeOrder }) => {
+const PixModal: React.FC<ModalPixProps> = ({ show, isOpen, onRequestClose, subtotal, freight, fullPIX, now }) => {
   const [pixValue, setPixValue] = useState<string>(fullPIX || '');
   const hasLoaded = useRef(false); // Track if onLoad has been executed
 
@@ -203,9 +200,9 @@ const PixModal: React.FC<ModalPixProps> = ({ show, isOpen, onRequestClose, subto
       <ModalContent>
         <h2>Pagamento via Pix</h2>
         <PIX
-          pixkey="5581991676177"
-          merchant="Verde Grãos"
-          city="Abreu e lima"
+          pixkey="leonardovinicius09@hotmail.com"
+          merchant="Guilherme Neves"
+          city="Paraíba do Sul"
           cep="25.850-000"
           code={`RQP${now}`}
           amount={totalAmount}
@@ -224,7 +221,6 @@ const PixModal: React.FC<ModalPixProps> = ({ show, isOpen, onRequestClose, subto
             <CopyButton onClick={handleCopy}>Copiar</CopyButton>
           </PixCodeContainer>
         </PixCodeWrapper>
-        <Button onClick={onFinalizeOrder}>Finalizar Compra</Button>
         <CloseButton onClick={onRequestClose}>Fechar</CloseButton>
       </ModalContent>
     </StyledModal>
