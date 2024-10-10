@@ -284,10 +284,12 @@
       // Exibe o modal de Pix se o método de pagamento for Pix
       if (paymentMethod === 'Pix') {
         setShowPixModal(true);
+      } else {
+        setOrderSuccess(true);
+
       }
       
       // Define que o pedido foi finalizado com sucesso
-      setOrderSuccess(true);
     
     };
     
@@ -462,6 +464,8 @@
           subtotal={subtotal} // Ajuste conforme necessário
           freight={freight} // Ajuste conforme necessário
           fullPIX={''} now={0} 
+          onFinalizeOrder={handleFinalizeOrder} // Passa a função aqui
+
           />
         
       </>
