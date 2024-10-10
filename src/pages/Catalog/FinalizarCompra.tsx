@@ -280,7 +280,6 @@ const storeCoordinates = {
     // Exibe o modal de Pix se o método de pagamento for Pix
     if (paymentMethod === 'Pix') {
       setShowPixModal(true);
-      return; // Não finaliza a compra, abre modal
     }
     
     // Define que o pedido foi finalizado com sucesso
