@@ -3,28 +3,24 @@ import Modal from 'react-modal';
 import PIX from 'react-qrcode-pix';
 import { toast, ToastContainer } from 'react-toastify';
 import styled from 'styled-components';
-import { Button } from '../../../components/Notifies/EnviarPedido/StyledPedidos';
 
 Modal.setAppElement('#root'); // Define o elemento raiz para acessibilidade
 
 const StyledModal = styled(Modal)`
-
   overlay: {
-    background: rgba(0, 0, 0, 0.7); // Escurece mais o fundo
-    zIndex: 1000;
-
+    background: rgba(0, 0, 0, 0.7); // Fundo escurecido
+    z-index: 1000;
   }
   content: {
-    max-width: 80vw; // Largura máxima para telas pequenas
+    max-width: 90vw; // Largura máxima para telas pequenas
     width: 80%; // Largura em porcentagem
-    max-height: 80vh; // Altura máxima para não ultrapassar a tela
-    margin: auto;
+    max-height: 90vh; // Altura máxima para não ultrapassar a tela
     padding: 20px; // Padding reduzido para dispositivos móveis
     border-radius: 12px; // Borda arredondada
-    background: #333; // Fundo escuro para todo o modal
-    color: #fff; // Cor do texto para contraste
+    background: #1c1c1c; // Fundo mais escuro
+    color: #f5f5f5; // Texto claro para contraste
     border: none;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2); // Sombra mais pronunciada
+    box-shadow: 0 6px 30px rgba(0, 0, 0, 0.3); // Sombra mais pronunciada
     overflow: auto; // Adiciona rolagem se o conteúdo for grande
   }
 `;
@@ -36,30 +32,66 @@ const ModalContent = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin: 100px auto 0 auto; // Centraliza horizontalmente e afasta do topo
+  margin: 100px auto ; // Centraliza horizontalmente
   padding: 20px;
   border-radius: 8px; // Bordas arredondadas para suavidade
-  background-color: #3b3b3b; // Cor mais escura e neutra
-  color: #f0f0f0; // Texto claro para contraste
+  background-color: #2b2b2b; // Cor mais escura e neutra
+  color: #e0e0e0; // Texto claro para contraste
 
   & h2 {
-    margin-bottom: 15px;
-    color: #ccc; // Cor neutra para o título
+    margin-bottom: 10px;
+    color: #ccc; // Título em branco
+    font-size: 1.2rem; // Tamanho do título
+  }
+
+  & h3 {
+    margin-top: 10px;
+    margin-bottom: 20px;
+    color: #fff; // Título secundário
+    font-size: 1.2rem; // Tamanho do subtítulo
   }
 `;
-const CloseButton = styled.button`
-  background: #e63946; // Vermelho mais forte
-  color: #fff;
-  border: none;
-  padding: 12px 24px; // Padding um pouco maior
-  border-radius: 6px; // Borda arredondada
-  cursor: pointer;
-  font-size: 18px; // Fonte um pouco maior
-  margin-top: 20px; // Margem superior ajustada
-  transition: background 0.3s ease; // Transição suave para mudança de cor
+
+const Button = styled.button`
+  background-color: #2a9d8f; // Cor de fundo do botão
+  color: white; // Cor do texto
+  border: none; // Sem borda
+  border-radius: 8px; // Bordas arredondadas
+  padding: 12px 24px; // Espaçamento interno
+  font-size: 16px; // Tamanho da fonte
+  cursor: pointer; // Cursor de ponteiro ao passar o mouse
+  transition: background-color 0.3s ease, transform 0.2s ease; // Transição suave
+  margin: 10px; // Espaçamento entre os botões
 
   &:hover {
-    background: #d62839; // Cor do botão em hover
+    background-color: #219c7d; // Cor de fundo ao passar o mouse
+    transform: scale(1.05); // Efeito de zoom ao passar o mouse
+  }
+`;
+
+// Botão de fechar com cor diferente
+const CloseButton = styled(Button)`
+  background-color: #e74c3c; // Cor de fundo do botão de fechar
+
+  &:hover {
+    background-color: #c0392b; // Cor ao passar o mouse no botão de fechar
+  }
+`;
+
+// Toast Notifications com melhorias
+const ToastContainerStyled = styled(ToastContainer)`
+  .Toastify__toast {
+    border-radius: 8px; // Borda arredondada
+    font-size: 14px; // Tamanho da fonte
+    padding: 15px; // Padding interno
+  }
+  
+  .Toastify__toast--success {
+    background: #28a745; // Cor de fundo do sucesso
+  }
+
+  .Toastify__toast--error {
+    background: #dc3545; // Cor de fundo do erro
   }
 `;
 
@@ -68,10 +100,10 @@ const PixCodeWrapper = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  background: rgba(0, 0, 0, 0.7); // Fundo escuro semi-transparente para destaque
-  padding: 5px;
-  border-radius: 10px; // Arredondando as bordas do fundo
-  margin: 15px auto 15px; // Espaçamento inferior entre o código e outros elementos
+  background: rgba(0, 0, 0, 0.5); // Fundo escuro semi-transparente
+  padding: 10px; // Aumentado para melhor aparência
+  border-radius: 10px; // Arredondando as bordas
+  margin: 15px 0; // Margem superior e inferior
   box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.5); // Sombra para destacar o bloco
 `;
 
@@ -80,39 +112,40 @@ const PixCodeContainer = styled.div`
   align-items: center;
   justify-content: center;
   padding: 10px;
-  width: 100%; 
+  width: 100%;
   max-width: 300px; // Largura máxima para o bloco
-  background: transparent; // Sem fundo para não interferir
-  border-radius: 6px; 
+  background: transparent; // Sem fundo
+  border-radius: 6px;
   position: relative;
   overflow: hidden;
 `;
 
 const PixCode = styled.code`
   display: block;
-  font-size: 14px; 
-  color: #fff; // Cor do texto branca para contraste
+  font-size: 14px;
+  color: #fff; // Texto branco
   white-space: nowrap;
-  overflow: hidden; 
-  text-overflow: ellipsis; 
-  text-align: center; 
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-align: center;
   margin-right: 10px; // Espaço entre o texto e o botão
 `;
 
 const CopyButton = styled.button`
-  background: #2a9d8f; 
+  background: #2a9d8f; // Cor de fundo do botão de cópia
   color: #fff;
   border: none;
   padding: 8px 12px;
   border-radius: 6px;
   cursor: pointer;
-  font-size: 14px; 
+  font-size: 14px;
+  transition: background 0.3s ease; // Transição suave
 
   &:hover {
-    background: #238b8e;
+    background: #238b8e; // Cor ao passar o mouse
+    transform: scale(1.05); // Efeito de zoom ao passar o mouse
   }
 `;
-
 interface ModalPixProps {
   show: boolean;
   isOpen: boolean;
@@ -121,7 +154,8 @@ interface ModalPixProps {
   freight: number;
   fullPIX: string;
   now: number;
-  handleFinalizeOrder: () => Promise<void>; // Adiciona a prop para finalizar o pedido
+  whatsappUrl: string; // Adicionando a propriedade
+
 }
 
 const PixModal: React.FC<ModalPixProps> = ({
@@ -132,7 +166,8 @@ const PixModal: React.FC<ModalPixProps> = ({
   freight,
   fullPIX,
   now,
-  handleFinalizeOrder, // Recebe a função de finalização do pedido
+  whatsappUrl, // Recebendo a URL do WhatsApp como prop
+
 }) => {
   const [pixValue, setPixValue] = useState<string>(fullPIX || '');
   const hasLoaded = useRef(false);
@@ -194,6 +229,18 @@ const PixModal: React.FC<ModalPixProps> = ({
   }
 
   const totalAmount = subtotal + freight;
+  
+
+  const handleConfirmOrder = () => {
+    // Abre a URL do WhatsApp ao confirmar o pedido
+    window.open(whatsappUrl, '_blank');
+    onRequestClose(); // Fecha o modal
+  };
+
+  if (!show) {
+    return null;
+  }
+
 
   return (
     <>
@@ -205,6 +252,7 @@ const PixModal: React.FC<ModalPixProps> = ({
       >
         <ModalContent>
           <h2>Pagamento via Pix</h2>
+          <h3>Efetue o pagamento via PIX e confirme seu pedido!</h3>
           <PIX
             pixkey="leonardovinicius09@hotmail.com"
             merchant="Guilherme Neves"
@@ -227,8 +275,10 @@ const PixModal: React.FC<ModalPixProps> = ({
               <CopyButton onClick={handleCopy}>Copiar</CopyButton>
             </PixCodeContainer>
           </PixCodeWrapper>
-          <Button  onClick={handleFinalizeOrder}>Confirmar Pedido</Button> {/* Botão para finalizar o pedido */}
-          <CloseButton onClick={onRequestClose}>Fechar</CloseButton>
+          <div>
+            <CloseButton onClick={onRequestClose}>Fechar</CloseButton>
+            <Button onClick={handleConfirmOrder}>Confirmar Pedido </Button>
+          </div>
         </ModalContent>
       </StyledModal>
     </>

@@ -81,6 +81,7 @@ const FinalizarCompra: React.FC = () => {
   const paymentMethodRef = useRef<HTMLSelectElement>(null);
   const changeAmountRef = useRef<HTMLInputElement>(null);
   const [orderData, setOrderData] = useState<any>(null);
+  const [currentWhatsAppUrl, setCurrentWhatsAppUrl] = useState<string>('');
 
 
   
@@ -206,7 +207,7 @@ const storeCoordinates = {
     setPaymentMethod(method);
   };
 
-  const handleFinalizeOrder = async () => {
+  const handleFinalizeOrder = async (): Promise<string | void> => {
     const errors: string[] = [];
     let hasError = false;
 
@@ -220,7 +221,7 @@ const storeCoordinates = {
     if (deliveryType === 'Entrega') {
         if (!cep) {
             errors.push('CEP é obrigatório');
-            setCepError(true); 
+            setCepError(true);
             hasError = true;
             cepRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
         }
@@ -251,40 +252,44 @@ const storeCoordinates = {
     // Se houver erros, exibe os erros e retorna
     if (hasError) {
         errors.forEach(error => toast.error(error));
-        return;
+        return; // Retorna sem fazer mais nada
     }
 
-    // Se o método de pagamento for Pix, abre o modal
-    if (paymentMethod === 'Pix') {
-        setShowPixModal(true);
-        return; // Retorna para evitar enviar a mensagem enquanto o modal está aberto
-    }
-
-    // Lógica para finalizar o pedido (apenas se o método não for Pix)
+    // Lógica para montar a mensagem do pedido
     const total = subtotal + freight;
     const orderMessage = `Pedido:\n${cartItems.map(item => {
         const subtotalItem = item.bulk
             ? ((item.productPrice / 1000) * (item.weight || 0)).toFixed(2)
             : (item.productPrice * (item.quantity || 0)).toFixed(2);
         return `${item.productName} - Quantidade: ${item.bulk ? (item.weight || 0) + ' kg' : item.quantity} - Subtotal: R$${subtotalItem}`;
-    }).join('\n\n')}\n\nEndereço: ${cidade}, ${bairro}, ${rua}, ${number}, ${complement} \n\nResumo da Compra:\nSubtotal: R$${subtotal.toFixed(2)}\nFrete: R$${freight.toFixed(2)}\n\nTotal: R$${total.toFixed(2)}\n`;
+    }).join('\n\n')}\n\nTotal: R$${total.toFixed(2)}\n`;
 
-    const paymentDetails = paymentMethod === 'Dinheiro'
-        ? `\nO cliente irá pagar: R$${changeAmount?.toFixed(2)}\nTroco: R$${(changeAmount ? changeAmount - total : 0).toFixed(2)}`
-        : `\nMétodo de Pagamento: ${paymentMethod}`;
-
-    const clientDetails = `\n\nNome do Cliente: ${clientInfo.name}\nTelefone: ${clientInfo.phone}`;
-    const mapLink = coordinates ? `\n\nLocalização no Mapa:\nhttps://www.google.com/maps?q=${coordinates.lat},${coordinates.lng}` : '';
-    const fullMessage = `${orderMessage}${paymentDetails}${mapLink}${clientDetails}`;
+    const clientDetails = `\nNome do Cliente: ${clientInfo.name}\nTelefone: ${clientInfo.phone}`;
+    const fullMessage = `${orderMessage}${clientDetails}`;
     const encodedMessage = encodeURIComponent(fullMessage);
-    const phoneNumber = '5551999999999';
+    const phoneNumber = '5551999999999'; // Número do WhatsApp do destinatário
     const whatsappUrl = `https://api.whatsapp.com/send?phone=${phoneNumber}&text=${encodedMessage}`;
 
-    // Abre a URL do WhatsApp
+    setCurrentWhatsAppUrl(whatsappUrl); // Armazena a URL do WhatsApp
+
+    // Se o método de pagamento for Pix, abre o modal
+    if (paymentMethod === 'Pix') {
+      console.log("Abrindo modal para pagamento via Pix...");
+      setShowPixModal(true);
+      setOrderSuccess(true);
+
+      // Nenhuma necessidade de chamar setCurrentWhatsAppUrl aqui, pois já foi chamado acima
+      return; // Retorna para evitar enviar a mensagem enquanto o modal está aberto
+    }
+
+    // Se o método de pagamento não for Pix, abre a URL do WhatsApp
     window.open(whatsappUrl, '_blank');
 
     // Define que o pedido foi finalizado com sucesso
     setOrderSuccess(true);
+    
+    // Retorna a URL do WhatsApp
+    return whatsappUrl; 
 };
   
   const handleSuccessRedirect = () => {
@@ -460,8 +465,8 @@ const storeCoordinates = {
         subtotal={subtotal} // Ajuste conforme necessário
         freight={freight} // Ajuste conforme necessário
         fullPIX={''} now={0} 
+        whatsappUrl={currentWhatsAppUrl} // Passando a URL do WhatsApp
 
-        handleFinalizeOrder={handleFinalizeOrder} // Passando a função corretamente
 
         />
       
