@@ -121,17 +121,26 @@ interface ModalPixProps {
   freight: number;
   fullPIX: string;
   now: number;
-  handleFinalizeOrder: () => void; // Nova prop para a função de finalizar o pedido
+  handleFinalizeOrder: () => Promise<void>; // Adiciona a prop para finalizar o pedido
 }
 
-const PixModal: React.FC<ModalPixProps> = ({ show, isOpen, onRequestClose, subtotal, freight, fullPIX, now, handleFinalizeOrder }) => {
+const PixModal: React.FC<ModalPixProps> = ({
+  show,
+  isOpen,
+  onRequestClose,
+  subtotal,
+  freight,
+  fullPIX,
+  now,
+  handleFinalizeOrder, // Recebe a função de finalização do pedido
+}) => {
   const [pixValue, setPixValue] = useState<string>(fullPIX || '');
-  const hasLoaded = useRef(false); // Track if onLoad has been executed
+  const hasLoaded = useRef(false);
 
   const handleLoad = useCallback((newPIX: string) => {
     if (!hasLoaded.current) {
       setPixValue(newPIX);
-      hasLoaded.current = true; // Prevent further updates
+      hasLoaded.current = true;
     }
   }, []);
 
@@ -153,7 +162,7 @@ const PixModal: React.FC<ModalPixProps> = ({ show, isOpen, onRequestClose, subto
     } else {
       const textArea = document.createElement('textarea');
       textArea.value = pixValue;
-      textArea.style.position = 'fixed'; 
+      textArea.style.position = 'fixed';
       textArea.style.left = '-999999px';
       document.body.appendChild(textArea);
       textArea.focus();
@@ -180,13 +189,8 @@ const PixModal: React.FC<ModalPixProps> = ({ show, isOpen, onRequestClose, subto
     }
   };
 
-  const handleConfirmOrder = () => {
-    handleFinalizeOrder(); // Chama a função para finalizar o pedido
-    onRequestClose(); // Fecha o modal após confirmar
-  };
-
   if (!show) {
-    return null; // Não renderiza nada se `show` for false
+    return null;
   }
 
   const totalAmount = subtotal + freight;
@@ -212,8 +216,8 @@ const PixModal: React.FC<ModalPixProps> = ({ show, isOpen, onRequestClose, subto
             resize={184}
             variant="fluid"
             padding={30}
-            color="#2a9d8f" // Cor do QR Code
-            bgColor="#ccc" // Cor de fundo do QR Code
+            color="#2a9d8f"
+            bgColor="#ccc"
             bgRounded
             divider
           />
@@ -223,8 +227,8 @@ const PixModal: React.FC<ModalPixProps> = ({ show, isOpen, onRequestClose, subto
               <CopyButton onClick={handleCopy}>Copiar</CopyButton>
             </PixCodeContainer>
           </PixCodeWrapper>
+          <Button  onClick={handleFinalizeOrder}>Confirmar Pedido</Button> {/* Botão para finalizar o pedido */}
           <CloseButton onClick={onRequestClose}>Fechar</CloseButton>
-          <Button onClick={handleConfirmOrder}>Confirmar Pedido</Button> {/* Botão para confirmar o pedido */}
         </ModalContent>
       </StyledModal>
     </>

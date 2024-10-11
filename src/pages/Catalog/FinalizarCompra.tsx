@@ -206,7 +206,7 @@ const storeCoordinates = {
     setPaymentMethod(method);
   };
 
-  const handleFinalizeOrder = () => {
+  const handleFinalizeOrder = async () => {
     const errors: string[] = [];
     let hasError = false;
 
@@ -216,47 +216,51 @@ const storeCoordinates = {
     setPaymentMethodError(false);
     setChangeAmountError(false);
 
+    // Validação para entrega
     if (deliveryType === 'Entrega') {
         if (!cep) {
             errors.push('CEP é obrigatório');
-            setCepError(true); // Marcar o erro no CEP
+            setCepError(true); 
             hasError = true;
-            cepRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' }); // Scroll suave até o CEP
+            cepRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
         }
         if (!number) {
             errors.push('Número é obrigatório');
-            setNumberError(true); // Marcar o erro no número
+            setNumberError(true);
             hasError = true;
-            numberRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' }); // Scroll suave até o Número
+            numberRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
         }
     }
 
+    // Validação do método de pagamento
     if (!paymentMethod) {
         errors.push('Método de pagamento é obrigatório');
-        setPaymentMethodError(true); // Marcar erro no método de pagamento
+        setPaymentMethodError(true);
         hasError = true;
-        paymentMethodRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' }); // Scroll suave até o Método de Pagamento
+        paymentMethodRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
     }
 
+    // Validação do troco se o pagamento for em dinheiro
     if (paymentMethod === 'Dinheiro' && (changeAmount === null || changeAmount < subtotal + freight)) {
         errors.push('O valor inserido para troco deve ser maior ou igual ao total.');
-        setChangeAmountError(true); // Marcar erro no valor do troco
+        setChangeAmountError(true);
         hasError = true;
-        changeAmountRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' }); // Scroll suave até o Valor de Troco
+        changeAmountRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
     }
 
+    // Se houver erros, exibe os erros e retorna
     if (hasError) {
-        // Exibe os erros usando toastify
         errors.forEach(error => toast.error(error));
         return;
     }
 
-    // Exibe o modal de Pix se o método de pagamento for Pix
+    // Se o método de pagamento for Pix, abre o modal
     if (paymentMethod === 'Pix') {
         setShowPixModal(true);
         return; // Retorna para evitar enviar a mensagem enquanto o modal está aberto
     }
 
+    // Lógica para finalizar o pedido (apenas se o método não for Pix)
     const total = subtotal + freight;
     const orderMessage = `Pedido:\n${cartItems.map(item => {
         const subtotalItem = item.bulk
@@ -278,7 +282,7 @@ const storeCoordinates = {
 
     // Abre a URL do WhatsApp
     window.open(whatsappUrl, '_blank');
-  
+
     // Define que o pedido foi finalizado com sucesso
     setOrderSuccess(true);
 };
@@ -457,7 +461,7 @@ const storeCoordinates = {
         freight={freight} // Ajuste conforme necessário
         fullPIX={''} now={0} 
 
-        handleFinalizeOrder={handleFinalizeOrder} // Passa a função aqui
+        handleFinalizeOrder={handleFinalizeOrder} // Passando a função corretamente
 
         />
       

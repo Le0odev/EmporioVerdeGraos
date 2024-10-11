@@ -166,7 +166,7 @@ const handleFlavorSelect = (flavor: string) => {
           ))}
         </FiltersContainer>
         {loading ? (
-          <p>Carregando...</p>
+          <p>Carregando....</p>
         ) : error ? (
           <p>{error}</p>
         ) : (
