@@ -155,11 +155,17 @@ const handleFlavorSelect = (flavor: string) => {
           />
         </SearchContainer>
         <FiltersContainer>
-          <FilterButton onClick={() => setSelectedCategory(null)}>Todos</FilterButton>
+          <FilterButton 
+            onClick={() => setSelectedCategory(null)} 
+            style={{ backgroundColor: selectedCategory === null ? '#9370DB' : 'transparent' }}
+          >
+            Todos
+          </FilterButton>
           {categories.map((category) => (
             <FilterButton
               key={category.id}
               onClick={() => setSelectedCategory(category.id)}
+              style={{ backgroundColor: selectedCategory === category.id ? '#9370DB' : 'transparent' }}
             >
               {category.categoryName}
             </FilterButton>
