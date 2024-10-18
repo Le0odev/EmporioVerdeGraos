@@ -308,7 +308,7 @@ const CriarVenda: React.FC = () => {
       // Adicionar linha divisória após cada item
       doc.line(10, currentY + lineHeight * 4, 70, currentY + lineHeight * 4);
   
-      currentY += lineHeight * 4; // Ajuste o multiplicador conforme necessário para o espaçamento entre os itens
+      currentY += lineHeight * 5; // Ajuste para dar mais espaço entre os itens
     });
   
     // Espaçamento entre os itens do carrinho e o subtotal
