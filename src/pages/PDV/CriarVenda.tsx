@@ -299,8 +299,12 @@ const CriarVenda: React.FC = () => {
       const line3 = item.bulk ? `Peso: ${item.peso}g` : `Quantidade: ${item.quantidade}`;
       const line4 = `Subtotal: R$ ${item.bulk ? (item.productPrice * (item.peso || 0) / 1000).toFixed(2) : (item.productPrice * (item.quantidade || 0)).toFixed(2)}`;
   
+      doc.setFont('helvetica', 'bold');
       doc.setFontSize(10);
       doc.text(line1, 10, currentY);
+      
+      // Restante das informações em estilo normal
+      doc.setFont('helvetica', 'normal');
       doc.text(line2, 10, currentY + lineHeight);
       doc.text(line3, 10, currentY + lineHeight * 2);
       doc.text(line4, 10, currentY + lineHeight * 3);
