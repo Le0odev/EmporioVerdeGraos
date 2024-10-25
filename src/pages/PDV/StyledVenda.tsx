@@ -488,8 +488,7 @@ export const CartActions = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-top: 1rem;
-  padding: 0.5rem;
+  margin-top: 0.5rem;
   border-top: 1px solid ${colors.border};
 
   @media (max-width: 768px) {
@@ -549,7 +548,7 @@ export const TrashIcon = styled(FaTrashAlt)`
   color: red;
   transition: color 0.3s ease;
   position: absolute; /* Define o posicionamento absoluto */
-  top: 8px;           /* Ajusta para a parte superior */
+  top: 12px;           /* Ajusta para a parte superior */
   right: 8px;         /* Ajusta para a parte direita */
   
   &:hover {
