@@ -271,27 +271,7 @@ export const CartList = styled.ul`
 `;
 
 // Item individual do carrinho
-export const CartItem = styled.li`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0.75rem;
-  border-bottom: 1px solid ${colors.border};
-  background-color: #fff;
-  border-radius: 4px;
-  margin-bottom: 6px;
-  box-shadow: 0 2px 4px ${colors.shadow};
-  transition: background-color 0.3s ease;
 
-  &:hover {
-    background-color: ${colors.secondary};
-  }
-
-  @media (max-width: 768px) {
-    padding: 0.5rem;
-    margin-bottom: 4px;
-  }
-`;
 
 // Detalhes do item do carrinho
 export const CartItemDetails = styled.div`
@@ -404,21 +384,7 @@ export const DecrementButton = styled.button`
 
 
 
-// Ícone de lixeira para excluir item do carrinho
-export const TrashIcon = styled(FaTrashAlt)`
-  cursor: pointer;
-  color: red;
-  transition: color 0.3s ease;
-  margin-left: 0.5rem;
 
-  &:hover {
-    color: #c82333;
-  }
-  @media (max-width: 768px) {
-    font-size: 0.9rem;
-  }
-  
-`;
 
 // Input específico para granel
 export const GranelInput = styled(Input)`
@@ -550,5 +516,47 @@ export const PaymentButton = styled.button<{ selected: boolean }>`
   &:hover {
     background-color: #0056b3;
     color: #ffffff;
+  }
+`;
+
+// Container do item do carrinho
+export const CartItem = styled.li`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem;
+  border-bottom: 1px solid ${colors.border};
+  background-color: #fff;
+  border-radius: 4px;
+  margin-bottom: 6px;
+  box-shadow: 0 2px 4px ${colors.shadow};
+  transition: background-color 0.3s ease;
+  position: relative; /* Adiciona posição relativa para o container */
+
+  &:hover {
+    background-color: ${colors.secondary};
+  }
+
+  @media (max-width: 768px) {
+    padding: 0.5rem;
+    margin-bottom: 4px;
+  }
+`;
+
+// Ícone de lixeira
+export const TrashIcon = styled(FaTrashAlt)`
+  cursor: pointer;
+  color: red;
+  transition: color 0.3s ease;
+  position: absolute; /* Define o posicionamento absoluto */
+  top: 8px;           /* Ajusta para a parte superior */
+  right: 8px;         /* Ajusta para a parte direita */
+  
+  &:hover {
+    color: #c82333;
+  }
+
+  @media (max-width: 768px) {
+    font-size: 0.9rem;
   }
 `;
