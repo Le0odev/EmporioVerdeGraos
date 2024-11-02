@@ -9,7 +9,7 @@ import { CriarVenda } from '../pages/PDV/CriarVenda';
 import RelatorioVendas from '../pages/Reports/Relatorio';
 import Catalog from '../pages/Catalog/Catalog';
 import Cart from '../pages/Catalog/Cart';
-import { ToastContainer } from 'react-toastify';
+import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css'; 
 import ListaDeProdutos from '../components/Notifies/ListaProdutos';
 import ListaProdutosGerenciamento from '../components/Notifies/GerenciarProdutos/ListaProdutosGerenciamento';
@@ -43,6 +43,22 @@ const MainContent = styled.div<{ showSidebar: boolean }>`
   }
 `;
 
+const ClearToastsButton = styled.button`
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  padding: 10px 15px;
+  background-color: #ff3333;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+
+  &:hover {
+    background-color: #cc0000;
+  }
+`;
+
 export const AppRoutes = () => {
   const location = useLocation();
  
@@ -55,6 +71,9 @@ export const AppRoutes = () => {
   // Exibir a sidebar apenas se a rota atual não estiver na lista de rotas sem sidebar
   const showSidebar = !noSidebarRoutes.includes(location.pathname);
 
+  const handleClearAllToasts = () => {
+    toast.dismiss();
+  };
 
 
   return (
@@ -79,6 +98,10 @@ export const AppRoutes = () => {
         </Routes>
         <ListaDeProdutos />
         <ToastContainer />
+        {/* Botão para limpar todos os toasts */}
+        <ClearToastsButton onClick={handleClearAllToasts}>
+          Limpar Todos
+        </ClearToastsButton>
       </MainContent>
       <Footer />
     </AppContainer>
