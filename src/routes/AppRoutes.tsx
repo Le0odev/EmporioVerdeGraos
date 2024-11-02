@@ -15,7 +15,7 @@ import ListaDeProdutos from '../components/Notifies/ListaProdutos';
 import ListaProdutosGerenciamento from '../components/Notifies/GerenciarProdutos/ListaProdutosGerenciamento';
 import EnviarPedido from '../components/Notifies/EnviarPedido/EnviarPedido';
 import { Footer } from '../components/Footer/Footer';
-import  Sidebar from '../components/Header/Sidebar';
+import Sidebar from '../components/Header/Sidebar';
 import { useState, useEffect } from 'react';
 import FinalizarCompra from '../pages/Catalog/FinalizarCompra';
 import PIX from 'react-qrcode-pix';
@@ -27,7 +27,7 @@ declare const H: any;
 const AppContainer = styled.div`
   display: flex;
   flex-direction: column;
-  min-height: 100vh; // Garante que a altura da página ocupe a tela inteira
+  min-height: 100vh;
 `;
 
 const MainContent = styled.div<{ showSidebar: boolean }>`
@@ -61,30 +61,46 @@ const ClearToastsButton = styled.button`
 
 export const AppRoutes = () => {
   const location = useLocation();
- 
+  const [hasToasts, setHasToasts] = useState(false);
 
-  const now = new Date().getTime().toString();
-
-  // Defina as rotas onde a sidebar não deve aparecer
   const noSidebarRoutes = ['/catalogo', '/cart', '/finalizar-compra', '/sucess'];
-
-  // Exibir a sidebar apenas se a rota atual não estiver na lista de rotas sem sidebar
   const showSidebar = !noSidebarRoutes.includes(location.pathname);
 
   const handleClearAllToasts = () => {
     toast.dismiss();
+    setHasToasts(false); // Define hasToasts como false após limpar as notificações
   };
 
+  useEffect(() => {
+    const showToastListener = () => setHasToasts(true);
+    const hideToastListener = () => {
+     // @ts-ignore
+      if (toast.isActive()) {
+        setHasToasts(true);
+      } else {
+        setHasToasts(false);
+      }
+    };
+
+    // Adiciona eventos de monitoramento
+    toast.onChange((data) => {
+      if (data.status === 'added') showToastListener();
+      else if (data.status === 'removed') hideToastListener();
+    });
+
+    return () => {
+      toast.onChange(() => {}); // Passa uma função vazia para remover o listener
+    };
+  }, []);
 
   return (
     <AppContainer>
-      {showSidebar && <Sidebar />} {/* Exibe a sidebar com base na condição */}
+      {showSidebar && <Sidebar />}
       <MainContent showSidebar={showSidebar}>
 
         <Routes>
           <Route path='/login' element={<Login />} />
           <Route path='/admin-home' element={<Dashboard />} />
-
           <Route path="/cadastrar-produto" element={<CadastrarProduto />} />
           <Route path="/cadastrar-categoria" element={<CadastrarCategoria />} />
           <Route path="/criar-venda" element={<CriarVenda />} />
@@ -96,12 +112,16 @@ export const AppRoutes = () => {
           <Route path="/lista-pedidos" element={<ListaProdutosGerenciamento />} />
           <Route path="/lista-pedidos/enviar-pedido" element={<EnviarPedido />} />
         </Routes>
+
         <ListaDeProdutos />
         <ToastContainer />
-        {/* Botão para limpar todos os toasts */}
-        <ClearToastsButton onClick={handleClearAllToasts}>
-          Limpar Todos
-        </ClearToastsButton>
+        
+        {/* Botão para limpar todos os toasts, exibido apenas se houver notificações */}
+        {hasToasts && (
+          <ClearToastsButton onClick={handleClearAllToasts}>
+            Limpar Todos
+          </ClearToastsButton>
+        )}
       </MainContent>
       <Footer />
     </AppContainer>
