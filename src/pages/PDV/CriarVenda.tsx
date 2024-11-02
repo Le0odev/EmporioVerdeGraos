@@ -127,17 +127,20 @@ const CriarVenda: React.FC = () => {
 
   const addToCart = (produto: Produto) => {
     const itemExistente = carrinho.find(item => item.id === produto.id);
+    
     if (itemExistente) {
       const novoCarrinho = carrinho.map(item =>
         item.id === produto.id ? { ...item, quantidade: (item.quantidade || 0) + 1 } : item
       );
       setCarrinho(novoCarrinho);
-
     } else {
-      setCarrinho([...carrinho, { ...produto, quantidade: 1 }]);
+      // Adiciona o novo produto no início do array
+      setCarrinho([{ ...produto, quantidade: 1 }, ...carrinho]);
     }
+    
     setCodigoBarras('');
   };
+  
 
   const updateQuantity = (id: number, quantidade: number | null) => {
     setCarrinho((prevCarrinho) =>
