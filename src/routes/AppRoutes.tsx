@@ -46,7 +46,7 @@ const MainContent = styled.div<{ showSidebar: boolean }>`
 const ClearToastsButton = styled.button`
   position: fixed;
   bottom: 20px;
-  right: 120px; /* Aumente esse valor para mover o botão mais para a esquerda */
+  right: 350px; /* Aumente esse valor para mover o botão mais para a esquerda */
   padding: 10px 15px;
   background-color: #ff3333;
   color: white;
