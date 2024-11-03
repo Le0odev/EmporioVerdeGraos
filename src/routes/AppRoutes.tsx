@@ -46,7 +46,7 @@ const MainContent = styled.div<{ showSidebar: boolean }>`
 const ClearToastsButton = styled.button`
   position: fixed;
   bottom: 20px;
-  right: 20px;
+  right: 120px; /* Aumente esse valor para mover o botão mais para a esquerda */
   padding: 10px 15px;
   background-color: #ff3333;
   color: white;
@@ -57,7 +57,12 @@ const ClearToastsButton = styled.button`
   &:hover {
     background-color: #cc0000;
   }
+
+  @media (max-width: 768px) {
+    right: 20px; /* Redefine para próximo da borda em telas menores */
+  }
 `;
+
 
 export const AppRoutes = () => {
   const location = useLocation();
