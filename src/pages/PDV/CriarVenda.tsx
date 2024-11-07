@@ -271,7 +271,7 @@ const CriarVenda: React.FC = () => {
     // Configurar o cabeçalho do cupom
     const dataHora = new Date().toLocaleString('pt-BR');
     const nomeEmpresa = 'Empório Verde Grãos';
-    const cnpjEmpresa = '81.991.676/1777';
+    const cnpjEmpresa = '34.483.095/0001-63';
     const enderecoEmpresa = 'Centro, Abreu e Lima';
     const telefoneEmpresa = '(81) 9 9167-6177';
   
