@@ -46,6 +46,8 @@ import jsPDF from 'jspdf';
 import { toast } from 'react-toastify';
 import { SearchBar, SearchContainer, SearchIcon } from '../../components/StyledSearch';
 import { FiSearch } from 'react-icons/fi';
+import PixModalVenda from './PixModalVenda';
+import { CancelButton } from '../ProductCad/StyledProdutos';
 
 
 interface Produto {
@@ -77,13 +79,17 @@ const CriarVenda: React.FC = () => {
   const [showModal, setShowModal] = useState<boolean>(false); // Estado para controlar o modal
   const [showPrintModal, setShowPrintModal] = useState<boolean>(false); // Estado para controlar o modal de impressão
   const togglePrintModal = () => setShowPrintModal(!showPrintModal);
+  const [showPixModal, setShowPixModal] = useState(false); // Novo estado para controlar o modal PIX
+
 
   const toggleModal = () => setShowModal(!showModal); 
 
 
+  
+
   const searchProdutosByCodeBar = async (codeBar: string) => {
     try {
-      const response = await axios.get(`https://systemallback-end-production.up.railway.app/products/search/codebar?codeBar=${codeBar}`, {
+      const response = await axios.get(`http://localhost:8080/products/search/codebar?codeBar=${codeBar}`, {
         headers: {
           Authorization: `Bearer ${token}`
         }
@@ -111,7 +117,7 @@ const CriarVenda: React.FC = () => {
 
   const searchProdutosByName = async (term: string) => {
     try {
-      const response = await axios.get(`https://systemallback-end-production.up.railway.app/products/search?productName=${term}`, {
+      const response = await axios.get(`http://localhost:8080/products/search?productName=${term}`, {
         headers: {
           Authorization: `Bearer ${token}`
         }
@@ -161,6 +167,16 @@ const CriarVenda: React.FC = () => {
   const removeFromCart = (id: number) => {
     setCarrinho((prevCarrinho) => prevCarrinho.filter(item => item.id !== id));
   };
+  
+  const handlePixConfirmation = async () => {
+    try {
+      await handleCheckout();
+      setShowPixModal(false);
+    } catch (error) {
+      console.error('Erro ao processar pagamento PIX:', error);
+      toast.error('Erro ao processar o pagamento. Por favor, tente novamente.');
+    }
+  };
 
   const handleCheckout = async () => {
     try {
@@ -168,7 +184,12 @@ const CriarVenda: React.FC = () => {
         toast.warning('Por favor, preencha a forma de pagamento antes de finalizar a venda.');
         return;
       }
-  
+
+      if (formaDePagamento === 'PIX' && !showPixModal) {
+        setShowPixModal(true);
+        return; // Interrompe a finalização até que o modal seja fechado
+      }
+
       const vendaItems = carrinho.map((item) => ({
         productId: item.id,
         quantity: item.bulk ? null : item.quantidade,
@@ -182,7 +203,7 @@ const CriarVenda: React.FC = () => {
         methodPayment: formaDePagamento
       };
   
-      const response = await axios.post('https://systemallback-end-production.up.railway.app/sales/create', saleRequest, {
+      const response = await axios.post('http://localhost:8080/sales/create', saleRequest, {
         headers: {
           Authorization: `Bearer ${token}`,
           'Content-Type': 'application/json'
@@ -361,7 +382,9 @@ const CriarVenda: React.FC = () => {
     };
   };
 
-  
+  const generatePixCode = () => {
+    return Date.now().toString();
+  };
 
 
   useEffect(() => {
@@ -508,13 +531,27 @@ const CriarVenda: React.FC = () => {
             </CheckoutSection>
         )}
       </VendaSection>
+      <PixModalVenda
+        isOpen={showPixModal}
+        onClose={() => {
+          setShowPixModal(false);
+          handleCheckout(); // Chama novamente a finalização
+        } }
+        subtotal={calcularSubtotal().subtotalComDesconto}
+        onCancel={() => setShowPixModal(false)}
+        fullPIX={generatePixCode()}
+        now={Date.now()}
+
+      />
+
+
       {showModal && (
         <ModalWrapper>
           <ModalContent>
             <h2>Deseja finalizar a venda?</h2>
             <div>
               <Button onClick={handleCheckout}>Confirmar</Button>
-              <Button onClick={() => setShowModal(false)}>Cancelar</Button>
+              <CancelButton onClick={() => setShowModal(false)}>Cancelar</CancelButton>
             </div>
           </ModalContent>
         </ModalWrapper>

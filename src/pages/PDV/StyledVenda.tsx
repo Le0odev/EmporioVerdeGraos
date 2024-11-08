@@ -559,3 +559,18 @@ export const TrashIcon = styled(FaTrashAlt)`
     font-size: 0.9rem;
   }
 `;
+const CancelButton = styled.button`
+    background-color: #d9534f; /* Vermelho */
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 12px 24px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin: 10px;
+
+    &:hover {
+        background-color: #c9302c; /* Vermelho mais escuro para hover */
+    }
+    `;
