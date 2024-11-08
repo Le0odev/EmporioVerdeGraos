@@ -167,23 +167,49 @@ export const FiltersContainer = styled.div`
 
 export const FilterButton = styled.button<{ selected?: boolean }>`
   background-color: ${props => props.selected ? colors.selectedFilterBackground : colors.filterButtonBackground};
-  color: ${colors.secondary}; 
-  border: none;
+  color: ${props => props.selected ? '#FFF' : colors.secondary}; 
+  border: 1px solid ${props => props.selected ? darken(0.1, colors.selectedFilterBackground) : 'transparent'};
   padding: 0.5rem 1.25rem;
   border-radius: 30px;
   cursor: pointer;
   font-size: 0.875rem;
-  transition: background-color 0.3s ease, transform 0.3s ease;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: ${props => props.selected ? '0px 4px 8px rgba(0, 0, 0, 0.2)' : 'none'};
 
   &:hover {
-    background-color: ${darken(0.1, colors.accent)};
-    transform: scale(1.1);
+    background-color: ${props => darken(0.05, props.selected ? colors.selectedFilterBackground : colors.filterButtonBackground)};
   }
 
   @media (max-width: 768px) {
     font-size: 0.8rem;
     padding: 0.5rem 1rem;
   }
+`;
+
+export const DropdownContainer = styled.div`
+  position: relative;
+  display: inline-block;
+  width: 100%;
+`;
+
+export const DropdownButton = styled.button`
+  background-color: #fff;
+  border: 1px solid #ccc;
+  padding: 8px 12px;
+  width: 100%;
+  text-align: left;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+`;
+
+export const DropdownList = styled.div`
+  position: absolute;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+  width: 100%;
+  z-index: 1;
 `;
 
 export const ProductList = styled.div`

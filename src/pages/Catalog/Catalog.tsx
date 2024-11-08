@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
 import { useCart } from './CartContext';
 import WeightModal from './ModalsCatalog/WeightModal';
 import QuestionModal from './ModalsCatalog/QuestionModal';
-import FlavorModal from './ModalsCatalog/FlavorModal'; 
+import FlavorModal from './ModalsCatalog/FlavorModal';
+import { debounce } from 'lodash';
 import {
   CatalogContainer,
   SearchBar,
@@ -46,33 +47,27 @@ const Catalog: React.FC = () => {
     setExpandedProduct(expandedProduct?.id === product.id ? null : product);
   };
 
-  // Fetching categories
-  useEffect(() => {
-    const fetchCategories = async () => {
-      setLoading(true);
-      try {
-        const response = await axios.get('https://systemallback-end-production.up.railway.app/public/catalog/categories');
-        setCategories(response.data);
-      } catch (error) {
-        console.error('Erro ao buscar categorias:', error);
-        setError('Erro ao buscar categorias.');
-      } finally {
-        setLoading(false);
-      }
-    };
+  const fetchCategories = async () => {
+    setLoading(true);
+    try {
+      const response = await axios.get('https://systemallback-end-production.up.railway.app/public/catalog/categories');
+      setCategories(response.data);
+    } catch (error) {
+      console.error('Erro ao buscar categorias:', error);
+      setError('Erro ao buscar categorias.');
+    } finally {
+      setLoading(false);
+    }
+  };
 
-    fetchCategories();
-  }, []);
-
-  // Fetching products based on search and category
-  useEffect(() => {
-    const fetchProducts = async () => {
+  const fetchProducts = useCallback(
+    debounce(async (search: any, category: any) => {
       setLoading(true);
       try {
         const response = await axios.get('https://systemallback-end-production.up.railway.app/public/catalog/search', {
           params: {
-            productName: searchTerm,
-            categoryId: selectedCategory,
+            productName: search,
+            categoryId: category,
           }
         });
         setProducts(response.data);
@@ -82,44 +77,47 @@ const Catalog: React.FC = () => {
       } finally {
         setLoading(false);
       }
-    };
+    }, 500),
+    []
+  );
 
-    fetchProducts();
-  }, [searchTerm, selectedCategory]);
+  useEffect(() => {
+    fetchCategories();
+  }, []);
 
-  // Handling adding to cart
+  useEffect(() => {
+    fetchProducts(searchTerm, selectedCategory);
+  }, [searchTerm, selectedCategory, fetchProducts]);
+
   const handleAddToCart = (product: Product) => {
-    setCurrentProduct(product); // Set current product before opening modal
+    setCurrentProduct(product);
     if (product.bulk) {
       setModalOpen(true);
     } else if (product.flavors && product.flavors.length > 0) {
-      setFlavorModalOpen(true); // Open flavor selection modal
+      setFlavorModalOpen(true);
     } else {
-      addToCart(product); // Directly add to cart
+      addToCart(product);
       setQuestionModalOpen(true);
-       
     }
   };
 
-  // Handling weight modal submission
   const handleModalSubmit = (weight: number) => {
     if (currentProduct) {
-      addToCart(currentProduct, weight); // Add to cart with weight
+      addToCart(currentProduct, weight);
       setCurrentProduct(null);
       setModalOpen(false);
       setQuestionModalOpen(true);
     }
   };
 
-  
-const handleFlavorSelect = (flavor: string) => {
-  setSelectedFlavor(flavor); // Armazena o sabor selecionado
-  if (currentProduct) {
-       // @ts-ignore
-    addToCart(currentProduct, 1, flavor); // Passa 1 como peso padrão para sabor
-    setQuestionModalOpen(true);
-  }
-};
+  const handleFlavorSelect = (flavor: string) => {
+    setSelectedFlavor(flavor);
+    if (currentProduct) {
+      //@ts-ignore
+      addToCart(currentProduct, 1, flavor);
+      setQuestionModalOpen(true);
+    }
+  };
 
   const handleGoToCart = () => {
     navigate('/cart');
@@ -141,7 +139,6 @@ const handleFlavorSelect = (flavor: string) => {
   return (
     <>
       <HeaderCart handleGoToCart={handleGoToCart} />
-
       <CatalogContainer>
         <SearchContainer>
           <SearchIcon>
@@ -155,9 +152,9 @@ const handleFlavorSelect = (flavor: string) => {
           />
         </SearchContainer>
         <FiltersContainer>
-          <FilterButton 
-            onClick={() => setSelectedCategory(null)} 
-            style={{ backgroundColor: selectedCategory === null ? '#9370DB' : '#38a169' }}
+          <FilterButton
+            onClick={() => setSelectedCategory(null)}
+            selected={selectedCategory === null}
           >
             Todos
           </FilterButton>
@@ -165,14 +162,14 @@ const handleFlavorSelect = (flavor: string) => {
             <FilterButton
               key={category.id}
               onClick={() => setSelectedCategory(category.id)}
-              style={{ backgroundColor: selectedCategory === category.id ? '#9370DB' : '#38a169' }}
+              selected={selectedCategory === category.id}
             >
               {category.categoryName}
             </FilterButton>
           ))}
         </FiltersContainer>
         {loading ? (
-          <p>Carregando....</p>
+          <p>Carregando...</p>
         ) : error ? (
           <p>{error}</p>
         ) : (
@@ -182,7 +179,12 @@ const handleFlavorSelect = (flavor: string) => {
                 <ProductImage src={product.imageUrl} alt={product.productName} />
                 <ProductName>{product.productName}</ProductName>
                 <ProductPrice>R${product.productPrice.toFixed(2)}</ProductPrice>
-                <AddToCartButton onClick={(e) => { e.stopPropagation(); handleAddToCart(product); }}>
+                <AddToCartButton
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleAddToCart(product);
+                  }}
+                >
                   Comprar
                 </AddToCartButton>
               </ProductCard>
@@ -190,7 +192,6 @@ const handleFlavorSelect = (flavor: string) => {
           </ProductList>
         )}
       </CatalogContainer>
-
       <ProductDescriptionModal
         product={currentProduct}
         isOpen={descriptionModalOpen}
@@ -202,7 +203,7 @@ const handleFlavorSelect = (flavor: string) => {
         onClose={() => setModalOpen(false)}
         onSubmit={handleModalSubmit}
       />
-      <QuestionModal 
+      <QuestionModal
         isOpen={questionModalOpen}
         onClose={() => setQuestionModalOpen(false)}
         onContinueShopping={handleContinueShopping}
@@ -211,8 +212,8 @@ const handleFlavorSelect = (flavor: string) => {
       <FlavorModal
         isOpen={flavorModalOpen}
         onClose={() => setFlavorModalOpen(false)}
-        flavors={currentProduct?.flavors || []} // Pass flavors from current product
-        onSelectFlavor={handleFlavorSelect} // Handle flavor selection
+        flavors={currentProduct?.flavors || []}
+        onSelectFlavor={handleFlavorSelect}
       />
     </>
   );
