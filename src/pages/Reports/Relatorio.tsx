@@ -30,10 +30,13 @@ import {
   FilterLabel,
   DateInputsWrapper,
   ButtonGroup,
-  InputGroup
+  InputGroup,
+  DeleteButton
 } from './StyledReport';
 import { useAuth } from '../Login/authContext';
 import { format } from 'date-fns';
+import { FaTrash } from 'react-icons/fa';
+import { toast } from 'react-toastify';
 
 
 interface Sale {
@@ -46,6 +49,7 @@ interface Sale {
 }
 
 interface SalesByDay {
+  id: number;  // Propriedade 'id' é obrigatória
   date: string;
   total: number;
 }
@@ -74,6 +78,9 @@ const Relatorio: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const { token } = useAuth();
 
+  
+  
+
   useEffect(() => {
     if (filterOption === 'day' && date) {
       fetchSalesByDay();
@@ -99,7 +106,47 @@ const Relatorio: React.FC = () => {
       console.error('Erro ao buscar vendas por dia:', error);
     }
   };
-
+  const handleDeleteSale = async (saleId: number) => {
+    // Verificação de confirmação antes de excluir
+    const confirmDelete = window.confirm('Tem certeza de que deseja excluir esta venda?');
+    
+    if (!confirmDelete) {
+      return; // Se o usuário cancelar a ação, a exclusão não será realizada
+    }
+  
+    try {
+      // Requisição DELETE para excluir a venda
+      await axios.delete(`https://systemallback-end-production.up.railway.app/sales/${saleId}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+  
+      // Atualiza o estado das vendas removendo a venda deletada
+      setSales((prevSales) => prevSales.filter((sale) => sale.id !== saleId));
+  
+      // Se a venda estava em uma das listas agrupadas, remova também
+      setGroupedSales((prevGroupedSales) =>
+        prevGroupedSales.filter((groupedSale) => groupedSale.id !== saleId)
+      );
+  
+      // Atualizar os totais de vendas, caso necessário
+      calculateTotalByDay(sales);
+      calculateTotalByPeriod(sales);
+  
+      // Realizar uma nova busca pelas vendas após exclusão
+      if (filterOption === 'day' && date) {
+        fetchSalesByDay();
+      } else if (filterOption === 'month' && month && year) {
+        fetchTotalSalesByMonth();
+      } else if (filterOption === 'period' && startDate && endDate) {
+        fetchSalesByPeriod();
+      }
+  
+      toast.success('Venda deletada com sucesso!');
+    } catch (error) {
+      console.error('Erro ao deletar a venda:', error);
+      alert('Erro ao tentar deletar a venda.');
+    }
+  };
   const fetchTotalSalesByMonth = async () => {
     try {
       const response = await axios.get(`https://systemallback-end-production.up.railway.app/report/month/${year}/${month}`, {
@@ -139,12 +186,13 @@ const Relatorio: React.FC = () => {
       acc[date] += sale.saleTotals;
       return acc;
     }, {});
-
-    const groupedSalesArray: SalesByDay[] = Object.keys(grouped).map(date => ({
+  
+    const groupedSalesArray: SalesByDay[] = Object.keys(grouped).map((date, index) => ({
+      id: index + 1, // Atribuindo um id fictício ou um índice
       date,
       total: grouped[date],
     }));
-
+  
     setGroupedSales(groupedSalesArray);
   };
 
@@ -284,6 +332,15 @@ const Relatorio: React.FC = () => {
             <SalesItem key={sale.id} onClick={() => handleSaleClick(sale)}>
               <div>Data: {formatDate(sale.saleDate)}</div>
               <h4>Total: R${sale.saleTotals.toFixed(2)}</h4>
+
+              <DeleteButton
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleDeleteSale(sale.id);
+                }}
+              >
+                <FaTrash />
+              </DeleteButton>
             </SalesItem>
           ))}
 
