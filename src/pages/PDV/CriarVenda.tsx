@@ -89,7 +89,7 @@ const CriarVenda: React.FC = () => {
 
   const searchProdutosByCodeBar = async (codeBar: string) => {
     try {
-      const response = await axios.get(`http://localhost:8080/products/search/codebar?codeBar=${codeBar}`, {
+      const response = await axios.get(`https://systemallback-end-production.up.railway.app/products/search/codebar?codeBar=${codeBar}`, {
         headers: {
           Authorization: `Bearer ${token}`
         }
@@ -117,7 +117,7 @@ const CriarVenda: React.FC = () => {
 
   const searchProdutosByName = async (term: string) => {
     try {
-      const response = await axios.get(`http://localhost:8080/products/search?productName=${term}`, {
+      const response = await axios.get(`https://systemallback-end-production.up.railway.app/products/search?productName=${term}`, {
         headers: {
           Authorization: `Bearer ${token}`
         }
@@ -203,7 +203,7 @@ const CriarVenda: React.FC = () => {
         methodPayment: formaDePagamento
       };
   
-      const response = await axios.post('http://localhost:8080/sales/create', saleRequest, {
+      const response = await axios.post('https://systemallback-end-production.up.railway.app/sales/create', saleRequest, {
         headers: {
           Authorization: `Bearer ${token}`,
           'Content-Type': 'application/json'
