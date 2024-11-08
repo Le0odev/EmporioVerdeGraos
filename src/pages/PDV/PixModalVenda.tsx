@@ -213,7 +213,7 @@ const PixModalVenda: React.FC<PixModalVendaProps> = ({
       <ModalContent>
         <Title>Pagamento via PIX</Title>
         <PIX
-          pixkey="leonardovinicius09@hotmail.com"
+          pixkey="+5581991676177"
           merchant="Empório Verde Grãos"
           city="Abreu e Lima"
           amount={subtotal}
