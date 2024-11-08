@@ -302,45 +302,7 @@ export const FilterInput = styled.input`
   }
 `;
 
-// Lista de vendas
-export const SalesList = styled.ul`
-  list-style: none;
-  padding: 0;
-  margin: 0;
 
-  
-`;
-
-// Item de venda (Card)
-export const SalesItem = styled.li`
-  padding: 20px;
-  margin-bottom: 12px;
-  background-color: #fff;
-  border-radius: 8px;
-  border: 1px solid #ddd;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  cursor: pointer;
-  transition: background-color 0.3s, transform 0.2s;
-
-  &:hover {
-    background-color: #e9ecef;
-    transform: scale(1.02);
-  }
-
-  & > div {
-    margin-bottom: 10px;
-  }
-
-  @media (max-width: 768px) {
-    padding: 15px;
-    font-size: 14px;
-  }
-
-  @media (max-width: 480px) {
-    padding: 10px;
-    font-size: 12px;
-  }
-`;
 
 // Container para o total de vendas
 export const TotalContainer = styled.div`
@@ -394,6 +356,63 @@ export const Button = styled.button<ButtonProps>`
 
   @media (max-width: 480px) {
     padding: 8px 16px;
+    font-size: 12px;
+  }
+`;
+
+export const DeleteButton = styled.button`
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: #ff4d4d;
+  font-size: 1.5rem;
+  transition: color 0.3s ease;
+
+  &:hover {
+    color: #e60000;  // Um tom mais intenso de vermelho quando passar o mouse
+  }
+
+  @media (max-width: 768px) {
+    padding: 15px;
+    font-size: 16px;
+  }
+`;
+
+export const SalesList = styled.ul`
+  list-style: none;
+  padding: 0;
+  margin: 0;
+`;
+
+export const SalesItem = styled.li`
+  display: flex;
+  justify-content: space-between; /* Alinha os itens para as extremidades */
+  align-items: center; /* Centraliza o conteúdo verticalmente */
+  padding: 20px;
+  margin-bottom: 12px;
+  background-color: #fff;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.2s;
+
+  &:hover {
+    background-color: #e9ecef;
+    transform: scale(1.02);
+  }
+
+  & > div {
+    margin-bottom: 10px;
+  }
+
+  @media (max-width: 768px) {
+    padding: 15px;
+    font-size: 14px;
+  }
+
+  @media (max-width: 480px) {
+    padding: 10px;
     font-size: 12px;
   }
 `;
