@@ -254,7 +254,7 @@ const PixModal: React.FC<ModalPixProps> = ({
           <h2>Pagamento via Pix</h2>
           <h3>Efetue o pagamento via PIX e confirme seu pedido!</h3>
           <PIX
-            pixkey="leonardovinicius09@hotmail.com"
+            pixkey="+5581991676177"
             merchant="Guilherme Neves"
             city="Paraíba do Sul"
             cep="25.850-000"
