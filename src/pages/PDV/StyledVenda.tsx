@@ -474,14 +474,15 @@ export const ModalContent = styled.div`
 `;
 
 // AlertMessage
-export const AlertMessage = styled.div`
-  background-color: #f8d7da;
-  color: #721c24;
-  padding: 10px;
-  border: 1px solid #f5c6cb;
+export const AlertMessage = styled.div<{ error?: boolean }>`
+  padding: 6px 12px;
   border-radius: 4px;
-  margin-bottom: 15px;
-`;
+  font-size: 14px;
+  font-weight: 500;
+  background-color: ${({ error }) => (error ? "#ffcccc" : "#3cb043")};
+  color: ${({ error }) => (error ? "#000000" : "#ffffff")};
+`
+
 
 // Ações do carrinho
 export const CartActions = styled.div`
