@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import axios from 'axios';
 import { useCart } from './CartContext';
 import WeightModal from './ModalsCatalog/WeightModal';
@@ -17,13 +17,16 @@ import {
   ProductPrice,
   SearchContainer,
   SearchIcon,
-  AddToCartButton
+  AddToCartButton,
+  FiltersWrapper,
+  ArrowButton
 } from './StyledCatalog';
 import { Category, Product } from './Product';
 import { FiSearch } from 'react-icons/fi';
 import { useNavigate } from 'react-router-dom';
 import HeaderCart from '../../components/Header/HeadrCart/HeaderCart';
 import ProductDescriptionModal from './ModalsCatalog/ProducDescriptionModal';
+import { FaArrowLeft, FaArrowRight } from 'react-icons/fa';
 
 const Catalog: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState<string>('');
@@ -43,9 +46,29 @@ const Catalog: React.FC = () => {
   const navigate = useNavigate();
   const itemCount = getCartItemCount();
 
-  const handleToggleDescription = (product: Product) => {
-    setExpandedProduct(expandedProduct?.id === product.id ? null : product);
-  };
+  
+  const scrollContainer = useRef<HTMLDivElement>(null)
+  const [showLeftArrow, setShowLeftArrow] = useState(false)
+  const [showRightArrow, setShowRightArrow] = useState(true)
+
+  const checkScroll = () => {
+    if (scrollContainer.current) {
+      const { scrollLeft, scrollWidth, clientWidth } = scrollContainer.current
+      setShowLeftArrow(scrollLeft > 0)
+      setShowRightArrow(scrollLeft < scrollWidth - clientWidth - 10) // -10 para uma pequena margem
+    }
+  }
+
+  const scroll = (direction: "left" | "right") => {
+    if (scrollContainer.current) {
+      const scrollAmount = 200
+      scrollContainer.current.scrollBy({
+        left: direction === "left" ? -scrollAmount : scrollAmount,
+        behavior: "smooth",
+      })
+    }
+  }
+
 
   const fetchCategories = async () => {
     setLoading(true);
@@ -151,23 +174,32 @@ const Catalog: React.FC = () => {
             onChange={(e) => setSearchTerm(e.target.value)}
           />
         </SearchContainer>
-        <FiltersContainer>
+        <FiltersWrapper>
+      {showLeftArrow && (
+        <ArrowButton className="left" onClick={() => scroll("left")}>
+          <FaArrowLeft />
+        </ArrowButton>
+      )}
+      <FiltersContainer ref={scrollContainer} onScroll={checkScroll}>
+        <FilterButton onClick={() => setSelectedCategory(null)} selected={selectedCategory === null}>
+          Todos
+        </FilterButton>
+        {categories.map((category) => (
           <FilterButton
-            onClick={() => setSelectedCategory(null)}
-            selected={selectedCategory === null}
+            key={category.id}
+            onClick={() => setSelectedCategory(category.id)}
+            selected={selectedCategory === category.id}
           >
-            Todos
+            {category.categoryName}
           </FilterButton>
-          {categories.map((category) => (
-            <FilterButton
-              key={category.id}
-              onClick={() => setSelectedCategory(category.id)}
-              selected={selectedCategory === category.id}
-            >
-              {category.categoryName}
-            </FilterButton>
-          ))}
-        </FiltersContainer>
+        ))}
+      </FiltersContainer>
+      {showRightArrow && (
+        <ArrowButton className="right" onClick={() => scroll("right")}>
+          <FaArrowRight />
+        </ArrowButton>
+      )}
+    </FiltersWrapper>
         {loading ? (
           <p>Carregando...</p>
         ) : error ? (

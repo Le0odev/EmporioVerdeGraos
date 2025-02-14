@@ -1,5 +1,7 @@
 import { darken, lighten, rgba } from "polished"
 import styled from "styled-components"
+import { FaArrowRight, FaArrowLeft } from 'react-icons/fa'; // Se estiver usando react-icons, adicione as setas
+
 
 const colors = {
   primary: "#2E7D32", // Um verde mais escuro e sofisticado
@@ -109,25 +111,64 @@ export const SearchIcon = styled.i`
   align-items: center;
 `
 
+export const FiltersWrapper = styled.div`
+  position: relative;
+  width: 100%;
+  padding: 0 2rem; // Espaço para as setas
+  margin: 0.5rem 0;
+`
+
 export const FiltersContainer = styled.div`
   display: flex;
-  gap: 0.75rem;
-  padding-bottom: 1rem;
+  gap: 0.5rem;
   overflow-x: auto;
-  scrollbar-width: thin;
-  scrollbar-color: ${colors.lightText} transparent;
-
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  scroll-behavior: smooth;
+  padding: 0.5rem 0;
+  
   &::-webkit-scrollbar {
-    height: 4px;
+    display: none;
+  }
+`
+export const ArrowButton = styled.button`
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: #ffffff;
+  border: 1px solid #E2E8F0;
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 1;
+  padding: 0;
+  color: #718096;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+
+  &:hover {
+    background-color: #f8f9fa;
   }
 
-  &::-webkit-scrollbar-track {
-    background: transparent;
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
   }
 
-  &::-webkit-scrollbar-thumb {
-    background-color: ${colors.lightText};
-    border-radius: 20px;
+  &.left {
+    left: 0;
+  }
+
+  &.right {
+    right: 0;
+  }
+
+  svg {
+    width: 12px;
+    height: 12px;
   }
 `
 
