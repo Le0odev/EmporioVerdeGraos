@@ -1,61 +1,39 @@
-import { darken } from 'polished';
-import styled from 'styled-components';
+import { darken, lighten, rgba } from "polished"
+import styled from "styled-components"
 
 const colors = {
-  primary: '#2d3748',
-  secondary: '#f7fafc',
-  accent: '#38a169',
-  text: '#1a202c',
-  lightText: '#718096',
-  border: '#e2e8f0',
-  shadow: 'rgba(0, 0, 0, 0.1)',
-  background: '#edf2f7',
-  headerBackground: '#38a169',
-  filterButtonBackground: '#2d3748',
-  selectedFilterBackground: '#38a169',
-};
-
-export const Header = styled.header`
-  background: ${colors.headerBackground};
-  color: ${colors.secondary};
-  padding: 1rem 2rem;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  box-shadow: 0 4px 8px ${colors.shadow};
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  z-index: 1000;
-  border-radius: 0 0 16px 16px;
-  box-sizing: border-box;
-
-  @media (max-width: 768px) {
-    padding: 0.75rem 1rem;
-  }
-`;
+  primary: "#2E7D32", // Um verde mais escuro e sofisticado
+  secondary: "#ffffff",
+  background: "#F5F7FA", // Um fundo ligeiramente mais frio
+  text: "#1A202C", // Um cinza mais escuro para melhor contraste
+  accent: "#43A047", // Um verde mais claro para acentos
+  border: "#E2E8F0",
+  shadow: "rgba(0, 0, 0, 0.08)",
+  selectedFilterBackground: "#43A047",
+  filterButtonBackground: "#ffffff",
+  lightText: "#718096",
+}
 
 export const CatalogContainer = styled.div`
   margin: 10px auto;
-  width: 80%;
-  height: 80%;
+  width: 100%;
+  max-width: 1280px;
   background-color: ${colors.background};
   padding: 2rem;
-  min-height: calc(100vh - 4rem);
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
-  border-radius: 16px;
-  box-shadow: 0 4px 8px ${colors.shadow}; 
   box-sizing: border-box;
+  border-radius: 16px;
+
 
   @media (max-width: 768px) {
     width: 94%;
-    height: 80%;
     margin: 10px auto;
+    height: 80%;
     padding: 1rem;
-    gap: 1rem;
+    gap: 1.5rem;
     background-color: ${colors.background};
     min-height: calc(100vh - 4rem);
     display: flex;
@@ -63,290 +41,340 @@ export const CatalogContainer = styled.div`
     border-radius: 16px;
     box-shadow: 0 4px 8px ${colors.shadow}; 
     box-sizing: border-box;
-    
-  }
-`;
 
-export const Title = styled.h1`
-  font-size: 2.25rem; // Aumentei um pouco o tamanho da fonte
-  font-weight: bold;
-  color: ${colors.secondary}; // Mudança para um contraste maior com o fundo
-  text-align: center;
-  margin: 0;
-  text-shadow: 1px 1px ${colors.shadow}; // Pequeno efeito de sombra no texto
+  }
+`
+
+export const Header = styled.header`
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  width: 100%;
+  background-color: ${colors.primary};
+  box-shadow: 0 2px 4px ${rgba(colors.shadow, 0.1)};
+  padding: 1rem 2rem;
+  margin: -2rem -2rem 0;
 
   @media (max-width: 768px) {
-    font-size: 1.45rem; // Ajuste para telas menores
+    padding: 1rem 1.5rem;
+    margin: -1.5rem -1.5rem 0;
   }
-`;
+`
 
-export const IconButton = styled.button`
-  background: none;
-  border: none;
-  color: ${colors.secondary};
-  cursor: pointer;
-  font-size: 2rem;
-  transition: color 0.3s ease, transform 0.3s ease;
-
-   svg {
-    font-size: 24px;
-  }
-
-  span {
-    position: absolute;
-    top: 8px; // Ajuste conforme necessário
-    right: 8px; // Ajuste conforme necessário
-    background: red;
-    color: white;
-    border-radius: 50%;
-    padding: 1px 5px;
-    font-size: 13px;
-    font-weight: bold;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  &:hover {
-    color: ${darken(0.1, colors.secondary)};
-  }
-
-  @media (max-width: 768px) {
-    font-size: 1.55rem;
-  }
-`;
+export const HeaderContent = styled.div`
+  max-width: 1280px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+`
 
 export const SearchContainer = styled.div`
   position: relative;
   width: 100%;
-`;
+  background-color: ${colors.secondary};
+  border-radius: 1rem;
+  padding: 0.75rem 1rem;
+  box-shadow: 0 2px 8px ${rgba(colors.shadow, 0.08)};
+  display: flex;
+  align-items: center;
+  transition: box-shadow 0.3s ease;
+
+  &:focus-within {
+    box-shadow: 0 4px 12px ${rgba(colors.shadow, 0.12)};
+  }
+`
 
 export const SearchBar = styled.input`
   width: 100%;
-  padding: 0.75rem 2.5rem;
-  border: 1px solid ${colors.border};
-  border-radius: 60px;
+  padding: 0.5rem 0.75rem;
+  border: none;
+  background: transparent;
   font-size: 1rem;
-  background-color: ${colors.secondary};
-  box-shadow: 0 2px 4px ${colors.shadow};
-  transition: box-shadow 0.3s ease, border-color 0.3s ease;
+  color: ${colors.text};
 
   &:focus {
-    box-shadow: 0 0 8px ${colors.accent};
     outline: none;
-    border-color: ${colors.accent};
   }
 
-  @media (max-width: 768px) {
-    font-size: 0.875rem;
-    padding: 0.6rem 2rem;
+  &::placeholder {
+    color: ${colors.lightText};
   }
-`;
+`
 
 export const SearchIcon = styled.i`
-  position: absolute;
-  left: 16px;
-  top: 50%;
-  transform: translateY(-50%);
   color: ${colors.lightText};
-  font-size: 1.25rem;
-
-  @media (max-width: 768px) {
-    font-size: 1rem;
-    left: 12px;
-  }
-`;
+  margin-right: 0.75rem;
+  display: flex;
+  align-items: center;
+`
 
 export const FiltersContainer = styled.div`
   display: flex;
-  flex-wrap: wrap;
-  gap: 0.4rem;
-  justify-content: center;
-  padding-bottom: 8px;
-`;
+  gap: 0.75rem;
+  padding-bottom: 1rem;
+  overflow-x: auto;
+  scrollbar-width: thin;
+  scrollbar-color: ${colors.lightText} transparent;
+
+  &::-webkit-scrollbar {
+    height: 4px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: ${colors.lightText};
+    border-radius: 20px;
+  }
+`
 
 export const FilterButton = styled.button<{ selected?: boolean }>`
-  background-color: ${props => props.selected ? colors.selectedFilterBackground : colors.filterButtonBackground};
-  color: ${props => props.selected ? '#FFF' : colors.secondary}; 
-  border: 1px solid ${props => props.selected ? darken(0.1, colors.selectedFilterBackground) : 'transparent'};
-  padding: 0.5rem 1.25rem;
-  border-radius: 30px;
-  cursor: pointer;
+  background-color: ${(props) => (props.selected ? colors.selectedFilterBackground : colors.filterButtonBackground)};
+  color: ${(props) => (props.selected ? colors.secondary : colors.text)};
+  border: 1px solid ${(props) => (props.selected ? "transparent" : colors.border)};
+  padding: 0.625rem 1.25rem;
+  border-radius: 0.75rem;
   font-size: 0.875rem;
-  transition: background-color 0.3s ease, box-shadow 0.3s ease;
-  box-shadow: ${props => props.selected ? '0px 4px 8px rgba(0, 0, 0, 0.2)' : 'none'};
+  font-weight: 500;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+  box-shadow: ${(props) => (props.selected ? `0 2px 4px ${rgba(colors.primary, 0.2)}` : "none")};
 
   &:hover {
-    background-color: ${props => darken(0.05, props.selected ? colors.selectedFilterBackground : colors.filterButtonBackground)};
+    background-color: ${(props) => (props.selected ? darken(0.05, colors.selectedFilterBackground) : lighten(0.05, colors.filterButtonBackground))};
+    transform: translateY(-1px);
   }
-
-  @media (max-width: 768px) {
-    font-size: 0.8rem;
-    padding: 0.5rem 1rem;
-  }
-`;
-
-export const DropdownContainer = styled.div`
-  position: relative;
-  display: inline-block;
-  width: 100%;
-`;
-
-export const DropdownButton = styled.button`
-  background-color: #fff;
-  border: 1px solid #ccc;
-  padding: 8px 12px;
-  width: 100%;
-  text-align: left;
-  cursor: pointer;
-  display: flex;
-  justify-content: space-between;
-`;
-
-export const DropdownList = styled.div`
-  position: absolute;
-  background-color: #fff;
-  border: 1px solid #ccc;
-  box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
-  width: 100%;
-  z-index: 1;
-`;
+`
 
 export const ProductList = styled.div`
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 1rem;
-  padding: 0;
-  max-width: 100%; 
-  margin: 0 auto; 
-  height: auto; 
-  box-sizing: border-box;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.5rem;
+  width: 100%;
+  padding: 0.5rem;
+  background-color: ${colors.background};
 
-   @media (max-width: 1024px) {
+  @media (min-width: 480px) {
     grid-template-columns: repeat(2, 1fr);
+    gap: 0.75rem;
+    padding: 0.75rem;
   }
 
-  @media (max-width: 768px) {
+  @media (min-width: 640px) {
     grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+    padding: 1rem;
+  }
+
+  @media (min-width: 1024px) {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.25rem;
+    padding: 1.25rem;
+  }
+
+  @media (min-width: 1280px) {
+    grid-template-columns: repeat(5, 1fr);
   }
 `;
 
 export const ProductCard = styled.div`
   background-color: ${colors.secondary};
-  border: 1px solid ${colors.border};
-  border-radius: 8px;
-  box-shadow: 0 4px 8px ${colors.shadow};
+  border-radius: 0.5rem;
   overflow: hidden;
-  transition: box-shadow 0.3s ease, transform 0.3s ease;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  padding: 0.8rem; // Aumentei um pouco o padding
-  text-align: center;
   position: relative;
-
+  transition: all 0.2s ease;
+  border: 1px solid ${colors.border};
+  padding: 0.5rem;
 
   &:hover {
-    box-shadow: 0 6px 12px ${colors.shadow};
-    transform: translateY(-3px);
-    cursor: pointer;
+    box-shadow: 0 4px 6px ${colors.shadow};
   }
 
-  @media (max-width: 768px) {
-  background-color: ${colors.secondary};
-  border: 1px solid ${colors.border};
-  border-radius: 8px;
-  box-shadow: 0 4px 8px ${colors.shadow};
-  overflow: hidden;
-  transition: box-shadow 0.3s ease, transform 0.3s ease;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 1.25rem; // Aumentei um pouco o padding
-  text-align: center;
-  position: relative;
-  box-shadow: 0 2px 4px ${colors.shadow};
-  padding: 1rem; 
+  @media (max-width: 480px) {
+    padding: 0.4rem;
   }
 `;
 
-export const AddToCartButton = styled.button`
-  background-color: ${colors.accent};
-  color: ${colors.secondary};
-  border: none;
-  padding: 0.75rem 1.5rem;
-  border-radius: 12px;
-  font-size: 0.875rem;
-  font-weight: bold;
-  transition: background-color 0.3s ease, transform 0.3s ease;
-  cursor: pointer;
+export const ProductImageContainer = styled.div`
+  position: relative;
+  padding: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: ${colors.background};
+  aspect-ratio: 1;
 
-  &:hover {
-    background-color: ${darken(0.1, colors.accent)};
-    transform: translateY(-3px) scale(1.05); // Corrigi a transformação para melhor efeito
-    cursor: pointer;
-
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background-color: ${colors.border};
   }
 
-  &:focus {
-    outline: none;
-    box-shadow: 0 0 4px ${colors.accent};
-  }
-
-  @media (max-width: 768px) {
-    font-size: 0.75rem;
-    padding: 0.5rem 1rem;
+  @media (max-width: 480px) {
+    padding: 0.4rem;
   }
 `;
 
 export const ProductImage = styled.img`
-  width: 80px;
-  height: 80px;
-  object-fit: cover;
-  background-color: ${colors.background}
-  border-radius: 6px;
+  width: 75%;
+  height: 75%;
+  object-fit: contain;
+  transition: transform 0.2s ease;
 
+  ${ProductCard}:hover & {
+    transform: scale(1.05);
+  }
 
-  @media (max-width: 768px) {
-    object-fit: cover;
-    border-radius: 6px;
-     width: 100%;
-    object-fit: cover;
-    background-color: ${colors.background}
-    border-radius: 6px;
+  @media (max-width: 480px) {
+    width: 70%;
+    height: 70%;
+  }
+`;
+
+export const ProductInfo = styled.div`
+  padding: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+
+  @media (max-width: 480px) {
+    padding: 0.4rem;
   }
 `;
 
 export const ProductName = styled.h3`
-  font-size: 1rem;
-  margin: 0.5rem 0;
+  font-size: 0.8125rem;
+  font-weight: 500;
   color: ${colors.text};
-  font-weight: 600;
+  margin: 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  line-height: 1.3;
+  min-height: 2.2em;
+  margin-top: 0.5rem;
+  word-break: break-word;
 
   @media (max-width: 768px) {
-    font-size: 0.7rem;
+    font-size: 0.75rem;
+    margin-top: 0.4rem;
+    margin-bottom: 0.4rem;
+    line-height: 1.2;
   }
 `;
+
 
 export const ProductPrice = styled.p`
-  font-size: 1rem;
-  font-weight: bold;
-  color: ${colors.accent};
-  margin: 0.5rem 0;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: ${colors.primary};
+  margin: 0;
+  display: flex;
+  align-items: center;
+  
 
   @media (max-width: 768px) {
-    font-size: 0.875rem;
+    
   }
 `;
+
+export const AddToCartButton = styled.button`
+  width: 100%;
+  background-color: ${colors.primary};
+  color: ${colors.secondary};
+  border: none;
+  padding: 0.5rem;
+  border-radius: 0.375rem;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  margin-top: 0.25rem;
+
+  &:hover {
+    background-color: ${colors.accent};
+  }
+
+  @media (max-width: 480px) {
+    padding: 0.4rem;
+    font-size: 0.75rem;
+  }
+`;
+
+
+export const CartButton = styled.button`
+  position: relative;
+  background: none;
+  border: none;
+  color: ${colors.secondary};
+  padding: 0.5rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s ease;
+
+  &:hover {
+    transform: scale(1.1);
+  }
+
+  svg {
+    width: 1.75rem;
+    height: 1.75rem;
+  }
+`
+
+export const CartCount = styled.span`
+  position: absolute;
+  top: -0.25rem;
+  right: -0.25rem;
+  background-color: ${colors.accent};
+  color: ${colors.secondary};
+  font-size: 0.75rem;
+  font-weight: 700;
+  width: 1.5rem;
+  height: 1.5rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 4px ${rgba(colors.shadow, 0.2)};
+`
+
+export const Logo = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+`
 
 export const LogoImage = styled.img`
   width: 3rem;
-  height: auto;
-  margin-right: 0.75rem;
-  object-fit: contain;
-  border-radius: 50%; // Tornei a logo circular
+  height: 3rem;
+  border-radius: 50%;
+  box-shadow: 0 2px 4px ${rgba(colors.shadow, 0.2)};
+`
+
+export const LogoText = styled.h1`
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: ${colors.secondary};
+  margin: 0;
+  text-shadow: 1px 1px 2px ${rgba(0, 0, 0, 0.1)};
 
   @media (max-width: 768px) {
-    width: 2.5rem;
+    font-size: 1.25rem;
   }
-`;
+`
+
