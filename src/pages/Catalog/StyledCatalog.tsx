@@ -111,26 +111,25 @@ export const SearchIcon = styled.i`
   align-items: center;
 `
 
-export const FiltersWrapper = styled.div`
+export const FiltersWrapper = styled.div<{ showLeftArrow: boolean }>`
   position: relative;
   width: 100%;
-  padding: 0 2rem; // Espaço para as setas
+  padding-left: ${(props) => (props.showLeftArrow ? "2rem" : "0")};
+  padding-right: 2rem;
   margin: 0.5rem 0;
 `
 
 export const FiltersContainer = styled.div`
   display: flex;
-  gap: 0.5rem;
   overflow-x: auto;
-  scrollbar-width: none;
-  -ms-overflow-style: none;
-  scroll-behavior: smooth;
-  padding: 0.5rem 0;
-  
+  scroll-snap-type: x mandatory;
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
   &::-webkit-scrollbar {
     display: none;
   }
 `
+
 export const ArrowButton = styled.button`
   position: absolute;
   top: 50%;

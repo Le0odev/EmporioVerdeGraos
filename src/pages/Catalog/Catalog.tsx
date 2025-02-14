@@ -8,7 +8,6 @@ import { debounce } from 'lodash';
 import {
   CatalogContainer,
   SearchBar,
-  FiltersContainer,
   FilterButton,
   ProductList,
   ProductCard,
@@ -19,7 +18,8 @@ import {
   SearchIcon,
   AddToCartButton,
   FiltersWrapper,
-  ArrowButton
+  ArrowButton,
+  FiltersContainer,
 } from './StyledCatalog';
 import { Category, Product } from './Product';
 import { FiSearch } from 'react-icons/fi';
@@ -54,8 +54,8 @@ const Catalog: React.FC = () => {
   const checkScroll = () => {
     if (scrollContainer.current) {
       const { scrollLeft, scrollWidth, clientWidth } = scrollContainer.current
-      setShowLeftArrow(scrollLeft > 0)
-      setShowRightArrow(scrollLeft < scrollWidth - clientWidth - 10) // -10 para uma pequena margem
+      setShowLeftArrow(scrollLeft > 20) // Pequena margem para evitar flickering
+      setShowRightArrow(scrollLeft < scrollWidth - clientWidth - 10)
     }
   }
 
@@ -174,7 +174,7 @@ const Catalog: React.FC = () => {
             onChange={(e) => setSearchTerm(e.target.value)}
           />
         </SearchContainer>
-        <FiltersWrapper>
+        <FiltersWrapper showLeftArrow={showLeftArrow}>
       {showLeftArrow && (
         <ArrowButton className="left" onClick={() => scroll("left")}>
           <FaArrowLeft />
