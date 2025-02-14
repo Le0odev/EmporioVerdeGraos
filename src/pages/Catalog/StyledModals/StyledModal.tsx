@@ -47,12 +47,7 @@ export const ModalContent = styled.div`
     color: #333;
   }
 
-  p {
-    font-size: 1rem;  
-    color: #666;
-    line-height: 1.4;  
-    margin-bottom: 15px;
-  }
+  
 `;
 
 // Botão de fechar com um ícone estilizado
@@ -76,37 +71,6 @@ export const CloseButton = styled.button`
   }
 `;
 
-// Botão de Comprar com gradiente
-export const BuyButton = styled.button`
-  background: linear-gradient(45deg, #28a745, #218838); 
-  color: #fff;
-  border: none;
-  border-radius: 5px;
-  padding: 10px 20px;
-  font-size: 1rem;
-  cursor: pointer;
-  transition: transform 0.3s ease;
-
-  &:hover {
-    transform: scale(1.05); // Efeito de aumento no hover
-  }
-
-  &:active {
-    background: linear-gradient(45deg, #218838, #1e7e34);
-  }
-
-  &:focus {
-    outline: none;
-  }
-`;
-
-
-// Estilos para os componentes
-export const ProductTitle = styled.h2`
-  font-size: 24px;
-  margin-bottom: 8px;
-  color: #333;
-`;
 
 export const ProductDescription = styled.p`
   font-size: 16px;
@@ -114,16 +78,6 @@ export const ProductDescription = styled.p`
   margin-bottom: 12px;
 `;
 
-export const ProductWeight = styled.p`
-  font-size: 16px;
-  color: #888;
-  margin-bottom: 12px;
-`;
-
-export const FlavorSelectorWrapper = styled.div`
-  margin-top: 16px;
-  margin-bottom: 18px;
-`;
 
 export const FlavorTitle = styled.h4`
   font-size: 18px;
@@ -142,3 +96,75 @@ export const FlavorInput = styled.input`
   margin-right: 8px;
 `;
 
+
+// Estilização para a imagem do produto
+export const ProductImage = styled.img`
+  width: 100%;
+  max-width: 150px;
+  border-radius: 8px;
+  margin-bottom: 10px;
+`;
+
+// Nome do Produto
+export const ProductTitle = styled.h2`
+  font-size: 20px;
+  font-weight: bold;
+  margin-bottom: 5px;
+  color: #333;
+`;
+
+// Preço do Produto
+export const ProductPrice = styled.p`
+  font-size: 22px;
+  font-weight: bold;
+  color: #28a745; 
+  margin-bottom: 10px;
+`;
+
+// Categoria como badge
+export const ProductCategory = styled.span`
+  display: inline-block;
+  background-color: #f0f0f0;
+  color: #555;
+  font-size: 14px;
+  padding: 4px 10px;
+  border-radius: 15px;
+  margin-bottom: 10px;
+`;
+
+// Peso do Produto
+export const ProductWeight = styled.p`
+  font-size: 16px;
+  color: #888;
+  margin-bottom: 12px;
+`;
+
+// Botão de Comprar
+export const BuyButton = styled.button`
+  background: linear-gradient(45deg, #28a745, #218838); 
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  padding: 10px 20px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+
+  &:hover {
+    transform: scale(1.05);
+  }
+
+  &:active {
+    background: linear-gradient(45deg, #218838, #1e7e34);
+  }
+
+  &:focus {
+    outline: none;
+  }
+`;
+
+// Seletor de Sabores
+export const FlavorSelectorWrapper = styled.div`
+  margin-top: 16px;
+  margin-bottom: 18px;
+`;
