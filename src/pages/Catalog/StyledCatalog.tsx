@@ -122,6 +122,7 @@ export const FiltersWrapper = styled.div<{ showLeftArrow: boolean }>`
 export const FiltersContainer = styled.div`
   display: flex;
   overflow-x: auto;
+  gap: 0.5rem;
   scroll-snap-type: x mandatory;
   -ms-overflow-style: none;  /* IE and Edge */
   scrollbar-width: none;  /* Firefox */
