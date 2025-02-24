@@ -279,7 +279,6 @@ const storeCoordinates = {
 
     // Se o método de pagamento for Pix, abre o modal
     if (paymentMethod === 'Pix') {
-        console.log("Abrindo modal para pagamento via Pix...");
         setShowPixModal(true);
         setOrderSuccess(true);
 

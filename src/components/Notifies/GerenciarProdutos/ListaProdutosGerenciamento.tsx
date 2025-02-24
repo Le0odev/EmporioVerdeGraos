@@ -65,7 +65,6 @@ const ListaProdutosGerenciamento: React.FC = () => {
         const produtos = response.data;
         setProdutos(produtos);
         atualizarListas(produtos);
-        console.log(response.data)
       } catch (error) {
         console.error('Erro ao buscar produtos:', error);
       }

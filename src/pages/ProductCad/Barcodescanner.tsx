@@ -24,7 +24,6 @@ const BarcodeScanner: React.FC<BarcodeScannerProps> = ({ onDetected }) => {
           console.error("Erro ao inicializar o Quagga: ", err);
           return;
         }
-        console.log("Quagga pronto para uso!");
         Quagga.start();
       });
 

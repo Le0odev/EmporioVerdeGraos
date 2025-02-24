@@ -208,8 +208,6 @@ const CadastrarProduto: React.FC = () => {
       
       if (axios.isAxiosError(error)) {
           const axiosError = error as AxiosError<ErrorResponse>;
-          console.log('Status do erro:', axiosError.response?.status);
-          console.log('Dados do erro:', axiosError.response?.data);
   
           let errorMessage = 'Erro ao finalizar a venda. Por favor, tente novamente mais tarde.';
   

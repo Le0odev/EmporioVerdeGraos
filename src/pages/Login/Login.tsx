@@ -37,7 +37,6 @@ const LoginForm: React.FC = () => {
   const { setToken } = useAuth(); // Usa o contexto de autenticação para definir o token
   const mutation = useMutation(login, {
     onSuccess: (data) => {
-      console.log('Login bem-sucedido, token:', data.acessToken); // Certifique-se de usar o nome correto do campo
       localStorage.setItem('accessToken', data.acessToken); // Corrigir para usar o nome correto do campo
       setToken(data.acessToken); // Define o token no contexto de autenticação
       navigate('/'); // Redirect to home or another page

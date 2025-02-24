@@ -107,7 +107,6 @@ const CriarVenda: React.FC = () => {
           }
         );
   
-        console.log("Resposta da API:", response.data);
   
         const produtoEncontrado = response.data[0]; // Supondo que a API retorne um array de resultados
   
@@ -128,7 +127,6 @@ const CriarVenda: React.FC = () => {
       } else {
         // Lógica para produtos não a granel (por unidade)
         const productCode = removeLeadingZeros(codeBar);
-        console.log(`Código de produto para unidade: ${productCode}`);
   
         const response = await axios.get(
           `https://systemallback-end-production.up.railway.app/products/search/codebar?codeBar=${productCode}`,
@@ -139,7 +137,6 @@ const CriarVenda: React.FC = () => {
           }
         );
   
-        console.log("Resposta da API para unidade:", response.data);
   
         const produtoEncontrado = response.data[0];
   
@@ -268,7 +265,6 @@ const CriarVenda: React.FC = () => {
         },
       )
 
-      console.log("Resposta da API após checkout:", response.data)
 
       setCarrinho([])
       setShowPrintModal(true)
@@ -284,8 +280,6 @@ const CriarVenda: React.FC = () => {
 
       if (axios.isAxiosError(error)) {
         const axiosError = error as AxiosError<ErrorResponse>
-        console.log("Status do erro:", axiosError.response?.status)
-        console.log("Dados do erro:", axiosError.response?.data)
 
         let errorMessage = "Erro ao finalizar a venda. Por favor, tente novamente mais tarde."
 

@@ -21,6 +21,7 @@ import FinalizarCompra from '../pages/Catalog/FinalizarCompra';
 import PIX from 'react-qrcode-pix';
 import SuccessPage from '../pages/Catalog/Sucess';
 import Dashboard from '../pages/Homes/AdminHome';
+import Chat from '../components/ChatBot/Chat';
 
 declare const H: any;
 
@@ -104,6 +105,7 @@ export const AppRoutes = () => {
       <MainContent showSidebar={showSidebar}>
 
         <Routes>
+          <Route path='/' element={<Chat />} />
           <Route path='/login' element={<Login />} />
           <Route path='/admin-home' element={<Dashboard />} />
           <Route path="/cadastrar-produto" element={<CadastrarProduto />} />

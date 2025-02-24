@@ -12,7 +12,6 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
   useEffect(() => {
     const savedToken = localStorage.getItem('accessToken');
-    console.log('Token recuperado do localStorage:', savedToken); // Adicione este log para verificar o token
     if (savedToken) {
       setToken(savedToken);
     }

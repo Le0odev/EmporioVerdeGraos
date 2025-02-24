@@ -233,7 +233,6 @@ const Relatorio: React.FC = () => {
       const detailedSale: Sale = response.data;
       setSelectedSale(detailedSale);
       setIsModalOpen(true);
-      console.log(detailedSale)
     } catch (error) {
       console.error('Erro ao buscar detalhes da venda:', error);
     }
