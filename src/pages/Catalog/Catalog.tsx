@@ -97,7 +97,7 @@ const Catalog: React.FC = () => {
       } catch (error) {
         console.error('Erro ao buscar produtos:', error);
         setError('Erro ao buscar produtos.');
-      } finally {
+      } finally { 
         setLoading(false);
       }
     }, 500),

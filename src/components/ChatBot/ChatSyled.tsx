@@ -2,7 +2,7 @@ import styled from "styled-components";
 
 export const ChatContainer = styled.div`
   width: 100%;
-  max-width: 700px; // Largura máxima aumentada
+  max-width: 900px; // Largura máxima aumentada
   height: 600px;
   display: flex;
   flex-direction: column;
