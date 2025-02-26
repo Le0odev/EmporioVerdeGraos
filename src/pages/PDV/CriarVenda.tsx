@@ -1,7 +1,7 @@
 "use client"
 
 import type React from "react"
-import { useState, useEffect } from "react"
+import { useState, useEffect, useCallback } from "react"
 import axios, { type AxiosError } from "axios"
 import { FaPlus, FaMinus } from "react-icons/fa"
 import { useAuth } from "../Login/authContext"
@@ -42,7 +42,7 @@ import {
   DecrementButton,
   QuantityDisplay,
   IncrementButton,
-  AlertMessage
+  AlertMessage,
 } from "./StyledVenda"
 import jsPDF from "jspdf"
 import { toast } from "react-toastify"
@@ -70,7 +70,6 @@ interface ErrorResponse {
 const CriarVenda: React.FC = () => {
   const { token } = useAuth()
   const [searchTermByName, setSearchTermByName] = useState<string>("")
-  const [searchTermByCodeBar, setSearchTermByCodeBar] = useState<string>("")
   const [produtos, setProdutos] = useState<Produto[]>([])
   const [carrinho, setCarrinho] = useState<Produto[]>([])
   const [autoAddFeedback, setAutoAddFeedback] = useState<string>("")
@@ -80,23 +79,22 @@ const CriarVenda: React.FC = () => {
   const [showModal, setShowModal] = useState<boolean>(false)
   const [showPrintModal, setShowPrintModal] = useState<boolean>(false)
   const [showPixModal, setShowPixModal] = useState(false)
+  const [searchTermByCodeBar, setSearchTermByCodeBar] = useState<string>("")
 
   const toggleModal = () => setShowModal(!showModal)
   const togglePrintModal = () => setShowPrintModal(!showPrintModal)
 
   const removeLeadingZeros = (code: string): string => {
-    return code.replace(/^0+/, "");
+    return code.replace(/^0+/, "")
   }
-  
+
   const searchProdutosByCodeBar = async (codeBar: string) => {
     try {
-  
       if (codeBar.startsWith("20") && codeBar.length === 13) {
         // Handling bulk product (a granel)
-        const productCode = removeLeadingZeros(codeBar.substring(2, 7)); 
-        const weightInGrams = Number.parseInt(codeBar.substring(7, 12)); 
-  
-  
+        const productCode = removeLeadingZeros(codeBar.substring(2, 7))
+        const weightInGrams = Number.parseInt(codeBar.substring(7, 12))
+
         // Buscar o produto no banco de dados
         const response = await axios.get(
           `https://systemallback-end-production.up.railway.app/products/search/codebar?codeBar=${productCode}`,
@@ -104,76 +102,78 @@ const CriarVenda: React.FC = () => {
             headers: {
               Authorization: `Bearer ${token}`,
             },
-          }
-        );
-  
-  
-        const produtoEncontrado = response.data[0]; // Supondo que a API retorne um array de resultados
-  
+          },
+        )
+
+        const produtoEncontrado = response.data[0] // Supondo que a API retorne um array de resultados
+
         if (produtoEncontrado) {
           // Produto encontrado, com peso
           const produtoComPeso = {
             ...produtoEncontrado,
             peso: weightInGrams, // Peso do produto a granel em gramas
             bulk: true, // Marcar como produto a granel
-          };
-          addToCart(produtoComPeso); // Adicionar ao carrinho
+          }
+          addToCart(produtoComPeso) // Adicionar ao carrinho
           setAutoAddFeedback(
-            `Produto "${produtoEncontrado.productName}" (${weightInGrams}g) adicionado automaticamente.`
-          );
+            `Produto "${produtoEncontrado.productName}" (${weightInGrams}g) adicionado automaticamente.`,
+          )
+          setSearchTermByName("") // Limpar o input após sucesso
         } else {
-          setAutoAddFeedback("Produto a granel não encontrado.");
+          setAutoAddFeedback("Produto a granel não encontrado.")
         }
       } else {
         // Lógica para produtos não a granel (por unidade)
-        const productCode = removeLeadingZeros(codeBar);
-  
+        const productCode = removeLeadingZeros(codeBar)
+
         const response = await axios.get(
           `https://systemallback-end-production.up.railway.app/products/search/codebar?codeBar=${productCode}`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
             },
-          }
-        );
-  
-  
-        const produtoEncontrado = response.data[0];
-  
+          },
+        )
+
+        const produtoEncontrado = response.data[0]
+
         if (produtoEncontrado) {
-          addToCart(produtoEncontrado); // Adicionar ao carrinho
-          setAutoAddFeedback(`Produto "${produtoEncontrado.productName}" adicionado automaticamente.`);
+          addToCart(produtoEncontrado)
+          setAutoAddFeedback(`Produto "${produtoEncontrado.productName}" adicionado automaticamente.`)
+          setSearchTermByName("") // Limpar o input após sucesso
         } else {
-          setAutoAddFeedback("Produto não encontrado.");
+          setAutoAddFeedback("Produto não encontrado.")
         }
       }
-  
+
       // Resetar o campo de busca
-      setSearchTermByCodeBar("");
-      setTimeout(() => setAutoAddFeedback(""), 3000);
+      setTimeout(() => setAutoAddFeedback(""), 3000)
     } catch (error) {
-      console.error("Erro ao buscar produtos por código de barras:", error);
-      setAutoAddFeedback("Erro ao buscar produto. Tente novamente.");
-    }
-  };
-
-  const searchProdutosByName = async (term: string) => {
-    try {
-      const response = await axios.get(
-        `https://systemallback-end-production.up.railway.app/products/search?productName=${term}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        },
-      )
-
-      setProdutos(response.data)
-    } catch (error) {
-      console.error("Erro ao buscar produtos:", error)
-      setProdutos([])
+      console.error("Erro ao buscar produtos por código de barras:", error)
+      setAutoAddFeedback("Erro ao buscar produto. Tente novamente.")
     }
   }
+
+  const searchProdutosByName = useCallback(
+    async (term: string) => {
+      try {
+        const response = await axios.get(
+          `https://systemallback-end-production.up.railway.app/products/search?productName=${term}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          },
+        )
+
+        setProdutos(response.data)
+      } catch (error) {
+        console.error("Erro ao buscar produtos:", error)
+        setProdutos([])
+      }
+    },
+    [token],
+  )
 
   const addToCart = (produto: Produto) => {
     const itemExistente = carrinho.find((item) => item.id === produto.id)
@@ -265,7 +265,6 @@ const CriarVenda: React.FC = () => {
         },
       )
 
-
       setCarrinho([])
       setShowPrintModal(true)
       toggleModal()
@@ -327,72 +326,99 @@ const CriarVenda: React.FC = () => {
     searchProdutosByCodeBar(searchTermByCodeBar)
   }
 
+  // Modifique a função handlePrintReceipt para aceitar dados opcionais
   const handlePrintReceipt = () => {
+    const carrinhoParaImprimir = carrinho
+    const descontoParaImprimir = desconto
+    const formaDePagamentoParaImprimir = formaDePagamento
+
+    const pageWidth = 80
+    const pageHeight = 297
+    const margins = { top: 10, right: 5, bottom: 10, left: 5 }
+    const lineHeight = 5
+
     const doc = new jsPDF({
       orientation: "portrait",
       unit: "mm",
-      format: [80, 297],
+      format: [pageWidth, pageHeight],
     })
 
-    const dataHora = new Date().toLocaleString("pt-BR")
-    const nomeEmpresa = "Empório Verde Grãos"
-    const cnpjEmpresa = "34.483.095/0001-63"
-    const enderecoEmpresa = "Centro, Abreu e Lima"
-    const telefoneEmpresa = "(81) 9 9167-6177"
+    let currentY = margins.top
 
-    doc.setFontSize(12)
-    doc.setFont("helvetica", "bold")
-    doc.text("Cupom de Compra", 40, 10, { align: "center" })
+    const addPage = () => {
+      doc.addPage([pageWidth, pageHeight])
+      currentY = margins.top
+    }
 
-    doc.setFont("helvetica", "normal")
-    doc.text(`${nomeEmpresa}`, 10, 20)
-    doc.text(`CNPJ: ${cnpjEmpresa}`, 10, 25)
-    doc.text(`Endereço: ${enderecoEmpresa}`, 10, 30)
-    doc.text(`Telefone: ${telefoneEmpresa}`, 10, 35)
-    doc.text(`Data e Hora: ${dataHora}`, 10, 40)
+    const writeText = (text: string, fontSize = 10, isBold = false) => {
+      doc.setFontSize(fontSize)
+      doc.setFont("helvetica", isBold ? "bold" : "normal")
 
-    doc.setLineWidth(0.5)
-    doc.line(10, 45, 70, 45)
+      const textLines = doc.splitTextToSize(text, pageWidth - margins.left - margins.right)
+      textLines.forEach((line: string) => {
+        if (currentY + lineHeight > pageHeight - margins.bottom) {
+          addPage()
+        }
+        doc.text(line, margins.left, currentY)
+        currentY += lineHeight
+      })
+    }
 
-    const startY = 50
-    let currentY = startY
-    const lineHeight = 4.5
+    const drawLine = () => {
+      if (currentY + 1 > pageHeight - margins.bottom) {
+        addPage()
+      }
+      doc.line(margins.left, currentY, pageWidth - margins.right, currentY)
+      currentY += lineHeight
+    }
 
-    carrinho.forEach((item, index) => {
-      const line1 = `${item.productName}`
-      const line2 = `Preço: ${item.productPrice.toFixed(2)}`
-      const line3 = item.bulk ? `Peso: ${item.peso}g` : `Quantidade: ${item.quantidade}`
-      const line4 = `Subtotal: R$ ${item.bulk ? ((item.productPrice * (item.peso || 0)) / 1000).toFixed(2) : (item.productPrice * (item.quantidade || 0)).toFixed(2)}`
+    // Header
+    writeText("Cupom de Compra", 14, true)
+    writeText("Empório Verde Grãos")
+    writeText("CNPJ: 34.483.095/0001-63")
+    writeText("Centro, Abreu e Lima")
+    writeText("(81) 9 9167-6177")
+    writeText(`Data e Hora: ${new Date().toLocaleString("pt-BR")}`)
+    drawLine()
 
-      doc.setFont("helvetica", "bold")
-      doc.setFontSize(10)
-      doc.text(line1, 10, currentY)
-
-      doc.setFont("helvetica", "normal")
-      doc.text(line2, 10, currentY + lineHeight)
-      doc.text(line3, 10, currentY + lineHeight * 2)
-      doc.text(line4, 10, currentY + lineHeight * 3)
-
-      doc.line(10, currentY + lineHeight * 4, 70, currentY + lineHeight * 4)
-
-      currentY += lineHeight * 5
+    // Items
+    carrinhoParaImprimir.forEach((item) => {
+      writeText(item.productName, 12, true)
+      writeText(`Preço: R$ ${item.productPrice.toFixed(2)}`)
+      writeText(item.bulk ? `Peso: ${item.peso}g` : `Quantidade: ${item.quantidade}`)
+      writeText(
+        `Subtotal: R$ ${
+          item.bulk
+            ? ((item.productPrice * (item.peso || 0)) / 1000).toFixed(2)
+            : (item.productPrice * (item.quantidade || 0)).toFixed(2)
+        }`,
+      )
+      drawLine()
     })
 
-    currentY += lineHeight
+    // Totals
+    const calcularSubtotalTeste = (carrinhoTeste: Produto[], descontoTeste: number) => {
+      const subtotal = carrinhoTeste.reduce((total, item) => {
+        if (item.bulk) {
+          return total + (item.productPrice * (item.peso || 0)) / 1000
+        } else {
+          return total + item.productPrice * (item.quantidade || 0)
+        }
+      }, 0)
 
-    const { subtotal, subtotalComDesconto } = calcularSubtotal()
-    doc.setFontSize(12)
-    doc.text(`Subtotal: R$ ${subtotal.toFixed(2)}`, 10, currentY + lineHeight)
-    doc.text(`Desconto: R$ ${(subtotal - subtotalComDesconto).toFixed(2)}`, 10, currentY + lineHeight * 2)
-    doc.text(`Total: R$ ${subtotalComDesconto.toFixed(2)}`, 10, currentY + lineHeight * 3)
-    doc.text(`Pagamento: ${formaDePagamento}`, 10, currentY + lineHeight * 4)
+      const subtotalComDesconto = subtotal - subtotal * (descontoTeste / 100)
+      return { subtotal, subtotalComDesconto }
+    }
 
-    currentY += lineHeight * 5
+    const { subtotal, subtotalComDesconto } = calcularSubtotalTeste(carrinhoParaImprimir, descontoParaImprimir)
 
-    doc.text(`Total: R$ ${subtotalComDesconto.toFixed(2)}`, 10, currentY + lineHeight * 0.5)
-    doc.line(10, currentY + lineHeight, 70, currentY + lineHeight)
+    writeText(`Subtotal: R$ ${subtotal.toFixed(2)}`, 12)
+    writeText(`Desconto: R$ ${(subtotal - subtotalComDesconto).toFixed(2)}`, 12)
+    writeText(`Total: R$ ${subtotalComDesconto.toFixed(2)}`, 12, true)
+    writeText(`Pagamento: ${formaDePagamentoParaImprimir}`, 12)
 
-    doc.line(10, currentY + lineHeight * 2, 70, currentY + lineHeight * 2)
+    drawLine()
+    writeText("Obrigado pela preferência!", 10, true)
 
     const pdfBlob = doc.output("blob") as Blob
     printPDF(pdfBlob)
@@ -425,52 +451,96 @@ const CriarVenda: React.FC = () => {
   useEffect(() => {
     if (searchTermByName) {
       const debounceSearch = setTimeout(() => {
-        searchProdutosByName(searchTermByName)
+        if (/^\d+$/.test(searchTermByName)) {
+          searchProdutosByCodeBar(searchTermByName)
+        } else {
+          searchProdutosByName(searchTermByName)
+        }
       }, 300)
 
       return () => clearTimeout(debounceSearch)
     } else {
       setProdutos([])
     }
-  }, [searchTermByName, searchProdutosByName]) // Added searchProdutosByName to dependencies
+  }, [searchTermByName, searchProdutosByName, searchProdutosByCodeBar])
 
   const { subtotal, subtotalComDesconto } = calcularSubtotal()
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      // F2 - Focus search
+      if (e.key === "F2") {
+        const searchInput = document.querySelector('input[type="text"]') as HTMLInputElement
+        if (searchInput) {
+          searchInput.focus()
+        }
+      }
+      // F4 - Finish sale
+      if (e.key === "F4") {
+        if (carrinho.length > 0) {
+          setShowModal(true)
+        }
+      }
+      // F8 - Quick payment with PIX
+      if (e.key === "F8") {
+        if (carrinho.length > 0) {
+          setFormaDePagamento("PIX")
+          setShowPixModal(true)
+        }
+      }
+    }
+
+    window.addEventListener("keydown", handleKeyDown)
+    return () => window.removeEventListener("keydown", handleKeyDown)
+  }, [carrinho.length])
 
   return (
     <VendaContainer>
       <SearchSection>
-        <Form onSubmit={handleSearchByCodeBarSubmit}>
-          <Label htmlFor="searchCodeBar">Procure um produto:</Label>
-          <Input
-            type="text"
-            placeholder="Insira o código de barras"
-            id="searchCodeBar"
-            value={searchTermByCodeBar}
-            onChange={(e) => setSearchTermByCodeBar(e.target.value)}
-          />
-        </Form>
         <Form onSubmit={handleSearchByNameSubmit}>
+        <Label>Buscar por nome ou código de barras // ( F2 )</Label>
           <SearchContainer>
             <SearchIcon>
               <FiSearch />
             </SearchIcon>
             <SearchBar
               type="text"
-              placeholder="Buscar produtos..."
+              placeholder="Buscar por nome ou código de barras..."
               value={searchTermByName}
               onChange={(e) => setSearchTermByName(e.target.value)}
+              onKeyDown={(e) => {
+                // Enter key triggers search
+                if (e.key === "Enter") {
+                  e.preventDefault()
+                  // If input looks like a barcode (only numbers), use barcode search
+                  if (/^\d+$/.test(searchTermByName)) {
+                    searchProdutosByCodeBar(searchTermByName)
+                  } else {
+                    searchProdutosByName(searchTermByName)
+                  }
+                }
+                // F2 key focuses the search input
+                if (e.key === "F2") {
+                  e.currentTarget.focus()
+                }
+              }}
             />
           </SearchContainer>
           <Button type="submit">Pesquisar</Button>
         </Form>
         {autoAddFeedback && (
-            <AlertMessage error={autoAddFeedback.includes("não encontrado")}>
-              {autoAddFeedback}
-            </AlertMessage>
+          <AlertMessage error={autoAddFeedback.includes("não encontrado")}>{autoAddFeedback}</AlertMessage>
         )}
         <ProductGrid>
           {produtos.map((produto) => (
-            <ProductCard2 key={produto.id} onClick={() => addToCart(produto)}>
+            <ProductCard2
+              key={produto.id}
+              onClick={() => {
+                addToCart(produto)
+                setSearchTermByName("") // Limpar o input após adicionar o produto
+                setProdutos([]) // Limpar os resultados da busca
+              }}
+            >
               <ProductImage src={produto.imageUrl} alt={produto.productName} />
               <ProductName>{produto.productName}</ProductName>
               <ProductPrice>
@@ -570,14 +640,14 @@ const CriarVenda: React.FC = () => {
                 Dinheiro
               </PaymentButton>
               <PaymentButton onClick={() => setFormaDePagamento("PIX")} selected={formaDePagamento === "PIX"}>
-                PIX
+                PIX  ( F8 )
               </PaymentButton>
             </PaymentButtonsContainer>
             <SubtotalContainer>
               <SubtotalLabel>Subtotal:</SubtotalLabel>
               <SubtotalAmount>R$ {subtotalComDesconto.toFixed(2)}</SubtotalAmount>
             </SubtotalContainer>
-            <CheckoutButton onClick={() => setShowModal(true)}>Finalizar Venda</CheckoutButton>
+            <CheckoutButton onClick={() => setShowModal(true)}>Finalizar Venda  ( F4 )</CheckoutButton>
           </CheckoutSection>
         )}
       </VendaSection>
